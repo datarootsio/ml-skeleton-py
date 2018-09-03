@@ -1,0 +1,15 @@
+{
+  "company": "dataroots",
+  "client": "[OPTIONAL] company name",
+  "main_dev": "James Vando",
+  "email": "info@dataroots.io",
+  "project_name": "BeautifulML",
+  "repo_name": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
+  "project_short_description": "Refreshingly simple Python ML template.",
+  "conda_path": "[OPTIONAL] will use default if not supplied",
+  "python_version": [
+    "3.7",
+    "3.6",
+    "2.7"
+  ]
+}

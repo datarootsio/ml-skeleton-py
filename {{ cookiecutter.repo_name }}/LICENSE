@@ -1,0 +1,7 @@
+Copyright (C) {{ cookiecutter.company }}  - All Rights Reserved
+
+Unauthorized copying of any files in this repository,
+via any medium, is strictly prohibited.
+
+Proprietary and confidential.
+Developed by {{ cookiecutter.main_dev }}

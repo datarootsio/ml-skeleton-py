@@ -4,8 +4,10 @@ import shutil
 
 logger = logging.getLogger(__name__)
 
-def main():
+def main(model_name):
+    print(model_name)
     logger.info('Copying iris dataset from raw to tranformed')
+    logger.info('Skipping staging, not relevant for this example')
 
     shutil.copyfile(
         os.path.join(os.getenv('DATA_RAW'), 'iris.csv'),

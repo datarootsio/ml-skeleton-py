@@ -6,12 +6,9 @@
 # GLOBALS                                                     #
 ###############################################################
 
-CONDA_PATH=[OPTIONAL]
-#"{{ cookiecutter.conda_path }}"
-PYTHON_VERSION=3.6
-#"{{ cookiecutter.python_version }}"
-REPO_NAME="test_repo"
-#"{{ cookiecutter.repo_name g}}"
+CONDA_PATH="{{ cookiecutter.conda_path }}"
+PYTHON_VERSION="{{ cookiecutter.python_version }}"
+REPO_NAME="{{ cookiecutter.repo_name }}"
 
 ###############################################################
 # COMMANDS                                                    #

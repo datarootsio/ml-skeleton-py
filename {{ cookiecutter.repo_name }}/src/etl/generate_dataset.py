@@ -1,11 +1,17 @@
+"""Dataset generation example."""
+
 import os
 import logging
 import shutil
 
 logger = logging.getLogger(__name__)
 
-def main(model_name):
-    print(model_name)
+
+def main():
+    """Generate a dataset using raw input data.
+
+    :param model_name: the name of the
+    """
     logger.info('Copying iris dataset from raw to tranformed')
     logger.info('Skipping staging, not relevant for this example')
 
@@ -15,6 +21,7 @@ def main(model_name):
     )
 
     logger.info('Done')
+
 
 if __name__ == '__main__':
     main()

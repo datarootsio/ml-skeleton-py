@@ -1,11 +1,13 @@
-## example borrowed from
-## # http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr-auto-examples-linear-model-plot-ols-py
+"""Train example.
+
+Example borrowed from:
+http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr-auto-examples-linear-model-plot-ols-py
+"""
 
 import os
-import datetime
 import logging
 
-from sklearn import datasets, linear_model
+from sklearn import linear_model
 from sklearn.externals import joblib
 import pandas as pd
 import click
@@ -19,8 +21,7 @@ logger = logging.getLogger(__name__)
 @click.option('--model-name', default='model')
 @click.option('--input-data', default='iris.csv')
 def main(model_name, input_data):
-    """
-    Train and save a linear regression model
+    """Train and save a linear regression model.
 
     :param model_name: name to save the model as (extension excluded)
     """
@@ -34,11 +35,11 @@ def main(model_name, input_data):
 
     # Split the data into training/testing sets
     iris_X_train = iris_X[:100]
-    iris_X_test = iris_X[100:]
+    # iris_X_test = iris_X[100:] (not used for this example)
 
     # Split the targets into training/testing sets
     iris_y_train = iris['petal_length'][:100]
-    iris_y_test = iris['petal_length'][100:]
+    # iris_y_test = iris['petal_length'][100:] (not used for this example)
 
     # Create linear regression object
     regr = linear_model.LinearRegression()
@@ -50,7 +51,8 @@ def main(model_name, input_data):
     # save the model
     logger.info('Saving serialized model: {}'.format(model_name))
     joblib.dump(regr,
-                os.path.join(os.getenv('MODEL_DIR'), '{}.p'.format(model_name)))
+                os.path.join(os.getenv('MODEL_DIR'),
+                             '{}.p'.format(model_name)))
 
     # save relevant metadata
     logger.info('Saving model metadata for model: {}'.format(model_name))

@@ -10,23 +10,24 @@ from sklearn.externals import joblib
 import pandas as pd
 import click
 
-from ..helpers import save_metadata
+from ..helpers import metadata_to_file
 
 logger = logging.getLogger(__name__)
 
+
 @click.command()
-@click.option('--name', default='model')
+@click.option('--model-name', default='model')
 @click.option('--input-data', default='iris.csv')
-def main(name, input_data):
+def main(model_name, input_data):
     """
     Train and save a linear regression model
 
-    :param name: name to save the model as (extension excluded)
+    :param model_name: name to save the model as (extension excluded)
     """
     # Load the iris dataset
     logging.info('Loading iris dataset')
     iris = pd.read_csv(os.path.join(os.getenv('DATA_TRANSFORMED'), input_data))
-    iris = iris.sample(frac=1) # shuffle
+    iris = iris.sample(frac=1)  # shuffle
 
     # drop species and target (petal_length)
     iris_X = iris.drop(columns=['species', 'petal_length'])
@@ -47,17 +48,17 @@ def main(name, input_data):
     regr.fit(iris_X_train, iris_y_train)
 
     # save the model
-    logger.info('Saving serialized model: {}'.format(name))
+    logger.info('Saving serialized model: {}'.format(model_name))
     joblib.dump(regr,
-                os.path.join(os.getenv('MODEL_DIR'), '{}.p'.format(name)))
+                os.path.join(os.getenv('MODEL_DIR'), '{}.p'.format(model_name)))
 
     # save relevant metadata
-    logger.info('Saving model metadata for model: {}'.format(name))
-    save_metadata(os.getenv('MODEL_METADATA_DIR'),
-                  name,
-                  {'name':name,
-                   'timestamp': str(datetime.datetime.now()),
-                   'extra': 'some extra inforation'})
+    logger.info('Saving model metadata for model: {}'.format(model_name))
+    metadata_to_file(path=os.getenv('MODEL_METADATA_DIR'),
+                     filename=model_name,
+                     metadata={'model_name': model_name,
+                               'extra': 'some extra information'},
+                     logger=logger)
 
 
 if __name__ == '__main__':

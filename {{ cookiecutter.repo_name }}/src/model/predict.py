@@ -2,16 +2,14 @@
 ## # http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr-auto-examples-linear-model-plot-ols-py
 
 import os
-import datetime
+import json
 import logging
 
-import numpy as np
-from sklearn import datasets, linear_model
 from sklearn.externals import joblib
 import pandas as pd
 import click
 
-from ..helpers import save_metadata
+from ..helpers import base_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +21,7 @@ def main(model_name, input_df, output_df):
     """
     Predict new values using a serialized model
 
-    Note log predictions through the logger. This should be captured by a listener on stdout.
+    Note log predictions via logger to STDOUT. This should be captured by a listener. If not, make amends.
 
     :param model_name: name find the loaded model by (excluding extension)
     :param input_df: the input features to use to generate prediction on (ignored in this example)
@@ -51,6 +49,8 @@ def main(model_name, input_df, output_df):
 
     output_df_fn = os.path.join(os.getenv('DATA_PREDICTIONS'), output_df)
     logger.info('storing saved prediction at: {}'.format(output_df_fn))
+
+    logger.info('prediction base metadata: {}'.format(json.dumps(base_metadata())))
     preds_df.to_csv(output_df_fn, index=False)
 
 

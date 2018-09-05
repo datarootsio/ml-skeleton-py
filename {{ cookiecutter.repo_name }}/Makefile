@@ -39,7 +39,7 @@ train: ## train the model, you can pass arguments as follows: make ARGS="--foo 1
 	source activate $(REPO_NAME); \
 	python -m src.model.train $(ARGS)
 
-predict: ## predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
+prediction: ## predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 	@echo ">>> training model"
 	source activate $(REPO_NAME); \
 	python -m src.model.predict $(ARGS)

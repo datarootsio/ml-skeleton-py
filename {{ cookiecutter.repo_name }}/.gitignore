@@ -114,7 +114,10 @@ dmypy.json
 
 models/
 
-{% if True %}
-data/**
-.env
-{%- endif %}
+{% if True %} data/** {% endif %}
+{% if True %} .env {% endif %}
+
+data/**/*.csv
+!data/raw/iris.csv
+
+

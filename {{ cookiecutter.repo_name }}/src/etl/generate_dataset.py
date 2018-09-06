@@ -14,8 +14,7 @@ def main():
     """
     logger.info('Copying iris dataset from raw to tranformed')
     logger.info('Skipping staging, not relevant for this example')
-    print(os.environ)
-    os.listdir(os.getenv('DATA_RAW'))
+
     shutil.copyfile(
         os.path.join(os.getenv('DATA_RAW'), 'iris.csv'),
         os.path.join(os.getenv('DATA_TRANSFORMED'), 'iris.csv')

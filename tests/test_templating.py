@@ -2,7 +2,7 @@
 
 import os
 
-project_dir = '../beautifulml/'
+project_dir = './beautifulml/'
 # check if default project exists
 assert os.path.isdir(project_dir)
 

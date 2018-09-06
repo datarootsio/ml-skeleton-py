@@ -2,7 +2,7 @@ image: continuumio/miniconda3:latest
 
 before_script:
   - pip install -r requirements.txt
-  - apt-get install make
+  - apt-get install build-essentials
 
 test:
   script:

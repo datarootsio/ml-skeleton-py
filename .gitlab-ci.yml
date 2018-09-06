@@ -1,0 +1,8 @@
+image: continuumio/miniconda3:latest
+
+before_script:
+  - pip install -r requirements.txt
+
+test:
+  script:
+    - make test

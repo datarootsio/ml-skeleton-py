@@ -15,6 +15,7 @@ init: create_environment requirements ## create environment & install requiremen
 default_project: ## initialize a cookiecutter project using the default config
 	@echo ">>> generating template using default config"
 	cookiecutter . --default-config --overwrite-if-exists --no-input
+	ls
 
 clean: ## clean default cookiecutter template (beautifulml)
 	@rm -rf ./beautifulml/

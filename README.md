@@ -21,9 +21,40 @@ pip install cookiecutter
 ```
 
 Install the skeleton (and create project directory):
+
 ```sh
 cookiecutter git+https://gitlab.com/dataroots/public/ml_skeleton_py.git
 ```
+
+Initialize the environment:
+
+```sh
+make init
+```
+
+Make sure to initialize a git repository and create a first commit 
+(TODO: add this to `make init`).
+
+Try out the `make` commands on the example iris dataset model (see 
+`make help`).
+
+```sh
+clean_environment              remove the associated conda environment
+count_report_files             count the number of present report files
+count_test_files               count the number of present test files
+create_environment             create a conda environment
+generate_dataset               run new ETL pipeline
+help                           show help on available commands
+init                           create environment & install requirements.txt
+lint                           lint the code using flake8
+prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
+pytest                         run tox/pytest tests
+requirements                   install requirements specified in "requirements.txt"
+test                           run extensive tests
+train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
+```
+
+Note the dependency: `generate_dataset` > `train` > `prediction`.
 
 ## Overview project structure
 

@@ -1,9 +1,9 @@
 {
   "company": "dataroots",
   "company_email": "info@dataroots.io",
-  "client": "[OPTIONAL] company name",
+  "client": "internal",
   "main_dev": "James Vando",
-  "email": "info@dataroots.io",
+  "main_dev_email": "info@dataroots.io",
   "project_name": "BeautifulML",
   "repo_name": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
   "project_short_description": "Refreshingly simple Python ML template.",

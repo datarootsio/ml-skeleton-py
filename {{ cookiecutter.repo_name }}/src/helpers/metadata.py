@@ -8,6 +8,10 @@ import datetime
 
 
 def get_git_commit():
+    """Get git commit if it exists.
+
+    :return: git commit string or 'na'
+    """
     try:
         return subprocess.check_output(
             ['git', 'rev-parse', 'HEAD']).decode(sys.stdout.encoding).strip()

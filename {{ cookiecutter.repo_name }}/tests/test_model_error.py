@@ -6,6 +6,7 @@ for expected error range.
 """
 import os
 
+
 def test_model_deserializable():
     """Test if a model correctly deserializes.
 

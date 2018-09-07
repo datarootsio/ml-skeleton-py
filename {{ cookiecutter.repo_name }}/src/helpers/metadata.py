@@ -7,6 +7,15 @@ import subprocess
 import datetime
 
 
+def get_git_commit():
+    try:
+        return subprocess.check_output(
+            ['git', 'rev-parse', 'HEAD']).decode(sys.stdout.encoding).strip()
+
+    except subprocess.CalledProcessError:
+        return 'na'
+
+
 def base_metadata():
     """
     Generate basic metadata.
@@ -16,8 +25,7 @@ def base_metadata():
 
     :return: metadata dictionary
     """
-    return {'git_commit': subprocess.check_output(
-        ['git', 'rev-parse', 'HEAD']).decode(sys.stdout.encoding).strip(),
+    return {'git_commit': get_git_commit(),
             'timestamp': str(datetime.datetime.now())}
 
 

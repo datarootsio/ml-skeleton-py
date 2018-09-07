@@ -69,7 +69,6 @@ count_test_files: ## count the number of present test files
     endif
 
 count_report_files: ## count the number of present report files
-	echo "$(NO_OF_REPORT_FILES)"
     ifeq (0, $(NO_OF_REPORT_FILES))
 		$(warning >>> No report files found)
     else

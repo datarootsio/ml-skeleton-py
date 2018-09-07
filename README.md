@@ -22,7 +22,7 @@ pip install cookiecutter
 
 Install the skeleton (and create project directory):
 ```sh
-cookiecutter git+https://gitlab.com/bart6114/ml_skeleton_py.git
+cookiecutter git+https://gitlab.com/dataroots/public/ml_skeleton_py.git
 ```
 
 ## Overview project structure

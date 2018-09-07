@@ -112,7 +112,8 @@ dmypy.json
 # template specific
 .pytest_cache/
 
-models/
+models/*.p
+models/**/*.json
 
 {% if True %} data/** {% endif %}
 {% if True %} .env {% endif %}

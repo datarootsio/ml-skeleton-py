@@ -110,3 +110,4 @@ venv.bak/
 dmypy.json
 
 .idea/
+beautifulml/

@@ -59,7 +59,8 @@ def main(model_name, input_data):
     metadata_to_file(path=os.getenv('MODEL_METADATA_DIR'),
                      filename=model_name,
                      metadata={'model_name': model_name,
-                               'extra': 'some extra information'},
+                               'extra': 'some extra information',
+                               'scores': 'add (CV) scores here'},
                      logger=logger)
 
 

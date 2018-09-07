@@ -9,6 +9,7 @@
 CONDA_PATH="{{ cookiecutter.conda_path }}"
 PYTHON_VERSION="{{ cookiecutter.python_version }}"
 REPO_NAME="{{ cookiecutter.repo_name }}"
+NO_OF_TEST_FILES := $(words $(wildcard tests/test_*.py))
 
 ###############################################################
 # COMMANDS                                                    #
@@ -57,6 +58,18 @@ generate_dataset: ## run new ETL pipeline
 lint: ## lint the code using flake8
 	@. activate $(REPO_NAME); \
 	flake8 src/
+
+count_test_files: ## count the number of present test files
+    ifeq (0, NO_OF_TEST_FILES)
+		$(error >>> No tests found)
+    else
+	@echo ">>> OK, $(NO_OF_TEST_FILES) pytest file found"
+    endif
+
+pytest: ## run tox/pytest tests
+	tox
+
+test: init generate_dataset train prediction lint pytest count_test_files ## run extensive tests
 
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

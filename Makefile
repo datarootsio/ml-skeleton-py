@@ -29,13 +29,10 @@ requirements: ## install requirements needed for testing
 replacement_test: ## check for correct variable interpolation
 	python tests/test_templating.py
 
-run_examples: ## run all examples in the project
-	make --directory beautifulml/ init
-	make --directory beautifulml/ generate_dataset
-	make --directory beautifulml/ train
-	make --directory beautifulml/ prediction
+run_project_test: ## run all examples in the project
+	make --directory beautifulml/ test
 
-test: default_project replacement_test run_examples clean lint ## run all tests
+test: default_project replacement_test run_project_test clean lint ## run all tests
 
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

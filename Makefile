@@ -21,7 +21,7 @@ clean: ## clean default cookiecutter template (beautifulml)
 	-conda env remove --name beautifulml -y
 
 lint: ## lint all python source code
-	@flake8
+	@flake8 tests
 
 requirements: ## install requirements needed for testing
 	@pip install -r requirements.txt

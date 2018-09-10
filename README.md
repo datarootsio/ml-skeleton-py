@@ -20,7 +20,9 @@ Install `cookiecutter`:
 pip install cookiecutter
 ```
 
-Install the skeleton (and create project directory):
+Install conda: https://conda.io/miniconda.html.
+
+Deploy the skeleton (and create project directory):
 
 ```sh
 cookiecutter git+https://gitlab.com/dataroots/public/ml_skeleton_py.git

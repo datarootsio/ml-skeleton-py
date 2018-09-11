@@ -2,14 +2,14 @@
 
 **THIS HAS NOT BEEN VALIDATED YET**
 
-This is an opinionated project skeleton for a Python based machine learning 
+This is an opinionated project skeleton for a Python based machine learning
 projects. This skeleton is to be used as the default project start for any
 Python project (unless arguments supporting otherwise).
 
-While this project is heavily opinionated, opinions can be discussed: 
+While this project is heavily opinionated, opinions can be discussed:
 feel free to open an issue for this.
 
-This project is built upon the best practices discussed in 
+This project is built upon the best practices discussed in
 our [methodology](https://gitlab.com/dataroots/public/methodology) repo.
 
 ## How-to
@@ -25,7 +25,7 @@ Install conda: https://conda.io/miniconda.html.
 Deploy the skeleton (and create project directory):
 
 ```sh
-cookiecutter git+https://gitlab.com/dataroots/public/ml_skeleton_py.git
+cookiecutter git+https://gitlab.com/dataroots/public/ml-skeleton-py.git
 ```
 
 Initialize the environment:
@@ -34,10 +34,10 @@ Initialize the environment:
 make init
 ```
 
-Make sure to initialize a git repository and create a first commit 
+Make sure to initialize a git repository and create a first commit
 (TODO: add this to `make init`).
 
-Try out the `make` commands on the example iris dataset model (see 
+Try out the `make` commands on the example iris dataset model (see
 `make help`).
 
 ```sh
@@ -87,21 +87,21 @@ to include this in the git repository. No credentials should be committed.
 
 ### data/
 
-Location for data in various shapes (see directory structure). 
+Location for data in various shapes (see directory structure).
 Note that the `raw` data should always be considered **immutable**.
 
-For larger projects, where it's infeasible to have project specific datasets 
-within the project structure, make sure to update the configuration and 
+For larger projects, where it's infeasible to have project specific datasets
+within the project structure, make sure to update the configuration and
 connectors to reflect as much.
 
 ### models/
 
 Location of saving of pickled models. Note, default to saving models in a git
-repository in order to log a git commit hash when building predictions or 
-evaluation model training. Make sure that the serialized version is of a 
+repository in order to log a git commit hash when building predictions or
+evaluation model training. Make sure that the serialized version is of a
 reasonable size (e.g., do not include training data in the model object).
 
-Metadata about models is about to be stored in `models/metadata`. See the 
+Metadata about models is about to be stored in `models/metadata`. See the
 included example for more information.s
 
 ### notebooks/
@@ -110,7 +110,7 @@ Location to save notebooks used for data and model exploration.
 
 ### reports/
 
-Location for reports and files necessary to reproduce report generation. 
+Location for reports and files necessary to reproduce report generation.
 Note that non-Python tools (e.g. RMarkdown) can be used as well.
 
 At least a explorative and delivery report are expected.
@@ -121,12 +121,12 @@ instead issue a warning.
 ### src/
 
 This directory should contain the logic for the model (training & prediction),
-ETL, helpers and potential apps. All source code relevant to a packaged 
-and deployable delivery should be contained in this folder. 
+ETL, helpers and potential apps. All source code relevant to a packaged
+and deployable delivery should be contained in this folder.
 
 ### tests/
 
-This directory contains the unittest by which you test your helper functions 
+This directory contains the unittest by which you test your helper functions
 and (deployed) model performance.
 
 ## Best practices for development

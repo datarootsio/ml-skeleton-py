@@ -1,6 +1,6 @@
-# {{ cookiecutter.project_name }}
+# `PROJECT NAME`
 
-{% if not cookiecutter.client == 'internal'%} > project for: {{ cookiecutter.client }} {% endif %} 
+> project for: `client name`  
 
 ## Objective
 
@@ -16,7 +16,7 @@
 
 ## Usage
 
-`ADD EXPLAINATION`
+`ADD EXPLANATION`
 
 ## Configuration
 
@@ -26,5 +26,5 @@
 
 `RELEVANT INFO ON DEPLOYMENT`
 
-> copyright by {{ cookiecutter.company }}
-> main developer {{ cookiecutter.main_dev }} ({{ cookiecutter.main_dev_email }}) 
+> copyright by dataroots
+> main developer `developer_name` (`developer email`)

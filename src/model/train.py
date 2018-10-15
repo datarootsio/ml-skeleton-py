@@ -13,6 +13,7 @@ import pandas as pd
 import click
 
 from ..helpers import metadata_to_file
+from .. import settings as s
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ def main(model_name, input_data):
     """
     # Load the iris dataset
     logging.info('Loading iris dataset')
-    iris = pd.read_csv(os.path.join(os.getenv('DATA_TRANSFORMED'), input_data))
+    iris = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, input_data))
     iris = iris.sample(frac=1)  # shuffle
 
     # drop species and target (petal_length)
@@ -51,12 +52,12 @@ def main(model_name, input_data):
     # save the model
     logger.info('Saving serialized model: {}'.format(model_name))
     joblib.dump(regr,
-                os.path.join(os.getenv('MODEL_DIR'),
+                os.path.join(s.MODEL_DIR,
                              '{}.p'.format(model_name)))
 
     # save relevant metadata
     logger.info('Saving model metadata for model: {}'.format(model_name))
-    metadata_to_file(path=os.getenv('MODEL_METADATA_DIR'),
+    metadata_to_file(path=s.MODEL_METADATA_DIR,
                      filename=model_name,
                      metadata={'model_name': model_name,
                                'extra': 'some extra information',

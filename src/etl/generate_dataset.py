@@ -4,6 +4,8 @@ import os
 import logging
 import shutil
 
+from .. import settings as s
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,8 +18,8 @@ def main():
     logger.info('Skipping staging, not relevant for this example')
 
     shutil.copyfile(
-        os.path.join(os.getenv('DATA_RAW'), 'iris.csv'),
-        os.path.join(os.getenv('DATA_TRANSFORMED'), 'iris.csv')
+        os.path.join(s.DATA_RAW, 'iris.csv'),
+        os.path.join(s.DATA_TRANSFORMED, 'iris.csv')
     )
 
     logger.info('Done')

@@ -13,6 +13,7 @@ import pandas as pd
 import click
 
 from ..helpers import base_metadata
+from .. import settings as s
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ def main(model_name, input_df, output_df):
     """
     # Deserialize the model
     logger.info('deserializing model: {}'.format(model_name))
-    regr = joblib.load(os.path.join(os.getenv('MODEL_DIR'),
+    regr = joblib.load(os.path.join(s.MODEL_DIR,
                                     '{}.p'.format(model_name)))
 
     # Run prediction
@@ -54,7 +55,7 @@ def main(model_name, input_df, output_df):
     # single observations at a time
     logger.info('prediction results: {}'.format(preds))
 
-    output_df_fn = os.path.join(os.getenv('DATA_PREDICTIONS'), output_df)
+    output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
     logger.info('storing saved prediction at: {}'.format(output_df_fn))
 
     logger.info('prediction base metadata: {}'.format(

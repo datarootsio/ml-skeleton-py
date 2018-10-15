@@ -18,9 +18,9 @@ NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
 # COMMANDS                                                    #
 ###############################################################
 
-init: create_environment requirements ## create environment & install requirements.txt
+init: create-environment requirements ## create environment & install requirements.txt
 
-create_environment: ## create a python environment
+create-environment: ## create a python environment
 	@echo ">>> removing old environment if exists"
 	@rm -rf ./env
 
@@ -46,7 +46,7 @@ prediction: ## predict new values, you can pass arguments as follows: make ARGS=
 	. activate ./env; \
 	python -m src.model.predict $(ARGS)
 
-generate_dataset: ## run new ETL pipeline
+generate-dataset: ## run new ETL pipeline
 	@echo ">>> generating dataset"
 	. activate ./env; \
 	python -m src.etl.generate_dataset $(ARGS)
@@ -55,14 +55,14 @@ lint: ## lint the code using flake8
 	@. activate ./env; \
 	flake8 src/
 
-count_test_files: ## count the number of present test files
+count-test-files: ## count the number of present test files
     ifeq (0, $(NO_OF_TEST_FILES))
 		$(error >>> No tests found)
     else
 	@echo ">>> OK, $(NO_OF_TEST_FILES) pytest file found"
     endif
 
-count_report_files: ## count the number of present report files
+count-report-files: ## count the number of present report files
     ifeq (0, $(NO_OF_REPORT_FILES))
 		$(warning >>> No report files found)
     else
@@ -75,7 +75,7 @@ pytest: ## run pytest tests
 	pytest tests
 
 
-test: init generate_dataset train prediction lint pytest count_test_files count_report_files ## run extensive tests
+test: init generate-dataset train prediction lint pytest count-test-files count-report-files ## run extensive tests
 
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

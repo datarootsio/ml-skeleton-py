@@ -48,7 +48,7 @@ prediction: ## predict new values, you can pass arguments as follows: make ARGS=
 
 generate_dataset: ## run new ETL pipeline
 	@echo ">>> generating dataset"
-	@. activate ./env; \
+	. activate ./env; \
 	python -m src.etl.generate_dataset $(ARGS)
 
 lint: ## lint the code using flake8
@@ -69,8 +69,11 @@ count_report_files: ## count the number of present report files
 	@echo ">>> OK, $(NO_OF_REPORT_FILES) report files found"
     endif
 
-pytest: ## run tox/pytest tests
-	tox
+pytest: ## run pytest tests
+	. activate ./env; \
+	pip install .; \
+	pytest tests
+
 
 test: init generate_dataset train prediction lint pytest count_test_files count_report_files ## run extensive tests
 

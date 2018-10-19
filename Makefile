@@ -37,14 +37,19 @@ requirements: ## install requirements specified in "requirements.txt"
 	pip install -r requirements.txt
 
 train: ## train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
-	@echo ">>> generating new predictions/estimates"
+	@echo ">>> training model"
 	. activate ./env; \
 	python -m src.model.train $(ARGS)
 
-prediction: ## predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
-	@echo ">>> training model"
+prediction: ## predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
+	@echo ">>> generating new predictions/estimates"
 	. activate ./env; \
 	python -m src.model.predict $(ARGS)
+
+deploy-endpoint: ## start flask server
+	@echo ">>> starting flask"
+	. activate ./env; \
+	python -m src.helpers.deploy_endpoint $(ARGS)
 
 generate-dataset: ## run new ETL pipeline
 	@echo ">>> generating dataset"

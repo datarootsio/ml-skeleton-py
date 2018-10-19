@@ -109,5 +109,6 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# adhoc
 .idea/
-beautifulml/
+.DS_Store

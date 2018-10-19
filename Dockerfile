@@ -1,9 +1,6 @@
-FROM continuumio/miniconda3
-RUN conda create -n env python=3.7
-RUN echo "source activate env" > ~/.bashrc
-ENV PATH /opt/conda/envs/env/bin:$PATH
-ADD requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
-# better to install requirements before because of docker caching
-ADD . /code
-WORKDIR /code
+FROM jupyter/datascience-notebook
+COPY requirements.txt /tmp/
+RUN pip install --requirement /tmp/requirements.txt && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+CMD start-notebook.sh

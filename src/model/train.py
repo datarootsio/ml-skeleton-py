@@ -12,8 +12,7 @@ import click
 
 from ..helpers import metadata_to_file, get_git_commit
 from .. import settings as s
-from sklearn.model_selection import KFold, train_test_split, cross_validate
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.model_selection import KFold, cross_validate
 
 logger = logging.getLogger(__name__)
 
@@ -39,35 +38,28 @@ def main(model_filename, input_data):
     iris_X = iris.drop(columns=['species', 'petal_length'])
     iris_y = iris['petal_length']
 
-    # Split the data into training/testing sets
-    iris_X_train, iris_X_test, iris_y_train, iris_y_test = \
-        train_test_split(iris_X, iris_y, test_size=0.2, random_state=0)
-
     # Create linear regression object
     regr = linear_model.LinearRegression()
 
     # Calculating CV score(s)
-    logger.info('Fitting linear model')
+    logger.info('Performing cross validation')
     cv = KFold(n_splits=5, shuffle=True, random_state=0)
-    scores = cross_validate(regr, iris_X_train, iris_y_train, cv=cv,
+    scores = cross_validate(regr, iris_X, iris_y, cv=cv,
                             scoring=['r2', 'neg_mean_squared_error'],
                             return_train_score=False, verbose=1)
     r2_cv_score = scores['test_r2'].mean()
     # cross_validate outputs negative mse
     mse_cv_score = - scores['test_neg_mean_squared_error'].mean()
 
-    # Train a model using the whole training set
-    logger.info('Fitting linear model')
-    regr.fit(iris_X_train, iris_y_train)
-
-    # Calculate test scores.
-    r2_test_score = r2_score(regr.predict(iris_X_test), iris_y_test)
-    mse_test_score = mean_squared_error(regr.predict(iris_X_test), iris_y_test)
+    # Train a model using the whole dataset
+    logger.info('Fitting linear model.')
+    regr.fit(iris_X, iris_y)
 
     # Format scores to be written to metadata.
+    # Beside cv score, we can have other scores (e.g. hold-out)
     scores = {
-        'r2': {'cv': r2_cv_score, 'test': r2_test_score},
-        'mse': {'cv': mse_cv_score, 'test': mse_test_score}
+        'r2': {'cv': r2_cv_score},
+        'mean_squared_error': {'cv': mse_cv_score},
     }
 
     # Save the model
@@ -80,9 +72,11 @@ def main(model_filename, input_data):
         .hexdigest()
 
     # Save relevant metadata.
-    logger.info('Saving model metadata for model: {}'.format(model_filename))
+    logger.info('Saving model metadata: {}'.format(model_filename))
     model_description = 'Predicting petal length (regression)'
-    testing_strategy = '5-fold cross validation, 20% testing (hold-out) set.'
+    testing_strategy = '5-fold cross validation, using mean ' \
+                       'to aggregate fold metrics, no hold-out set.'
+    feature_names = list(iris_X.columns.values)
     metadata_to_file(path=s.MODEL_METADATA_DIR,
                      filename='{}-{}'.format(model_filename, model_identifier),
                      metadata={
@@ -93,6 +87,7 @@ def main(model_filename, input_data):
                         'sklearn_object': regr,
                         'input_data_location': data_location,
                         'input_data_identifier': None,
+                        'feature_names': feature_names,
                         'testing_strategy': testing_strategy,
                         'scores': scores},
                      logger=logger)

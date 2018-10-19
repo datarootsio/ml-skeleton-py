@@ -51,6 +51,11 @@ def metadata_to_file(path, filename, metadata, logger=None):
     # bleh to backwards compat.. we need py3!
     metadata.update(base_metadata())
 
+    # add info specific to sklearn models
+    if metadata['sklearn_object'] is not None:
+        metadata['model_parameters'] = metadata['sklearn_object'].get_params()
+    del metadata['sklearn_object']
+
     fn = os.path.join(path, '{}.json'.format(filename))
     with open(fn, 'w') as f:
         json.dump(metadata, f, indent=4)

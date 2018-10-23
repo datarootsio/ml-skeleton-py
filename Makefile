@@ -36,6 +36,15 @@ requirements: ## install requirements specified in "requirements.txt"
 	. activate ./env; \
 	pip install -r requirements.txt
 
+generate-dataset: ## run new ETL pipeline
+	@echo ">>> generating dataset"
+	. activate ./env; \
+	python -m src.etl.generate_dataset $(ARGS)
+
+lint: ## lint the code using flake8
+	@. activate ./env; \
+	flake8 src/
+
 train: ## train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 	@echo ">>> training model"
 	. activate ./env; \
@@ -50,15 +59,6 @@ deploy-endpoint: ## start flask server
 	@echo ">>> starting flask"
 	. activate ./env; \
 	python -m src.helpers.deploy_endpoint $(ARGS)
-
-generate-dataset: ## run new ETL pipeline
-	@echo ">>> generating dataset"
-	. activate ./env; \
-	python -m src.etl.generate_dataset $(ARGS)
-
-lint: ## lint the code using flake8
-	@. activate ./env; \
-	flake8 src/
 
 count-test-files: ## count the number of present test files
     ifeq (0, $(NO_OF_TEST_FILES))
@@ -78,7 +78,6 @@ pytest: ## run pytest tests
 	. activate ./env; \
 	pip install .; \
 	pytest tests
-
 
 test: init generate-dataset train prediction lint pytest count-test-files count-report-files ## run extensive tests
 

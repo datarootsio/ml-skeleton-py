@@ -53,7 +53,8 @@ def metadata_to_file(path, filename, metadata, logger=None):
 
     # add info specific to sklearn models
     if metadata['sklearn_object'] is not None:
-        metadata['model_parameters'] = metadata['sklearn_object'].get_params()
+        metadata['model_hyperparameters'] = \
+            metadata['sklearn_object'].get_params()
     del metadata['sklearn_object']
 
     if check_scores_structure(metadata['scores']) is False:
@@ -91,7 +92,7 @@ def check_scores_structure(scores):
 
         metric_scores = scores[metric]
         for score in metric_scores:
-            if (score not in ['cv', 'hold-out'] and
+            if (score not in ['cross_val', 'hold_out'] and
                     not score.startswith('custom')):
                 return False
 

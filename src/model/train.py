@@ -19,18 +19,18 @@ logger = logging.getLogger(__name__)
 
 @click.command()
 @click.option('--model-filename', default='model')
-@click.option('--input-data', default='iris.csv')
-def main(model_filename, input_data):
+@click.option('--input-data-filename', default='iris.csv')
+def main(model_filename, input_data_filename):
     """Train and save a model. Calculate evaluation metrics. Write metadata.
 
     :param model_filename: name of file that stores serialized model
     (without extension)
-    :param input_data: name of file that holds data used to train the model
-    (with extension)
+    :param input_data_filename: name of file that holds data used to train
+    the model (with extension)
     """
     # Load the iris dataset
     logging.info('Loading iris dataset')
-    data_location = os.path.join(s.DATA_TRANSFORMED, input_data)
+    data_location = os.path.join(s.DATA_TRANSFORMED, input_data_filename)
     iris = pd.read_csv(data_location)
     iris = iris.sample(frac=1)  # shuffle
 
@@ -56,10 +56,10 @@ def main(model_filename, input_data):
     regr.fit(iris_X, iris_y)
 
     # Format scores to be written to metadata.
-    # Beside cv score, we can have other scores (e.g. hold-out)
+    # See the HOWTO to find the detailed explanation of the format.
     scores = {
-        'r2': {'cv': r2_cv_score},
-        'mean_squared_error': {'cv': mse_cv_score},
+        'r2': {'cross_val': r2_cv_score},
+        'mean_squared_error': {'cross_val': mse_cv_score},
     }
 
     # Save the model
@@ -73,6 +73,7 @@ def main(model_filename, input_data):
 
     # Save relevant metadata.
     logger.info('Saving model metadata: {}'.format(model_filename))
+    model_class = str(regr.__module__ + "." + regr.__class__.__name__)
     model_description = 'Predicting petal length (regression)'
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
@@ -81,7 +82,7 @@ def main(model_filename, input_data):
                      filename='{}-{}'.format(model_filename, model_identifier),
                      metadata={
                         'model_location': model_location,
-                        'model_type': str(regr.__class__),
+                        'model_type': model_class,
                         'model_description': model_description,
                         'model_identifier': model_identifier,
                         'sklearn_object': regr,

@@ -1,9 +1,9 @@
 """Example how to start Flask endpoint, to serve the predictions."""
 
 import os
-import sys
 import time
 
+import click
 from flask import Flask, request, jsonify
 import logging
 
@@ -13,6 +13,7 @@ from sklearn.externals import joblib
 
 logger = logging.getLogger(__name__)
 app = Flask(__name__)
+model = None
 
 
 @app.route('/predict')
@@ -58,17 +59,24 @@ def generate_response(model, features):
     }
 
 
-if __name__ == '__main__':
-    # Name of the model is given as a second argument
-    # (script name is the first argument always).
-    if len(sys.argv) == 1:
-        model_name = 'model'
-    else:
-        model_name = sys.argv[1]
+@click.command()
+@click.option('--host', default='localhost')
+@click.option('--port', default=5000)
+@click.option('--model-name', default='model')
+def main(host, port, model_name):
+    """Load model and start flask app.
 
+    :param host: server host
+    :param port: port
+    """
     logger.info('Deserializing model: {}'.format(model_name))
+    global model
     model = joblib.load(os.path.join
                         (settings.MODEL_DIR, '{}.p'.format(model_name)))
 
     logger.info('Starting flask server...')
-    app.run(debug=True)
+    app.run(host=host, port=port, debug=True)
+
+
+if __name__ == '__main__':
+    main()

@@ -5,6 +5,7 @@ import sklearn
 import sys
 import subprocess
 import datetime
+from .. import settings as s
 
 
 def get_git_commit():
@@ -34,7 +35,8 @@ def base_metadata():
 
 
 def metadata_to_file(path, filename, metadata, logger=None):
-    """Save metadata for e.g. trained models.
+    """
+    Save metadata for e.g. trained models.
 
     Note, there should be type checking here (and elsewhere): figure out way
     to do this in a clean py2/3 compat mode.
@@ -97,3 +99,22 @@ def check_scores_structure(scores):
                 return False
 
     return True
+
+
+def most_recent_model_id():
+    """Return id of the most recent model."""
+    metadata_maps = []
+    for file in os.listdir(s.MODEL_METADATA_DIR):
+        if file.endswith('.json'):
+            file_path = "{}/{}".format(s.MODEL_METADATA_DIR, file)
+            with open(file_path, 'r') as f:
+                dict = json.load(f)
+                metadata_maps.append(dict)
+
+    metadata_maps = sorted(metadata_maps,
+                           key=lambda dict: dict['timestamp'],
+                           reverse=True)
+
+    if len(metadata_maps) > 0:
+        return metadata_maps[0]['model_identifier']
+    return None

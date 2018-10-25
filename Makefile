@@ -57,8 +57,8 @@ prediction: ## predict new values, you can pass arguments as follows: make ARGS=
 	. activate ./env; \
 	python -m src.model.predict $(ARGS)
 
-deploy-endpoint: ## start flask server, you can pass arguments as follows: make ARGS="--model_name 10" deploy-endpoint
-    ## do not set --host and --port in ARGS explicitly, but through env variables, or omit them and use defaults
+deploy-endpoint: ## start flask server, you can pass arguments as follows: make ARGS="--model_path 'some_path'" deploy-endpoint
+    ## do not set --host and --port in ARGS explicitly, but through env variables, or omit them to use defaults
 	@echo ">>> starting flask"
 	. activate ./env; \
 	python -m src.helpers.deploy_endpoint --host $(FLASK_ENDPOINT_HOST) --port $(FLASK_ENDPOINT_PORT) $(ARGS)

@@ -15,7 +15,7 @@ app = Flask(__name__)
 model = None
 
 
-@app.route('/predict')
+@app.route('/predict', methods = ['POST'])
 def predict():
     """Return prediction for given request."""
     try:
@@ -68,19 +68,20 @@ def generate_response(model, features):
 
 
 @click.command()
+@click.option('--model-path',
+              default=os.path.join(settings.MODEL_DIR, '{}.p'.format('model')))
 @click.option('--host', default='localhost')
 @click.option('--port', default=5000)
-@click.option('--model-name', default='model')
-def main(host, port, model_name):
+def main(host, port, model_path):
     """Load model and start flask app.
 
+    :param model_path: path to serialized model
     :param host: server host
     :param port: port
     """
-    logger.info('Deserializing model: {}'.format(model_name))
+    logger.info('Deserializing model: {}'.format(model_path))
     global model
-    model = joblib.load(os.path.join
-                        (settings.MODEL_DIR, '{}.p'.format(model_name)))
+    model = joblib.load(model_path)
 
     logger.info('Starting flask server...')
     app.run(host=host, port=port, debug=True)

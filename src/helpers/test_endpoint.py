@@ -11,6 +11,6 @@ if __name__ == '__main__':
         ]
     }
 
-    response = requests.get("{}/predict".format('http://localhost:5000'),
+    response = requests.post("{}/predict".format('http://localhost:5000'),
                             json=input_json)
     print(response.json())

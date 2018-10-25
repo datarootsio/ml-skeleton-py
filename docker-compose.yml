@@ -1,5 +1,13 @@
 version: '3'
 services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+    - "5000:5000"
+
   jupyter:
     build: .
     ports:

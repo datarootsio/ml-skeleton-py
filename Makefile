@@ -82,6 +82,8 @@ pytest: ## run pytest tests
 	pip install .; \
 	pytest tests
 
+init-train: init generate-dataset train
+
 test: init generate-dataset train prediction lint pytest count-test-files count-report-files ## run extensive tests
 
 help: ## show help on available commands

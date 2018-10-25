@@ -34,7 +34,7 @@ def base_metadata():
             'timestamp': str(datetime.datetime.now())}
 
 
-def metadata_to_file(path, filename, metadata, logger=None):
+def generate_metadata(path, filename, metadata, logger=None):
     """
     Save metadata for e.g. trained models.
 
@@ -101,6 +101,7 @@ def check_scores_structure(scores):
     return True
 
 
+# Deprecated method! We will keep it for now in case it is useful.
 def most_recent_model_id():
     """Return id of the most recent model."""
     metadata_maps = []

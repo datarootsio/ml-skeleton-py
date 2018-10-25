@@ -10,7 +10,7 @@ from sklearn.externals import joblib
 import pandas as pd
 import click
 
-from ..helpers import metadata_to_file, get_git_commit
+from ..helpers import generate_metadata, get_git_commit
 from .. import settings as s
 from sklearn.model_selection import KFold, cross_validate
 
@@ -62,36 +62,45 @@ def main(model_filename, input_data_filename):
         'mean_squared_error': {'cross_val': mse_cv_score},
     }
 
-    # Save the model
-    model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
-    logger.info('Saving serialized model: {}'.format(model_filename))
-    joblib.dump(regr, model_location)
-    model_identifier = hashlib.sha1(
-        str(get_git_commit()).encode('utf-8') +
-        str(datetime.datetime.now()).encode('utf-8'))\
-        .hexdigest()
-
-    # Save relevant metadata.
-    logger.info('Saving model metadata: {}'.format(model_filename))
+    # Create metadata
     model_class = str(regr.__module__ + "." + regr.__class__.__name__)
     model_description = 'Predicting petal length (regression)'
+    model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
+    model_id = hashlib.sha1(
+        str(get_git_commit()).encode('utf-8') +
+        str(datetime.datetime.now()).encode('utf-8')) \
+        .hexdigest()
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
     feature_names = list(iris_X.columns.values)
-    metadata_to_file(path=s.MODEL_METADATA_DIR,
-                     filename='{}-{}'.format(model_filename, model_identifier),
-                     metadata={
-                        'model_location': model_location,
-                        'model_type': model_class,
-                        'model_description': model_description,
-                        'model_identifier': model_identifier,
-                        'sklearn_object': regr,
-                        'input_data_location': data_location,
-                        'input_data_identifier': None,
-                        'feature_names': feature_names,
-                        'testing_strategy': testing_strategy,
-                        'scores': scores},
-                     logger=logger)
+    metadata = {
+                'model_location': model_location,
+                'model_type': model_class,
+                'model_description': model_description,
+                'model_identifier': model_id,
+                'sklearn_object': regr,
+                'input_data_location': data_location,
+                'input_data_identifier': None,
+                'feature_names': feature_names,
+                'testing_strategy': testing_strategy,
+                'scores': scores
+    }
+
+    # Save the model. We want to save model and git ids along with the model.
+    # This information will be used when generating API response, for example.
+    regr._custom_metadata_ids = {
+        'model_identifier': model_id,
+        'git_commit': get_git_commit()
+    }
+    logger.info('Saving serialized model: {}'.format(model_filename))
+    joblib.dump(regr, model_location)
+
+    # Save relevant metadata in separate json file.
+    logger.info('Saving model metadata: {}'.format(model_filename))
+    generate_metadata(path=s.MODEL_METADATA_DIR,
+                      filename='{}-{}'.format(model_filename, model_id),
+                      metadata=metadata,
+                      logger=logger)
 
 
 if __name__ == '__main__':

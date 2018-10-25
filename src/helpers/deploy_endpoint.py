@@ -8,7 +8,6 @@ from flask import Flask, request, jsonify
 import logging
 
 from src import settings
-from src.helpers import most_recent_model_id
 from sklearn.externals import joblib
 
 logger = logging.getLogger(__name__)
@@ -49,12 +48,16 @@ def generate_response(model, features):
     """
     start_time = time.time()
     prediction = list(model.predict(features))
-    model_id = most_recent_model_id()
+    model_id = model._custom_metadata_ids['model_identifier']
+    model_git_commit = model._custom_metadata_ids['git_commit']
     elapsed_time = time.time() - start_time
 
     return {
-        'model_id': model_id,
-        'prediction': prediction,
+        'release': {
+            'model_id': model_id,
+            'git_commit': model_git_commit
+        },
+        'result': prediction,
         'timing': elapsed_time
     }
 

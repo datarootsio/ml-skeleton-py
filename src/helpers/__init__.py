@@ -1,13 +1,13 @@
 """Helpers package."""
 
 from .metadata import (
-    metadata_to_file,
+    generate_metadata,
     base_metadata,
     get_git_commit,
     most_recent_model_id
 )
 
-__all__ = ['metadata_to_file',
+__all__ = ['generate_metadata',
            'base_metadata',
            'get_git_commit',
            'most_recent_model_id']

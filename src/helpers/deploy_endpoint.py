@@ -15,7 +15,7 @@ app = Flask(__name__)
 model = None
 
 
-@app.route('/predict', methods = ['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     """Return prediction for given request."""
     try:

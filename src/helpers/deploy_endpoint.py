@@ -1,5 +1,5 @@
 """Example how to start Flask endpoint, to serve the predictions."""
-
+import numpy
 import os
 import time
 
@@ -23,7 +23,7 @@ def predict():
         features = data['features']
 
         if not isinstance(features, list):
-            return jsonify('Features parametar must be a list of entries.'
+            return jsonify('Features parametar must be a list of entries. '
                            'Each entry is a list of feature values')
 
         logger.info('Calculating prediction for input data: {}'
@@ -46,8 +46,13 @@ def generate_response(model, features):
     Each entry is a list of feature values.
     :return: Response from api endpoint.
     """
+    assert isinstance(features, list)
+    np_features = numpy.array(features)
+    if np_features.ndim == 1:
+        np_features = np_features.reshape(1, -1)
+
     start_time = time.time()
-    prediction = list(model.predict(features))
+    prediction = list(model.predict(np_features))
     model_id = model._custom_metadata_ids['model_identifier']
     model_git_commit = model._custom_metadata_ids['git_commit']
     elapsed_time = time.time() - start_time

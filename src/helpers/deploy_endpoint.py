@@ -6,12 +6,11 @@ import time
 import click
 from flask import Flask, request, jsonify
 import logging
-
-from src import settings
 from sklearn.externals import joblib
 
 logger = logging.getLogger(__name__)
 app = Flask(__name__)
+app.config.from_pyfile(os.path.join('..', 'settings.py'))
 model = None
 
 
@@ -68,8 +67,8 @@ def generate_response(model, features):
 
 
 @click.command()
-@click.option('--model-path',
-              default=os.path.join(settings.MODEL_DIR, '{}.p'.format('model')))
+@click.option('--model-path', default='{}/model.p'.
+              format(app.config.get('MODEL_DIR')))
 @click.option('--host', default='localhost')
 @click.option('--port', default=5000)
 def main(host, port, model_path):

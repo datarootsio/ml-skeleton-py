@@ -69,7 +69,7 @@ def generate_response(model, features):
 @click.command()
 @click.option('--model-path', default='{}/model.p'.
               format(app.config.get('MODEL_DIR')))
-@click.option('--host', default='localhost')
+@click.option('--host', default='0.0.0.0')
 @click.option('--port', default=5000)
 def main(host, port, model_path):
     """Load model and start flask app.

@@ -13,14 +13,12 @@ CONDA_PY_VERSION := "3.7"
 NO_OF_TEST_FILES := $(words $(wildcard tests/test_*.py))
 NO_OF_REPORT_FILES := $(words $(wildcard reports/))
 NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
-FLASK_ENDPOINT_HOST ?= "localhost"
+FLASK_ENDPOINT_HOST ?= "0.0.0.0"
 FLASK_ENDPOINT_PORT ?= 5000
 
 ###############################################################
 # COMMANDS                                                    #
 ###############################################################
-
-init: create-environment requirements ## create environment & install requirements.txt
 
 create-environment: ## create a python environment
 	@echo ">>> removing old environment if exists"
@@ -82,9 +80,15 @@ pytest: ## run pytest tests
 	pip install .; \
 	pytest tests
 
-init-train: init generate-dataset train
+init: create-environment requirements ## create environment & install requirements.txt
+
+init-train: init generate-dataset train ## create environment & train the model
 
 test: init generate-dataset train prediction lint pytest count-test-files count-report-files ## run extensive tests
+
+## build: ## package the project
+##    @echo ">>> building package"
+##    python setup.py sdist bdist_wheel
 
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

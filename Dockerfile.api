@@ -2,5 +2,6 @@ FROM continuumio/miniconda3
 RUN apt-get update && apt-get install make
 ADD . /project-ml-skeleton
 WORKDIR /project-ml-skeleton
+EXPOSE 5000
 RUN make init-train
-# ENTRYPOINT ["make", "deploy-endpoint"]
+ENTRYPOINT ["make", "deploy-endpoint"]

@@ -119,8 +119,6 @@ CONDA_EXEC (e.g. conda)
 Note:  
 These variables are set in Makefile (where we use only conda currently), but this will be changed so we can support both conda and pip.
 
-TODO: 
-- add docker-compose instructions (and how to setup pycharm to use this container)
 
 ## Makefile and test example
 
@@ -134,15 +132,38 @@ generate_dataset               run new ETL pipeline, to generate dataset from ra
 lint                           lint the code using flake8
 train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
+deploy-endpoint                start Flask endpoint for calculating predictions
 count_report_files             count the number of present report files
 count_test_files               count the number of present test files
 pytest                         run tox/pytest tests
 init                           create environment & install requirements.txt
+init-train:                    create environment & train the model
 test                           run extensive test
 ```
 
 Note the dependency: `generate_dataset` > `train` > `prediction`.
 
+## Creating API endpoint
+
+Calling `make deploy-endpoint` will start Flask endpoint, which will calculate predictions for new data,
+using up-to-date model. `deploy-endpoint` can accept three parameters (model path, host and port). 
+Default configuration is to use host 0.0.0.0 and port 5000.
+
+Detailed description of valid requests/responses is given in `swagger_specification.json`,
+within the root of the project.
+
+## Dockerization
+
+Currently you can find two docker files within the project root. 
+1. `Dockerfile` builds an image for running notebooks.
+2. `Dockerfile.api` builds an image for starting API endpoint. When building image,
+initial model will be trained and included in image definition. You can build image using following command:
+`docker build -t your_tag -f Dockerfile.api .`, and run as `docker run -d -p 5000:5000 your_tag`.
+After this, requests are accepted on localhost, port 5000.
+
+Finally, you can start both services using `docker-compose`.
+TODO: 
+- add docker-compose instructions (and how to setup pycharm to use this container)
 
 ## Best practices for development
 

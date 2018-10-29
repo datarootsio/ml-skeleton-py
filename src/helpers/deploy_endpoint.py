@@ -60,8 +60,8 @@ def generate_response(model, features):
 
     start_time = time.time()
     prediction = list(model.predict(np_features))
-    model_id = model._custom_metadata_ids['model_identifier']
-    model_git_commit = model._custom_metadata_ids['git_commit']
+    model_id = model._custom_metadata['model_identifier']
+    model_git_commit = model._custom_metadata['git_commit']
     elapsed_time = time.time() - start_time
 
     return {

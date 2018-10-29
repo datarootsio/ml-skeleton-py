@@ -1,16 +1,15 @@
 """Train example. Regression on iris dataset."""
 
-import datetime
 import os
 import logging
-import hashlib
 
 from sklearn import linear_model
 from sklearn.externals import joblib
 import pandas as pd
 import click
 
-from ..helpers import generate_metadata, get_git_commit
+from src.helpers.metadata import save_metadata
+from ..helpers import generate_metadata
 from .. import settings as s
 from sklearn.model_selection import KFold, cross_validate
 
@@ -63,44 +62,31 @@ def main(model_filename, input_data_filename):
     }
 
     # Create metadata
-    model_class = str(regr.__module__ + "." + regr.__class__.__name__)
     model_description = 'Predicting petal length (regression)'
     model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
-    model_id = hashlib.sha1(
-        str(get_git_commit()).encode('utf-8') +
-        str(datetime.datetime.now()).encode('utf-8')) \
-        .hexdigest()
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
-    feature_names = list(iris_X.columns.values)
-    metadata = {
-                'model_location': model_location,
-                'model_type': model_class,
-                'model_description': model_description,
-                'model_identifier': model_id,
-                'sklearn_object': regr,
-                'input_data_location': data_location,
-                'input_data_identifier': None,
-                'feature_names': feature_names,
-                'testing_strategy': testing_strategy,
-                'scores': scores
+    extra_metadata = {
+        'data_type': 'csv'
     }
+    metadata = generate_metadata(model_location, model_description,
+                                 regr, data_location, None, iris_X,
+                                 testing_strategy, scores,
+                                 extra_metadata=extra_metadata)
 
-    # Save the model. We want to save model and git ids along with the model.
+    # Save the model. We want to save metadata along with the model.
     # This information will be used when generating API response, for example.
-    regr._custom_metadata_ids = {
-        'model_identifier': model_id,
-        'git_commit': get_git_commit()
-    }
+    regr._custom_metadata = metadata
     logger.info('Saving serialized model: {}'.format(model_filename))
     joblib.dump(regr, model_location)
 
     # Save relevant metadata in separate json file.
     logger.info('Saving model metadata: {}'.format(model_filename))
-    generate_metadata(path=s.MODEL_METADATA_DIR,
-                      filename='{}-{}'.format(model_filename, model_id),
-                      metadata=metadata,
-                      logger=logger)
+    model_id = metadata['model_identifier']
+    save_metadata(path=s.MODEL_METADATA_DIR,
+                  filename='{}-{}'.format(model_filename, model_id),
+                  metadata=metadata,
+                  logger=logger)
 
 
 if __name__ == '__main__':

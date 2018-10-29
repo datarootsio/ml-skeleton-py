@@ -5,6 +5,8 @@ import sklearn
 import sys
 import subprocess
 import datetime
+import hashlib
+
 from .. import settings as s
 
 
@@ -34,12 +36,91 @@ def base_metadata():
             'timestamp': str(datetime.datetime.now())}
 
 
-def generate_metadata(path, filename, metadata, logger=None):
+def generate_metadata(model_location, model_description, model_object,
+                      data_location, data_identifier, features_object,
+                      testing_strategy, scores, model_hyperparameters=None,
+                      extra_metadata=None):
     """
-    Save metadata for e.g. trained models.
+    Generate metadata for provided information.
 
-    Note, there should be type checking here (and elsewhere): figure out way
-    to do this in a clean py2/3 compat mode.
+    More detailed documentation can be found in HOWTO.
+
+    :param model_location: Path to saved serialized model.
+    :param model_description: Textual description of the model (free-form).
+    :param model_object: Model object.
+    :param data_location: Path to data used for model training.
+    :param data_identifier: Uniquely identify data version used for training
+    the model. Useful for model reproducibility. Can be None if it is not
+    possible to have such identifier.
+    :param features_object: Object (dataframe) representing train data
+    (only features, no labels).
+    :param testing_strategy: Description of the strategy used for
+    testing/evaluating model.
+    :param scores: Model evaluation results. Refer to HOWTO for more details.
+    :param model_hyperparameters: Map (key-value pairs) containing
+    hyperparameters used when model was fitted.
+    :param extra_metadata: Additional metadata user can provide as a map.
+    :return: metadata object
+    """
+    if model_object is None:
+        raise Exception('Model object must be provided for metadata.')
+    if features_object is None:
+        raise Exception('Features object must be provided for metadata.')
+
+    if check_scores_structure(scores) is False:
+        raise Exception('Metada format for \'scores\' field is not valid.')
+
+    # Extract several metadata...
+
+    model_type = str(model_object.__module__
+                     + "." + model_object.__class__.__name__)
+
+    model_id = hashlib.sha1(
+        str(get_git_commit()).encode('utf-8') +
+        str(datetime.datetime.now()).encode('utf-8')) \
+        .hexdigest()
+
+    feature_names = list(features_object.columns.values)
+    num_data_rows = features_object.shape[0]
+    num_data_features = features_object.shape[1]
+
+    if model_hyperparameters is None:
+        if isinstance(model_object, sklearn.base.BaseEstimator):
+            model_hyperparameters = model_object.get_params()
+
+    model_object_size = '{} bytes'.format(sys.getsizeof(model_object))
+    data_object_size = '{} bytes'.format(sys.getsizeof(features_object))
+
+    metadata = {
+        'model_location': model_location,
+        'model_description': model_description,
+        'model_identifier': model_id,
+        'model_type': model_type,
+        'model_hyperparameters': model_hyperparameters,
+        'model_size': model_object_size,
+        'input_data_location': data_location,
+        'input_data_identifier': data_identifier,
+        'num_data_rows': num_data_rows,
+        'num_data_features': num_data_features,
+        'feature_names': feature_names,
+        'data_size': data_object_size,
+        'testing_strategy': testing_strategy,
+        'scores': scores
+    }
+
+    if extra_metadata is not None:
+        metadata.update(extra_metadata)
+
+    # TODO: this could have unwanted side effects: fix
+    # bleh to backwards compat.. we need py3!
+    metadata.update(base_metadata())
+
+    return metadata
+
+
+def save_metadata(path, filename, metadata, logger=None):
+    """
+    Save metadata for trained models.
 
     :param path: path were to save json file
     :param filename: filename without '.json' extension
@@ -48,19 +129,6 @@ def generate_metadata(path, filename, metadata, logger=None):
     :param logger: will also log to logger (INFO) if supplied
     """
     assert isinstance(metadata, dict)
-
-    # TODO: this could have unwanted side effects: fix
-    # bleh to backwards compat.. we need py3!
-    metadata.update(base_metadata())
-
-    # add info specific to sklearn models
-    if metadata['sklearn_object'] is not None:
-        metadata['model_hyperparameters'] = \
-            metadata['sklearn_object'].get_params()
-    del metadata['sklearn_object']
-
-    if check_scores_structure(metadata['scores']) is False:
-        raise Exception('Metada format for \'scores\' field is not valid.')
 
     fn = os.path.join(path, '{}.json'.format(filename))
     with open(fn, 'w') as f:

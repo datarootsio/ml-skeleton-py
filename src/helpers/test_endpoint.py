@@ -1,6 +1,7 @@
 """Example of calling API endpoint."""
 
 import requests
+from .. import settings as s
 
 if __name__ == '__main__':
 
@@ -11,7 +12,8 @@ if __name__ == '__main__':
         ]
     }
 
-    response = requests.post("{}/predict"
-                             .format('http://localhost:5000'),
+    response = requests.post("http://{}:{}/predict"
+                             .format(s.FLASK_ENDPOINT_HOST,
+                                     s.FLASK_ENDPOINT_PORT),
                              json=input_json)
     print(response.json())

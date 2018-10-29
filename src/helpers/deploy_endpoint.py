@@ -1,6 +1,5 @@
 """Example how to start Flask endpoint, to serve the predictions."""
 import numpy
-import os
 import time
 
 import click
@@ -9,31 +8,40 @@ import logging
 from sklearn.externals import joblib
 
 logger = logging.getLogger(__name__)
-app = Flask(__name__)
-app.config.from_pyfile(os.path.join('..', 'settings.py'))
-model = None
 
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    """Return prediction for given request."""
-    try:
-        data = request.get_json()
-        features = data['features']
+def create_flask_app(model_path):
+    """Create flask app for given model.
 
-        if not isinstance(features, list):
-            return jsonify('Features parametar must be a list of entries. '
-                           'Each entry is a list of feature values')
+    :param model_path: path to serialized model
+    :return: Flask app instance.
+    """
+    app = Flask(__name__)
+    logger.info('Deserializing model: {}'.format(model_path))
+    model = joblib.load(model_path)
 
-        logger.info('Calculating prediction for input data: {}'
-                    .format(features))
-        response = generate_response(model, features)
+    @app.route('/predict', methods=['POST'])
+    def predict():
+        """Return prediction for given request."""
+        try:
+            data = request.get_json()
+            features = data['features']
 
-        logger.info('Response: {}'.format(response))
-    except Exception as e:
-        return jsonify('Error occurred. {}'.format(str(e)))
+            if not isinstance(features, list):
+                return jsonify('Features parametar must be a list of entries. '
+                               'Each entry is a list of feature values')
 
-    return jsonify(response)
+            logger.info('Calculating prediction for input data: {}'
+                        .format(features))
+            response = generate_response(model, features)
+
+            logger.info('Response: {}'.format(response))
+        except Exception as e:
+            return jsonify('Error occurred. {}'.format(str(e)))
+
+        return jsonify(response)
+
+    return app
 
 
 def generate_response(model, features):
@@ -67,21 +75,19 @@ def generate_response(model, features):
 
 
 @click.command()
-@click.option('--model-path', default='{}/model.p'.
-              format(app.config.get('MODEL_DIR')))
+@click.option('--model-path', default='./models/model.p')
+# For now this is fixed, because with issues with Flask relative imports.
 @click.option('--host', default='0.0.0.0')
 @click.option('--port', default=5000)
 def main(host, port, model_path):
-    """Load model and start flask app.
+    """Load model and create flask app.
 
     :param model_path: path to serialized model
     :param host: server host
     :param port: port
     """
-    logger.info('Deserializing model: {}'.format(model_path))
-    global model
-    model = joblib.load(model_path)
-
+    print(model_path)
+    app = create_flask_app(model_path)
     logger.info('Starting flask server...')
     app.run(host=host, port=port, debug=True)
 

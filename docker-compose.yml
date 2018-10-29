@@ -10,7 +10,9 @@ services:
     - "5000:5000"
 
   jupyter:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
     ports:
     - "8888:8888"
     volumes:

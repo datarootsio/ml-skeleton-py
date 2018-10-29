@@ -13,8 +13,6 @@ CONDA_PY_VERSION := "3.7"
 NO_OF_TEST_FILES := $(words $(wildcard tests/test_*.py))
 NO_OF_REPORT_FILES := $(words $(wildcard reports/))
 NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
-FLASK_ENDPOINT_HOST ?= "0.0.0.0"
-FLASK_ENDPOINT_PORT ?= 5000
 
 ###############################################################
 # COMMANDS                                                    #
@@ -55,11 +53,10 @@ prediction: ## predict new values, you can pass arguments as follows: make ARGS=
 	. activate ./env; \
 	python -m src.model.predict $(ARGS)
 
-deploy-endpoint: ## start flask server, you can pass arguments as follows: make ARGS="--model_path 'some_path'" deploy-endpoint
-    ## do not set --host and --port in ARGS explicitly, but through env variables, or omit them to use defaults
+deploy-endpoint: ## start flask server, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" deploy-endpoint
 	@echo ">>> starting flask"
 	. activate ./env; \
-	python -m src.helpers.deploy_endpoint --host $(FLASK_ENDPOINT_HOST) --port $(FLASK_ENDPOINT_PORT) $(ARGS)
+	python -m src.helpers.deploy_endpoint $(ARGS)
 
 count-test-files: ## count the number of present test files
     ifeq (0, $(NO_OF_TEST_FILES))

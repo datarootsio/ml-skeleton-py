@@ -155,13 +155,14 @@ within the root of the project.
 ## Dockerization
 
 Currently you can find two docker files within the project root. 
-1. `Dockerfile` builds an image for running notebooks.
+1. `Dockerfile.jupyter` builds an image for running notebooks.
 2. `Dockerfile.api` builds an image for starting API endpoint. When building image,
 initial model will be trained and included in image definition. You can build image using following command:
 `docker build -t your_tag -f Dockerfile.api .`, and run as `docker run -d -p 5000:5000 your_tag`.
 After this, requests are accepted on localhost, port 5000.
 
-Finally, you can start both services using `docker-compose`.
+Finally, you can start both services using `docker-compose`:
+for example `docker-compose up jupyter` and `docker-compose up api`.
 TODO: 
 - add docker-compose instructions (and how to setup pycharm to use this container)
 

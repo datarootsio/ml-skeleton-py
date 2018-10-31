@@ -29,10 +29,11 @@ create-environment: ## create a python environment
 		@echo ">>> conda environment created, activate with: source activate ./env"
     endif
 
-requirements: ## install requirements specified in "requirements.txt"
-	@echo ">>> installing requirements.txt"
+requirements: ## install requirements and mlmonkey
+	@echo ">>> installing requirements and mlmonkey"
 	. activate ./env; \
-	pip install -r requirements.txt
+	pip install -r requirements.txt; \
+	pip install mlmonkey/.
 
 generate-dataset: ## run new ETL pipeline
 	@echo ">>> generating dataset"

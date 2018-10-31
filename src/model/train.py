@@ -64,13 +64,14 @@ def main(model_filename, input_data_filename):
     # Create metadata
     model_description = 'Predicting petal length (regression)'
     model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
+    feature_names = iris_X.columns.values.tolist()
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
     extra_metadata = {
         'data_type': 'csv'
     }
     metadata = generate_metadata(model_location, model_description,
-                                 regr, data_location, None, iris_X,
+                                 regr, data_location, None, feature_names,
                                  testing_strategy, scores,
                                  extra_metadata=extra_metadata)
 

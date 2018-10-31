@@ -1,0 +1,3 @@
+[submodule "mlmonkey"]
+	path = mlmonkey
+	url = https://gitlab.com/dataroots/public/mlmonkey.git

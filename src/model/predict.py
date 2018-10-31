@@ -12,7 +12,7 @@ from sklearn.externals import joblib
 import pandas as pd
 import click
 
-from ..helpers import base_metadata
+from mlmonkey.metadata import base_metadata
 from .. import settings as s
 
 logger = logging.getLogger(__name__)

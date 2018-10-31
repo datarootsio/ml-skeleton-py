@@ -83,47 +83,8 @@ This directory contains the unittests by which you test your helper functions an
 
 ## Model metadata
 
-Here is list of arguments we provide to generate metadata:
-1. `model_location`: Path to saved serialized model.
-2. `model_description`: Textual description of the model (free-form).
-3. `model_object`: Model object. Used only for automatic extraction of additional metadata (e.g model type, size etc).
-4. `data_location`: Path to data used for model training.
-5. `data_identifier`: In case we want to reproduce model, it is important to have version of the data used for training, if possible.  
-Data identifier should be any value that can help us to get right version of the data.  
-For example, that can include id of the last row in dataset, if that dataset is always updated by appending new rows.
-6. `features_object`: Object (dataframe) representing train data (only features, no labels).  
-Used only for automatic extraction of additional metadata (e.g. feature names).
-7. `testing_strategy`: Description of the strategy used for testing/evaluating model, i.e. calculating `scores`.  
-It should be detailed so the scores can be reproduced. For example, include information if you used cross validation and/or holdout set  
-and what setup (number of folds, stratification etc).
-8. `scores`: Model evaluation results. These scores should be formatted as map containing one or more metrics:  
-`metric name: scores map`, where scores map can contain multiple key-value pairs of type: `strategy name: score value`.  
-There are constraints on what can be valid metric name, and what can be strategy name.  
-Valid metric names: Those listed in `sklearn.metrics.SCORERS.keys()` +   
-`['log_loss', 'mean_absolute_error', 'mean_squared_error', 'mean_squared_log_error', 'median_absolute_error']`  
-In addition, if you want to use some alternative metric, you can include it but you must set its name to start with 'custom'.  
-Valid names for testing strategy: `['cross_val', 'hold_out']`, or other strategy which name must start with 'custom'.
-9. `model_hyperparameters`: Map (key-value pairs) containing hyperparameters used when model was fitted. If not provided,  
-and if the `model object` is of sklearn type, these hyper-parameters are extracted automatically using sklearn method.
-10. `extra_metadata`: Additional metadata user can provide. These metadata can be for example:
-- data type (e.g. csv), which can not be easily extracted automatically since we can have many formats, including distributed datasets, 
-- training time on given samples - which might depend whether it's about training on whole dataset, cv,  
-which hardware was used etc. Some of these info might be automatically extracted. For now, free-text description might be enough.
-
-
-Based on these 10 provided arguments, some additional metadata is automatically extracted:
-1. `model_identifier`: Unique ID of the model. Calculated as hash of concatenated git commit number and timestamp.
-2. `model_type`: Name of the Python class for the model instance. Eg: sklearn.linear_model.base.LinearRegression.
-3. `model_size`: Size of model object (when loaded in RAM) in bytes.
-4. `num_data_rows`: Number of rows (observations) in input data.
-5. `num_data_features`: Number of features in input data.
-6. `feature_names`: Names of features used for model training.  
-Don't need to be the same as names of columns in original (raw) input data.
-7. `data_size`: size of `features_object`, in bytes.
-8. `git_commit`: Number of git commit associated with the code version used when model was trained.
-9. `timestamp`: Time when metadata was generated.
- 
-We don't keep information about feature engineering in metadata, but rather in the reports.
+After training the model, metadata are being generated, using helper methods  from `mlmonkey` package.  
+For details on how metadata are generated, refer to documentation of that package.
 
 
 ## Setup the environment
@@ -166,9 +127,7 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 Calling `make deploy-endpoint` will start Flask endpoint, which will calculate predictions for new data,  
 using up-to-date model. `deploy-endpoint` can accept three parameters (model path, host and port).   
 Default configuration is to use host 0.0.0.0 and port 5000.
-
-Detailed description of valid requests/responses is given in `swagger_specification.json`,  
-within the root of the project.
+For detailed description of valid requests/responses, refer to `mlmonkey` package documentation. 
 
 
 ## Dockerization

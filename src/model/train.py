@@ -8,10 +8,10 @@ from sklearn.externals import joblib
 import pandas as pd
 import click
 
-from src.helpers.metadata import save_metadata
-from ..helpers import generate_metadata
 from .. import settings as s
 from sklearn.model_selection import KFold, cross_validate
+
+from mlmonkey.metadata import save_metadata, generate_metadata
 
 logger = logging.getLogger(__name__)
 

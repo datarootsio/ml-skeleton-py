@@ -11,9 +11,9 @@ import click
 from .. import settings as s
 from sklearn.model_selection import KFold, cross_validate
 
-from mlmonkey.metadata import save_metadata, generate_metadata
+from mlmonkey.metadata import ModelMetadata
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 @click.command()
@@ -56,10 +56,10 @@ def main(model_filename, input_data_filename):
 
     # Format scores to be written to metadata.
     # See the HOWTO to find the detailed explanation of the format.
-    scores = {
-        'r2': {'cross_val': r2_cv_score},
-        'mean_squared_error': {'cross_val': mse_cv_score},
-    }
+    scores = [
+        {'metric': 'r2', 'strategy': 'cv', 'value': r2_cv_score},
+        {'metric': 'mean_squared_error', 'strategy': 'cv', 'value': mse_cv_score},
+    ]
 
     # Create metadata
     model_description = 'Predicting petal length (regression)'
@@ -70,24 +70,17 @@ def main(model_filename, input_data_filename):
     extra_metadata = {
         'data_type': 'csv'
     }
-    metadata = generate_metadata(model_location, model_description,
-                                 regr, data_location, None, feature_names,
-                                 testing_strategy, scores,
-                                 extra_metadata=extra_metadata)
+    metadata = ModelMetadata(model_location, model_description,
+                             regr, data_location, None, feature_names,
+                             testing_strategy, scores,
+                             extra_metadata=extra_metadata)
 
-    # Save the model. We want to save metadata along with the model.
-    # This information will be used when generating API response, for example.
-    regr._custom_metadata = metadata
+    # Save the model.
     logger.info('Saving serialized model: {}'.format(model_filename))
     joblib.dump(regr, model_location)
 
-    # Save relevant metadata in separate json file.
-    logger.info('Saving model metadata: {}'.format(model_filename))
-    model_id = metadata['model_identifier']
-    save_metadata(path=s.MODEL_METADATA_DIR,
-                  filename='{}-{}'.format(model_filename, model_id),
-                  metadata=metadata,
-                  logger=logger)
+    # Save metadata to file
+    metadata.save(s.MODEL_METADATA_DIR)
 
 
 if __name__ == '__main__':

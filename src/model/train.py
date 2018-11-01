@@ -13,7 +13,7 @@ from sklearn.model_selection import KFold, cross_validate
 
 from mlmonkey.metadata import ModelMetadata
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 @click.command()
@@ -80,7 +80,7 @@ def main(model_filename, input_data_filename):
     joblib.dump(regr, model_location)
 
     # Save metadata to file
-    metadata.save(s.MODEL_METADATA_DIR)
+    metadata.save_to_file(s.MODEL_METADATA_DIR)
 
 
 if __name__ == '__main__':

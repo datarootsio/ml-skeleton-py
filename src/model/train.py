@@ -56,10 +56,10 @@ def main(model_filename, input_data_filename):
 
     # Format scores to be written to metadata.
     # See the HOWTO to find the detailed explanation of the format.
-    scores = [
-        {'metric': 'r2', 'strategy': 'cv', 'value': r2_cv_score},
-        {'metric': 'mean_squared_error', 'strategy': 'cv', 'value': mse_cv_score},
-    ]
+    scores = {
+        'r2': {'cv': r2_cv_score},
+        'mean_squared_error': {'cv': mse_cv_score}
+    }
 
     # Create metadata
     model_description = 'Predicting petal length (regression)'

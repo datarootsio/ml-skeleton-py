@@ -54,13 +54,6 @@ def main(model_filename, input_data_filename):
     logger.info('Fitting linear model.')
     regr.fit(iris_X, iris_y)
 
-    # Format scores to be written to metadata.
-    # See the HOWTO to find the detailed explanation of the format.
-    scores = {
-        'r2': {'cv': r2_cv_score},
-        'mean_squared_error': {'cv': mse_cv_score}
-    }
-
     # Create metadata
     model_description = 'Predicting petal length (regression)'
     model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
@@ -72,8 +65,12 @@ def main(model_filename, input_data_filename):
     }
     metadata = ModelMetadata(model_location, model_description,
                              regr, data_location, None, feature_names,
-                             testing_strategy, scores,
+                             testing_strategy, None,
                              extra_metadata=extra_metadata)
+
+    # add scores to metadata
+    metadata.add_score('r2', 'cv', r2_cv_score)
+    metadata.add_score('mean_squared_error', 'cv', mse_cv_score)
 
     # Save the model.
     logger.info('Saving serialized model: {}'.format(model_filename))

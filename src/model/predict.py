@@ -12,7 +12,7 @@ from sklearn.externals import joblib
 import pandas as pd
 import click
 
-from mlmonkey.metadata import base_metadata
+from mlmonkey.metadata import PredictionMetadata
 from .. import settings as s
 
 logger = logging.getLogger(__name__)
@@ -35,8 +35,8 @@ def main(model_name, input_df, output_df):
     """
     # Deserialize the model
     logger.info('deserializing model: {}'.format(model_name))
-    regr = joblib.load(os.path.join(s.MODEL_DIR,
-                                    '{}.p'.format(model_name)))
+    model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_name))
+    regr = joblib.load(model_location)
 
     # Run prediction
     input_data = [
@@ -57,11 +57,14 @@ def main(model_name, input_df, output_df):
 
     output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
     logger.info('storing saved prediction at: {}'.format(output_df_fn))
+    preds_df.to_csv(output_df_fn, index=False)
+
+    pm = PredictionMetadata(model_location=model_location,
+                            input_identifier=input_data,
+                            output_identifier=preds.tolist())
 
     logger.info('prediction base metadata: {}'.format(
-        json.dumps(base_metadata())))
-
-    preds_df.to_csv(output_df_fn, index=False)
+        json.dumps(pm.get())))
 
 
 if __name__ == '__main__':

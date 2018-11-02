@@ -10,7 +10,6 @@ import logging
 
 from sklearn.externals import joblib
 import pandas as pd
-import click
 
 from mlmonkey.metadata import PredictionMetadata
 from .. import settings as s
@@ -18,11 +17,7 @@ from .. import settings as s
 logger = logging.getLogger(__name__)
 
 
-@click.command()
-@click.option('--model-name', default='model')
-@click.option('--input-df', default='model')
-@click.option('--output-df', default='predictions.csv')
-def main(model_name, input_df, output_df):
+def predict(model_name, input_df, output_df):
     """Predict new values using a serialized model.
 
     Note log predictions via logger to STDOUT. This should be captured by a
@@ -65,7 +60,3 @@ def main(model_name, input_df, output_df):
 
     logger.info('prediction base metadata: {}'.format(
         json.dumps(pm.get())))
-
-
-if __name__ == '__main__':
-    main()

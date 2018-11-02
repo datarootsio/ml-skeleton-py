@@ -6,7 +6,6 @@ import logging
 from sklearn import linear_model
 from sklearn.externals import joblib
 import pandas as pd
-import click
 
 from .. import settings as s
 from sklearn.model_selection import KFold, cross_validate
@@ -16,10 +15,7 @@ from mlmonkey.metadata import ModelMetadata
 logger = logging.getLogger(__name__)
 
 
-@click.command()
-@click.option('--model-filename', default='model')
-@click.option('--input-data-filename', default='iris.csv')
-def main(model_filename, input_data_filename):
+def train(model_filename, input_data_filename):
     """Train and save a model. Calculate evaluation metrics. Write metadata.
 
     :param model_filename: name of file that stores serialized model
@@ -32,7 +28,7 @@ def main(model_filename, input_data_filename):
     data_location = os.path.join(s.DATA_TRANSFORMED, input_data_filename)
     iris = pd.read_csv(data_location)
     iris = iris.sample(frac=1)  # shuffle
-
+    print(99)
     # Prepare train and target columns
     iris_X = iris.drop(columns=['species', 'petal_length'])
     iris_y = iris['petal_length']
@@ -78,7 +74,3 @@ def main(model_filename, input_data_filename):
 
     # Save metadata to file
     metadata.save_to_file(s.MODEL_METADATA_DIR)
-
-
-if __name__ == '__main__':
-    main()

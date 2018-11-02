@@ -9,7 +9,7 @@ from .. import settings as s
 logger = logging.getLogger(__name__)
 
 
-def main():
+def generate():
     """Generate a dataset using raw input data.
 
     :param model_name: the name of the
@@ -23,7 +23,3 @@ def main():
     )
 
     logger.info('Done')
-
-
-if __name__ == '__main__':
-    main()

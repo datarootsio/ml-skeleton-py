@@ -15,15 +15,15 @@ NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
 
 generate-dataset: ## run new ETL pipeline
 	@echo ">>> generating dataset"
-	python -m src.etl.generate_dataset $(ARGS)
+	python ./scripts/generate_dataset.py $(ARGS)
 
 train: ## train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 	@echo ">>> training model"
-	python -m src.model.train $(ARGS)
+	python ./scripts/train.py $(ARGS)
 
 prediction: ## predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
 	@echo ">>> generating new predictions/estimates"
-	python -m src.model.predict $(ARGS)
+	python ./scripts/predict.py $(ARGS)
 
 deploy-endpoint: ## start flask server, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" deploy-endpoint
 	@echo ">>> starting flask"

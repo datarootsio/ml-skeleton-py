@@ -156,6 +156,7 @@ This includes running `make lint`, to check your code format.
 
 ## Project configuration
 
-TODO:
-Add configuration variables to the `.env` file. Note, check to see if it's OK
-to include this in the git repository. No credentials should be committed.
+Environment variables for the project can be specified in `.env` file,
+in project root. These variables will be read by dotenv package.
+For example, you can set variables defined in `src/settings.py`, such as
+`MODEL_DIR = /your/path/to/the/model/`.

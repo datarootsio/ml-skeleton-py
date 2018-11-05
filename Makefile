@@ -43,6 +43,8 @@ count-report-files: ## count the number of present report files
 	@echo ">>> OK, $(NO_OF_REPORT_FILES) report files found"
     endif
 
+init-train: generate-dataset train ## generate dataset & train the model
+
 tox: ## run tox tests
 	tox
 

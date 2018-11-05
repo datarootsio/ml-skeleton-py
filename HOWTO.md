@@ -15,7 +15,7 @@ There are several things we cover using this skeleton, including:
 1. predefined project structure
 2. generation of metadata used to ease model reproducibility and report generation
 3. check if the project includes necessary reports 
-4. check if the project is appropriately tested (unittest coverage)
+4. check if the project is appropriately tested (unit test coverage)
 5. assist creation of deployable solution, e.g. using Flask, Docker etc.  
 ... (this list will be extended)
 
@@ -34,6 +34,7 @@ We want to ensure each project follows (roughly) the same structure, according t
 │   └── metadata
 ├── notebooks
 ├── reports
+├── scripts
 ├── src
 │   ├── etl
 │   ├── helpers
@@ -58,14 +59,20 @@ You can find more details on metadata description in following section.
 
 ### notebooks/
 
-Location to save notebooks used for data and model exploration.
+Location to save notebooks used for data and model exploration.  
+Reporting notebooks are here placed by default, with default content.  
+They can be exported to `reports` as HTML/PDF etc.
 
 ### reports/
 
-Location for reports and files necessary to reproduce report generation.  
-Note that non-Python tools (e.g. RMarkdown) can be used as well.  
-At least explorative and delivery report are expected.  
+Location for reports and files necessary to reproduce report generation. Any format of reports can be used.  
+We provide report templates as notebooks. Notebooks are chosen because users are familiar with them and  
+interactivity is supported (HTML). At least explorative and delivery report are expected.  
 Note that `make test` will not error if reports are not included, but will instead issue a warning.
+
+### scripts/
+
+Python scripts that expose functionality from `src`.
 
 ### src/
 
@@ -73,8 +80,8 @@ This directory should contain the logic for the model (training & prediction), E
 All source code relevant to a packaged and deployable delivery should be contained in this folder.
 
 Two scripts must exist in this directory:
-1. `train.py` - trains the model, saves it and generates metadata
-2. `predict.py` - calculates predictions for new data
+1. `model/train.py` - trains the model, saves it and generates metadata
+2. `model/predict.py` - calculates predictions for new data
 
 ### tests/
 
@@ -87,35 +94,21 @@ After training the model, metadata are being generated, using helper methods  fr
 For details on how metadata are generated, refer to documentation of that package.
 
 
-## Setup the environment
-
-Setup these environment variables:  
-PY_ENV (conda or pip)  
-PIP_EXEC (e.g. pip3)  
-CONDA_EXEC (e.g. conda)  
-
-Note:  
-These variables are set in Makefile (where we use only conda currently), but this will be changed so we can support both conda and pip.
-
-
 ## Makefile and test example
 
 Try out the `make` commands on the example iris dataset model (see `make help`).
+You need to install packages listed in requirements.txt file before running any commands that execute code.
 
 ```sh
 help                           show help on available commands
-create-environment             create new virtual environment
-requirements                   install requirements specified in "requirements.txt"
 generate_dataset               run new ETL pipeline, to generate dataset from raw data
-lint                           lint the code using flake8
 train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
-prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
+prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
 deploy-endpoint                start Flask endpoint for calculating predictions
-count_report_files             count the number of present report files
-count_test_files               count the number of present test files
-pytest                         run tox/pytest tests
-init                           create environment & install requirements.txt
-init-train:                    create environment & train the model
+count-report-files             count the number of present report files
+count-test-files               count the number of present test files
+init-train                     generate dataset & train the model
+tox                            run tox, that includes running unit tests (pytest) and linting (flake8)
 test                           run extensive test
 ```
 
@@ -124,7 +117,7 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 
 ## Creating API endpoint
 
-Calling `make deploy-endpoint` will start Flask endpoint, which will calculate predictions for new data,  
+Calling `make deploy-endpoint` will start Flask API which calculates predictions for new data,  
 using up-to-date model. `deploy-endpoint` can accept three parameters (model path, host and port).   
 Default configuration is to use host 0.0.0.0 and port 5000.
 For detailed description of valid requests/responses, refer to `mlmonkey` package documentation. 
@@ -141,14 +134,11 @@ After this, requests are accepted on localhost, port 5000.
 
 Finally, you can start both services using `docker-compose`:  
 for example `docker-compose up jupyter` and `docker-compose up api`.  
-TODO: 
-- add docker-compose instructions (and how to setup pycharm to use this container)
 
 
 ## Best practices for development
 
 - Make sure that `make test` runs properly.  
-This includes running `make lint`, to check your code format.
 - Commit often, perfect later.
 - Integrate `make test` with your CI pipeline.
 - Capture `stdout` when deployed.
@@ -161,5 +151,5 @@ in project root. These variables will be read by dotenv package.
 For example, you can set variables defined in `src/settings.py`, such as
 `MODEL_DIR = /your/path/to/the/model/`.  
 
-Logging can be adjusted in source init script (output location, verbosity level etc).    
+Logging can be adjusted in source init script (output location, verbosity level etc).      
 Verbosity is read from environment variable `LOG_LEVEL`, and use `WARNING` if such variable is not defined.  

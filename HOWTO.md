@@ -157,6 +157,9 @@ This includes running `make lint`, to check your code format.
 ## Project configuration
 
 Environment variables for the project can be specified in `.env` file,
-in project root. These variables will be read by dotenv package.
+in project root. These variables will be read by dotenv package.  
 For example, you can set variables defined in `src/settings.py`, such as
-`MODEL_DIR = /your/path/to/the/model/`.
+`MODEL_DIR = /your/path/to/the/model/`.  
+
+Logging can be adjusted in source init script (output location, verbosity level etc).    
+Verbosity is read from environment variable `LOG_LEVEL`, and use `WARNING` if such variable is not defined.  

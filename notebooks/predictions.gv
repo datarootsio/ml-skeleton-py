@@ -1,0 +1,5 @@
+digraph {
+    "new data" -> "transformed data"[label="transformation"];
+    "transformed data" -> "features"[label="feature engineering"];
+    "features" -> "prediction"[label="model applied"];
+}

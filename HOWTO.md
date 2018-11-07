@@ -153,3 +153,10 @@ For example, you can set variables defined in `src/settings.py`, such as
 
 Logging can be adjusted in source init script (output location, verbosity level etc).      
 Verbosity is read from environment variable `LOG_LEVEL`, and use `WARNING` if such variable is not defined.  
+
+## Prerequisites
+
+If you are about to use graphviz in your project (example is given in template modeling report),  
+you should install graphviz software in your system (not just the python package).  
+On Linux you can use: `sudo apt-get install graphviz`, for Mac `brew install graphviz`.
+Graphs can be specified in code using Python API, but also specified in separate (.gv) file.

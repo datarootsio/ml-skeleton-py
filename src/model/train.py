@@ -3,7 +3,7 @@
 import os
 import logging
 
-from sklearn import linear_model
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 import pandas as pd
 
@@ -34,7 +34,7 @@ def train(model_filename, input_data_filename):
     iris_y = iris['petal_length']
 
     # Create linear regression object
-    regr = linear_model.LinearRegression()
+    regr = RandomForestRegressor()
 
     # Calculating CV score(s)
     logger.info('Performing cross validation')

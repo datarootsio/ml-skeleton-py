@@ -1,10 +1,14 @@
 """Example how to start Flask endpoint, to serve the predictions."""
+import os
+import sys
 
 import click
 import logging
 from mlmonkey.api import create_flask_app
 # We need to do absolute import because of the Flask.
-import src.settings as s
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src  import settings as s
+
 logger = logging.getLogger(__name__)
 
 

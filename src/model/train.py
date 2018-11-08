@@ -69,6 +69,7 @@ def train(model_filename, input_data_filename):
     metadata.add_score('mean_squared_error', 'cv', mse_cv_score)
 
     # Save the model.
+    regr._custom_metadata = metadata
     logger.info('Saving serialized model: {}'.format(model_filename))
     joblib.dump(regr, model_location)
 

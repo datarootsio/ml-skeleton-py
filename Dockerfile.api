@@ -1,7 +1,9 @@
 FROM continuumio/miniconda3
-RUN apt-get update && apt-get install make
-ADD . /project-ml-skeleton
+RUN apt-get update && apt-get install -y python-dev libffi-dev build-essential python2.7
+COPY . /project-ml-skeleton
 WORKDIR /project-ml-skeleton
+RUN pip install -r requirements.txt
+RUN pip install mlmonkey/.
 EXPOSE 5000
 RUN make init-train
 ENTRYPOINT ["make", "deploy-endpoint"]

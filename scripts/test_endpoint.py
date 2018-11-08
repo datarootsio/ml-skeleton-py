@@ -1,7 +1,7 @@
 """Example of calling API endpoint."""
 
 import requests
-from .. import settings as s
+from src import settings as s
 
 if __name__ == '__main__':
 

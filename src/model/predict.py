@@ -12,6 +12,8 @@ from sklearn.externals import joblib
 import pandas as pd
 
 from mlmonkey.metadata import PredictionMetadata
+
+from .explainability import TreeExplainer
 from .. import settings as s
 
 logger = logging.getLogger(__name__)
@@ -31,7 +33,7 @@ def predict(model_name, input_df, output_df):
     # Deserialize the model
     logger.info('deserializing model: {}'.format(model_name))
     model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_name))
-    regr = joblib.load(model_location)
+    model = joblib.load(model_location)
 
     # Run prediction
     input_data = [
@@ -43,7 +45,7 @@ def predict(model_name, input_df, output_df):
     # single observations at a time
     logger.info('running predictions for input: {}'.format(input_data))
 
-    preds = regr.predict(input_data)
+    preds = model.predict(input_data)
     preds_df = pd.DataFrame({'predictions': preds})
 
     # only log this directly when batch is small-ish or when predicting for
@@ -60,3 +62,8 @@ def predict(model_name, input_df, output_df):
 
     logger.info('prediction base metadata: {}'.format(
         json.dumps(pm.get())))
+
+    feature_names = ['sepal_length', 'sepal_width', 'petal_width']
+    explainer = TreeExplainer(model, feature_names)
+    feature_importance_preds = explainer.get_feature_importance(input_data)
+    logger.info('feature importance for predictions: {}'.format(feature_importance_preds))

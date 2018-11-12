@@ -25,7 +25,6 @@ def main(host, port, model_path):
     :param host: server host
     :param port: port
     """
-    print(model_path)
     app = create_flask_app(model_path)
     logger.info('Starting flask server...')
     app.run(host=host, port=port, debug=True)

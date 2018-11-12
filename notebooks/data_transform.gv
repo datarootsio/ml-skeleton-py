@@ -1,3 +1,0 @@
-digraph {
-    "raw data" -> "transformed data"[label="copy"];
-}

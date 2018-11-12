@@ -3,10 +3,12 @@
 import os
 import logging
 
+from sklearn.cross_validation import cross_val_predict
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 import pandas as pd
 
+from src.model.explainability import TreeExplainer
 from .. import settings as s
 from sklearn.model_selection import KFold, cross_validate
 
@@ -46,6 +48,9 @@ def train(model_filename, input_data_filename):
     # cross_validate outputs negative mse
     mse_cv_score = - scores['test_neg_mean_squared_error'].mean()
 
+    # Calculate predictions, to plot actual-vs-predicted later.
+    predictions = cross_val_predict(regr, iris_X, iris_y, cv=5)
+
     # Train a model using the whole dataset
     logger.info('Fitting linear model.')
     regr.fit(iris_X, iris_y)
@@ -54,14 +59,20 @@ def train(model_filename, input_data_filename):
     model_description = 'Predicting petal length (regression)'
     model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
     feature_names = iris_X.columns.values.tolist()
+    explainer = TreeExplainer(regr)
+    feature_importance = explainer.get_shap_values(iris_X)
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
     extra_metadata = {
-        'data_type': 'csv'
+        'data_type': 'csv',
+        'actual_and_predicted': {
+            'actual': list(iris_y),
+            'predicted': list(predictions)
+        }
     }
-    metadata = ModelMetadata(model_location, model_description,
-                             regr, data_location, None, feature_names,
-                             testing_strategy, None,
+    metadata = ModelMetadata(model_location, regr, model_description,
+                             data_location, None, feature_names,
+                             feature_importance, testing_strategy, None,
                              extra_metadata=extra_metadata)
 
     # add scores to metadata

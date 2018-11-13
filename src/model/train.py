@@ -30,18 +30,17 @@ def train(model_filename, input_data_filename):
     data_location = os.path.join(s.DATA_TRANSFORMED, input_data_filename)
     iris = pd.read_csv(data_location)
     iris = iris.sample(frac=1)  # shuffle
-    print(99)
     # Prepare train and target columns
     iris_X = iris.drop(columns=['species', 'petal_length'])
     iris_y = iris['petal_length']
 
     # Create linear regression object
-    regr = RandomForestRegressor()
+    regr_model = RandomForestRegressor()
 
     # Calculating CV score(s)
     logger.info('Performing cross validation')
     cv = KFold(n_splits=5, shuffle=True, random_state=0)
-    scores = cross_validate(regr, iris_X, iris_y, cv=cv,
+    scores = cross_validate(regr_model, iris_X, iris_y, cv=cv,
                             scoring=['r2', 'neg_mean_squared_error'],
                             return_train_score=False, verbose=1)
     r2_cv_score = scores['test_r2'].mean()
@@ -49,17 +48,17 @@ def train(model_filename, input_data_filename):
     mse_cv_score = - scores['test_neg_mean_squared_error'].mean()
 
     # Calculate predictions, to plot actual-vs-predicted later.
-    predictions = cross_val_predict(regr, iris_X, iris_y, cv=5)
+    predictions = cross_val_predict(regr_model, iris_X, iris_y, cv=5)
 
     # Train a model using the whole dataset
     logger.info('Fitting linear model.')
-    regr.fit(iris_X, iris_y)
+    regr_model.fit(iris_X, iris_y)
 
     # Create metadata
     model_description = 'Predicting petal length (regression)'
     model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
     feature_names = iris_X.columns.values.tolist()
-    explainer = TreeExplainer(regr, feature_names)
+    explainer = TreeExplainer(regr_model, feature_names)
     feature_importance = explainer.get_feature_importance(iris_X)
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
@@ -70,7 +69,7 @@ def train(model_filename, input_data_filename):
             'predicted': list(predictions)
         }
     }
-    metadata = ModelMetadata(model_location, regr, model_description,
+    metadata = ModelMetadata(model_location, regr_model, model_description,
                              data_location, None, feature_names,
                              feature_importance, testing_strategy, None,
                              extra_metadata=extra_metadata)
@@ -80,9 +79,9 @@ def train(model_filename, input_data_filename):
     metadata.add_score('mean_squared_error', 'cv', mse_cv_score)
 
     # Save the model.
-    regr._custom_metadata = metadata
+    regr_model._custom_metadata = metadata
     logger.info('Saving serialized model: {}'.format(model_filename))
-    joblib.dump(regr, model_location)
+    joblib.dump(regr_model, model_location)
 
     # Save metadata to file
     metadata.save_to_file(s.MODEL_METADATA_DIR)

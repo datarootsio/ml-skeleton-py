@@ -14,3 +14,4 @@ python-dotenv==0.9.1
 jupyter==1.0.0
 graphviz==0.10.1
 shap==0.24.0
+plotly==3.4.1

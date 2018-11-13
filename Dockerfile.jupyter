@@ -1,6 +1,8 @@
 FROM jupyter/datascience-notebook
 COPY requirements.txt /tmp/
+COPY mlmonkey/. /tmp/mlmonkey/
 RUN pip install --requirement /tmp/requirements.txt && \
+    pip install /tmp/mlmonkey/. && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 CMD start-notebook.sh

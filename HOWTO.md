@@ -12,13 +12,12 @@ This project is built upon the best practices discussed in our [methodology](htt
 ## Scope
 
 There are several things we cover using this skeleton, including:
-1. predefined project structure
-2. generation of metadata used to ease model reproducibility and report generation
-3. check if the project includes necessary reports 
-4. check if the project is appropriately tested (unit test coverage)
-5. assist creation of deployable solution, e.g. using Flask, Docker etc.  
+1. predefined project structure (directories and scripts)
+2. example scripts for model training, predictions, model explanation, and modeling report
+3. generation of metadata used to ease model reproducibility and report generation
+4. assist creation of deployable solution, e.g. using Flask, Docker etc.
+5. check if the project includes necessary report files and tests (unit test coverage)
 ... (this list will be extended)
-
 
 ## Overview project structure
 
@@ -36,6 +35,7 @@ We want to ensure each project follows (roughly) the same structure, according t
 ├── reports
 ├── scripts
 ├── src
+│   ├── app
 │   ├── etl
 │   ├── helpers
 │   └── model
@@ -88,10 +88,13 @@ Two scripts must exist in this directory:
 This directory contains the unittests by which you test your helper functions and coded logic.
 
 
-## Model metadata
+## Running the project
 
-After training the model, metadata are being generated, using helper methods  from `mlmonkey` package.  
-For details on how metadata are generated, refer to documentation of that package.
+Preferably, you can use make commands (from `Makefile`) or directly run scripts from `scripts`.  
+Refer to section below for the descriptions of make commands. Before running it, consider creating  
+a virtual environment. Project example code should be compatible with both Python 2.7 and 3.7.  
+Next, we need to install `mlmonkey` package. If it is included as a submodule in this project,  
+it can be done by `pip install mlmonkey/.`
 
 
 ## Makefile and test example
@@ -113,6 +116,12 @@ test                           run extensive test
 ```
 
 Note the dependency: `generate_dataset` > `train` > `prediction`.
+
+
+## Model metadata
+
+After training the model, metadata are being generated, using helper methods  from `mlmonkey` package.  
+For details on how metadata are generated, refer to documentation of that package.
 
 
 ## Creating API endpoint

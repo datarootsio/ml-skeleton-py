@@ -56,7 +56,7 @@ def train(model_filename, input_data_filename):
 
     # Create metadata
     model_description = 'Predicting petal length (regression)'
-    model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
+    model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_filename))
     feature_names = iris_X.columns.values.tolist()
     explainer = TreeExplainer(regr_model, feature_names)
     feature_importance = explainer.feature_importance_for_batch(iris_X)

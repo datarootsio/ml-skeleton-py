@@ -32,7 +32,7 @@ def predict(model_name, input_df, output_df):
     """
     # Deserialize the model
     logger.info('deserializing model: {}'.format(model_name))
-    model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_name))
+    model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_name))
     model = joblib.load(model_location)
 
     # Run prediction

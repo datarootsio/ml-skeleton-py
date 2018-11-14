@@ -123,6 +123,10 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 In source directory, we provide basic examples of scripts for generating final dataset with features,  
 training, calculating predictions, and model explanations. After running train script, model and metadata  
 will be saved in `models` directory. Predictions are saved in `predictions` and details included in log.
+Beside the source, we provide wrapper scripts (`scripts` directory) that call methods from source.  
+The idea is that source can be freely changed, and those scripts should preferably stay the same, or not changed much.  
+They can be run manually, from `Makefile`, but also represent example scripts that can be passed to Spark job,  
+(e.g. with spark-submit, in case we use Spark).
 
 
 ## Model metadata

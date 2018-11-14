@@ -46,11 +46,18 @@ def predict(model_name, input_df, output_df):
     logger.info('running predictions for input: {}'.format(input_data))
 
     preds = model.predict(input_data)
-    preds_df = pd.DataFrame({'predictions': preds})
+    preds_df = pd.DataFrame({'prediction': preds})
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
     logger.info('prediction results: {}'.format(preds))
+
+    logger.info('calculating prediction explanations (feature importance)')
+    feature_names = ['sepal_length', 'sepal_width', 'petal_width']
+    explainer = TreeExplainer(model, feature_names)
+    feature_importance_df = explainer.feature_importance_per_observation(input_data)
+    feature_importance_df.columns = [str(col) + '_importance' for col in feature_importance_df.columns]
+    preds_df = pd.concat([preds_df, feature_importance_df], axis=1)
 
     output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
     logger.info('storing saved prediction at: {}'.format(output_df_fn))
@@ -58,12 +65,7 @@ def predict(model_name, input_df, output_df):
 
     pm = PredictionMetadata(model_location=model_location,
                             input_identifier=input_data,
-                            output_identifier=preds.tolist())
+                            output_identifier=preds_df.T.to_dict().values())
 
     logger.info('prediction base metadata: {}'.format(
         json.dumps(pm.get())))
-
-    feature_names = ['sepal_length', 'sepal_width', 'petal_width']
-    explainer = TreeExplainer(model, feature_names)
-    feature_importance_preds = explainer.get_feature_importance(input_data)
-    logger.info('feature importance for predictions: {}'.format(feature_importance_preds))

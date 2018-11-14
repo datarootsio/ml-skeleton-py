@@ -59,7 +59,7 @@ def train(model_filename, input_data_filename):
     model_location = os.path.join(s.MODEL_DIR, '{}.p'.format(model_filename))
     feature_names = iris_X.columns.values.tolist()
     explainer = TreeExplainer(regr_model, feature_names)
-    feature_importance = explainer.get_feature_importance(iris_X)
+    feature_importance = explainer.feature_importance_for_batch(iris_X)
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
     extra_metadata = {

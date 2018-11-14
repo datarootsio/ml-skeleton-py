@@ -118,6 +118,13 @@ test                           run extensive test
 Note the dependency: `generate_dataset` > `train` > `prediction`.
 
 
+## Example scripts
+
+In source directory, we provide basic examples of scripts for generating final dataset with features,  
+training, calculating predictions, and model explanations. After running train script, model and metadata  
+will be saved in `models` directory. Predictions are saved in `predictions` and details included in log.
+
+
 ## Model metadata
 
 After training the model, metadata are being generated, using helper methods  from `mlmonkey` package.  
@@ -130,6 +137,13 @@ Calling `make deploy-endpoint` will start Flask API which calculates predictions
 using up-to-date model. `deploy-endpoint` can accept three parameters (model path, host and port).   
 Default configuration is to use host 0.0.0.0 and port 5000.
 For detailed description of valid requests/responses, refer to `mlmonkey` package documentation. 
+
+
+## Report example
+
+Within `report` directory, you can find example of modeling report, in notebook format.  
+The report contains sections that should preferably exist in the report, as well as examples  
+of textual content and visualizations. 
 
 
 ## Dockerization

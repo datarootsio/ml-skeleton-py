@@ -19,9 +19,9 @@ class TreeExplainer(object):
         self.explainer = shap.TreeExplainer(model)
         self.feature_names = feature_names
 
-    def get_feature_importance(self, observations):
+    def feature_importance_for_batch(self, observations):
         """
-        Calculate shap for features, using given observation(s).
+        Calculate average shap for features.
 
         :param observations: array or DataFrame: One or more observations.
         :return: Pairs (feature, shap_value)
@@ -46,3 +46,28 @@ class TreeExplainer(object):
             avg_abs_shaps.append(np.average(np.abs(shap_values[:, i])))
         result = zip(feature_names, avg_abs_shaps)
         return sorted(result, key=itemgetter(1), reverse=True)
+
+    def feature_importance_per_observation(self, observations):
+        """
+        Calculate shap for features, per each observation.
+
+        :param observations: array or DataFrame: One or more observations.
+        :return: DataFrame of importance scores, row per observation, column per feature
+        """
+        if isinstance(observations, DataFrame):
+            feature_names = observations.columns.values.tolist()
+            if self.feature_names is not None and feature_names != self.feature_names:
+                raise Exception('DataFrame columns do not match feature names.')
+
+        if isinstance(observations, list):
+            if self.feature_names is None:
+                raise Exception('Feature names not defined for explainer.'
+                                'Pass observation as a dataframe (feature names as column names).')
+            observations = np.array(observations)
+            if observations.ndim == 1:
+                observations = observations.reshape(1, -1)
+            feature_names = self.feature_names
+
+        shap_values = self.explainer.shap_values(observations)
+        shap_values = np.abs(shap_values)
+        return DataFrame(shap_values, columns=feature_names)

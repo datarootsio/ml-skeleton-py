@@ -65,7 +65,7 @@ def predict(model_name, input_df, output_df):
 
     pm = PredictionMetadata(model_location=model_location,
                             input_identifier=input_data,
-                            output_identifier=preds_df.T.to_dict().values())
+                            output_identifier=list(preds_df.T.to_dict().values()))
 
     logger.info('prediction base metadata: {}'.format(
         json.dumps(pm.get())))

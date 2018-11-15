@@ -7,6 +7,7 @@ before_script:
   - apt-get update
   - apt-get install -y python-dev libffi-dev build-essential python2.7
   - pip install -r requirements.txt
+  - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/dataroots/mlmonkey
   - pip install mlmonkey/.
 
 test:

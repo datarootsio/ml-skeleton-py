@@ -45,8 +45,12 @@ We want to ensure each project follows (roughly) the same structure, according t
 
 ### data/
 
-Location for data in various shapes.
-Note that the `raw` data should always be considered **immutable**.  
+Location for data in various shapes. Directories for storing data:  
+`raw` - contains original dataset, which should always be considered **immutable**.    
+`staging` - data obtained after preprocessing - cleaning, merging, filtering etc.  
+`transformed` - data ready for modeling (dataset containing features and label).  
+`predictions` - for storing predictions calculated using the model.   
+
 For larger projects, where it's infeasible to have project specific datasets within the project structure,  
 make sure to update the configuration and connectors to reflect as much.
 
@@ -72,7 +76,9 @@ Note that `make test` will not error if reports are not included, but will inste
 
 ### scripts/
 
-Python scripts that expose functionality from `src`.
+Python scripts that expose functionality from `src`. The idea is that source can be freely changed, and those scripts  
+should preferably stay the same, or not changed much. They can be run manually, from `Makefile`,  
+but also represent example scripts that can be passed to Spark job, (e.g. with spark-submit, in case we use Spark).
 
 ### src/
 
@@ -120,13 +126,11 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 
 ## Example scripts
 
-In source directory, we provide basic examples of scripts for generating final dataset with features,  
+In source directory, we provide basic examples of scripts for generating features dataset,  
 training, calculating predictions, and model explanations. After running train script, model and metadata  
-will be saved in `models` directory. Predictions are saved in `predictions` and details included in log.
-Beside the source, we provide wrapper scripts (`scripts` directory) that call methods from source.  
-The idea is that source can be freely changed, and those scripts should preferably stay the same, or not changed much.  
-They can be run manually, from `Makefile`, but also represent example scripts that can be passed to Spark job,  
-(e.g. with spark-submit, in case we use Spark).
+will be saved in `models` directory.  Note that for model, supported file extensions are `joblib` and `pickle`,  
+as a requirement from `mlmonkey` package, which later loads the model for purpose of exposing the model via Flask API.   
+Predictions are saved in `predictions` directory, prediction details are included in log.  
 
 
 ## Model metadata
@@ -137,11 +141,17 @@ For details on how metadata are generated, refer to documentation of that packag
 
 ## Creating API endpoint
 
-Calling `make deploy-endpoint` will start Flask API which calculates predictions for new data,  
-using up-to-date model. `deploy-endpoint` can accept three parameters (model path, host and port).   
+Calling `make deploy-endpoint` will start Flask API which calculates predictions for new data.  
+`deploy-endpoint` can accept four parameters (model path, metadata path, host and port).   
 Default configuration is to use host 0.0.0.0 and port 5000.
-For detailed description of valid requests/responses, refer to `mlmonkey` package documentation. 
-
+For detailed description of valid requests/responses, refer to `mlmonkey` package documentation.  
+Example how to call API using curl:
+```
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"features":[[4.8, 1.8, 2.4], [7.4, 2.5, 3.1]]}' \
+  http://localhost:5000/predict
+```
 
 ## Report example
 
@@ -185,5 +195,5 @@ Verbosity is read from environment variable `LOG_LEVEL`, and use `WARNING` if su
 
 If you are about to use graphviz in your project (example is given in template modeling report),  
 you should install graphviz software in your system (not just the python package).  
-On Linux you can use: `sudo apt-get install graphviz`, for Mac `brew install graphviz`.
+On Linux you can use: `sudo apt-get install graphviz`, for Mac `brew install graphviz`.  
 Graphs can be specified in code using Python API, but also specified in separate (.gv) file.

@@ -3,6 +3,8 @@ from operator import itemgetter
 
 from pandas import DataFrame
 import numpy as np
+import matplotlib as mpl
+mpl.use('TkAgg')
 import shap
 
 

@@ -99,9 +99,8 @@ This directory contains the unittests by which you test your helper functions an
 Preferably, you can use make commands (from `Makefile`) or directly run scripts from `scripts`.  
 Refer to section below for the descriptions of make commands. Before running it, consider creating  
 a virtual environment. Project example code should be compatible with both Python 2.7 and 3.7.  
-After installing dependencies listed in `requirements.txt`, we need to install `mlmonkey` package as well.  
-Currently, you can do it using `pip install` and point to the repository (online repo or locally cloned one).  
-Here is the command to install it directly from git: `pip install git+ssh://git@gitlab.com/dataroots/mlmonkey.git`
+First install `mlmonkey` and then dependencies listed in `requirements.txt`.    
+Here is the command to install `mlmonkey` directly from git: `pip install git+ssh://git@gitlab.com/dataroots/mlmonkey.git`
 
 
 ## Makefile and test example

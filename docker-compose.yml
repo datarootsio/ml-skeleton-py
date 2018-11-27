@@ -5,14 +5,14 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.api
+      dockerfile: dockerfiles/Dockerfile.api
     ports:
     - "5000:5000"
 
   jupyter:
     build:
       context: .
-      dockerfile: Dockerfile.jupyter
+      dockerfile: dockerfiles/Dockerfile.jupyter
     ports:
     - "8888:8888"
     volumes:

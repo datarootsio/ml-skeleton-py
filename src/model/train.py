@@ -3,7 +3,7 @@
 import os
 import logging
 
-from sklearn.cross_validation import cross_val_predict
+from sklearn.model_selection import cross_val_predict
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 import pandas as pd

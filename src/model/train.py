@@ -8,7 +8,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 import pandas as pd
 
-from .explainability import TreeExplainer
 from .. import settings as s
 from sklearn.model_selection import KFold, cross_validate
 
@@ -58,8 +57,8 @@ def train(model_filename, input_data_filename):
     model_description = 'Predicting petal length (regression)'
     model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_filename))
     feature_names = iris_X.columns.values.tolist()
-    explainer = TreeExplainer(regr_model, feature_names)
-    feature_importance = explainer.feature_importance_for_batch(iris_X)
+
+
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
     extra_metadata = {
@@ -71,7 +70,7 @@ def train(model_filename, input_data_filename):
     }
     metadata = ModelMetadata(model_location, regr_model, model_description,
                              data_location, None, feature_names,
-                             feature_importance, testing_strategy, None,
+                             list(regr_model.feature_importances_), testing_strategy, None,
                              extra_metadata=extra_metadata)
 
     # add scores to metadata

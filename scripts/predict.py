@@ -11,7 +11,7 @@ from src import model
 @click.option('--input-df', default='model')
 @click.option('--output-df', default='predictions.csv')
 def predict(model_name, input_df, output_df):
-    model.predict(model_name, input_df, output_df)
+    model.predict_from_file(model_name, input_df, output_df)
 
 
 if __name__ == '__main__':

@@ -5,10 +5,10 @@ from .train import (
 )
 
 from .predict import (
-    predict,
+    predict_from_file,
 )
 
 __all__ = [
     'train',
-    'predict',
+    'predict_from_file',
 ]

@@ -9,17 +9,17 @@ import json
 import logging
 
 from sklearn.externals import joblib
-import pandas as pd
+import numpy as np
+import shap
 
 from mlmonkey.metadata import PredictionMetadata
 
-from .explainability import TreeExplainer
 from .. import settings as s
 
 logger = logging.getLogger(__name__)
 
 
-def predict(model_name, input_df, output_df):
+def predict_from_file(model_name, input_df, output_df):
     """Predict new values using a serialized model.
 
     Note log predictions via logger to STDOUT. This should be captured by a
@@ -35,37 +35,37 @@ def predict(model_name, input_df, output_df):
     model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_name))
     model = joblib.load(model_location)
 
-    # Run prediction
-    input_data = [
+    # input features - normally one would load a file based on the `input_df` path here
+    input_data = np.array([
         [5.8, 2.8, 2.4],
         [6.4, 2.8, 2.1]
-    ]
+    ])
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
     logger.info('running predictions for input: {}'.format(input_data))
 
     preds = model.predict(input_data)
-    preds_df = pd.DataFrame({'prediction': preds})
+    preds = preds.reshape(-1, 1) # transform single axis array to a column
+
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
     logger.info('prediction results: {}'.format(preds))
 
     logger.info('calculating prediction explanations (feature importance)')
-    feature_names = ['sepal_length', 'sepal_width', 'petal_width']
-    explainer = TreeExplainer(model, feature_names)
-    feature_importance_df = explainer.feature_importance_per_observation(input_data)
-    feature_importance_df.columns = [str(col) + '_importance' for col in feature_importance_df.columns]
-    preds_df = pd.concat([preds_df, feature_importance_df], axis=1)
+
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(input_data)
+
+    preds_shap = np.hstack((preds, shap_values))
 
     output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
     logger.info('storing saved prediction at: {}'.format(output_df_fn))
-    preds_df.to_csv(output_df_fn, index=False)
+    np.savetxt(output_df_fn, preds_shap, delimiter=',')
 
     pm = PredictionMetadata(model_location=model_location,
-                            input_identifier=input_data,
-                            output_identifier=list(preds_df.T.to_dict().values()))
+                            input_identifier=input_data.tolist(),
+                            output_identifier=preds_shap.tolist())
 
-    logger.info('prediction base metadata: {}'.format(
-        json.dumps(pm.get())))
+    logger.info('prediction base metadata: {}'.format(pm))

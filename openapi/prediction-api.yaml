@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  description: API for serving model predictions.
+  version: 1.0.0
+  title: Model Api
+
+servers:
+- url: http://localhost:9090/
+
+paths:
+  /predict/:
+    post:
+      summary: Calculate predictions for provided observations.
+      operationId: api.predict_func
+      tags:
+      - predictions
+      responses:
+        '200':
+          description: Model output hstack'd with explanatory variables.
+          content:
+            application/json:
+              schema:
+                properties:
+                  release:
+                    type: object
+                    properties:
+                      model_name:
+                        type: string
+                      model_location:
+                        type: string
+                      git_commit:
+                        type: string
+                  result:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number
+                    description: Model output
+                  timing:
+                    type: number
+                    description: Prediction duration
+      requestBody:
+        description: Input data
+        content:
+            application/json:
+              schema:
+                required:
+                  - features
+                properties:
+                  features:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number

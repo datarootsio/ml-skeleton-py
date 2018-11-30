@@ -13,6 +13,6 @@ from src.model.predict import predict_api
 predict_func = functools.partial(predict_api, model_name='model')
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__, port=9090, specification_dir='../openapi/', debug=True)
+    app = connexion.FlaskApp(__name__, port=9090, specification_dir='../openapi/')
     app.add_api('prediction-api.yaml', arguments={'model_name': 'model'})
     app.run(host='0.0.0.0')

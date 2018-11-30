@@ -1,8 +1,8 @@
-FROM jupyter/datascience-notebook
-COPY ../requirements.txt /tmp/
-COPY mlmonkey/. /tmp/mlmonkey/
-RUN pip install --requirement /tmp/requirements.txt && \
-    pip install /tmp/mlmonkey/. && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-CMD start-notebook.sh
+FROM python:3.7
+RUN apt-get update && apt-get install -y python-dev libffi-dev build-essential
+COPY requirements.txt /workspace/
+WORKDIR /workspace
+RUN pip install -r requirements.txt
+RUN pip install git+https://gitlab.com/dataroots-public/mlmonkey.git
+EXPOSE 8888
+ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]

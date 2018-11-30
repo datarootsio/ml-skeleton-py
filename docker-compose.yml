@@ -5,15 +5,15 @@ services:
   api:
     build:
       context: .
-      dockerfile: docker/Dockerfile.api
+      dockerfile: ./docker/Dockerfile.api
     ports:
-    - "5000:5000"
+    - "9090:9090"
 
   jupyter:
     build:
       context: .
-      dockerfile: docker/Dockerfile.jupyter
+      dockerfile: ./docker/Dockerfile.jupyter
     ports:
     - "8888:8888"
     volumes:
-    - ./:/home/jovyan/work
+    - ./:/workspace/project_mount

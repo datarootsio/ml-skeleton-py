@@ -1,9 +1,8 @@
-FROM continuumio/miniconda3
-RUN apt-get update && apt-get install -y python-dev libffi-dev build-essential python2.7
-COPY . /project-ml-skeleton
-WORKDIR /project-ml-skeleton
+FROM python:3.7
+RUN apt-get update && apt-get install -y python-dev libffi-dev build-essential
+COPY . /app
+WORKDIR /app
 RUN pip install -r requirements.txt
-RUN pip install mlmonkey/.
-EXPOSE 5000
-RUN make init-train
-ENTRYPOINT ["madd ake", "deploy-endpoint"]
+RUN pip install git+https://gitlab.com/dataroots-public/mlmonkey.git
+EXPOSE 9090
+ENTRYPOINT ["python", "scripts/api.py"]

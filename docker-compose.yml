@@ -17,3 +17,7 @@ services:
     - "8888:8888"
     volumes:
     - ./:/workspace/project_mount
+  test:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.test

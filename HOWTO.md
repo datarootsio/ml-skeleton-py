@@ -24,23 +24,25 @@ There are several things we cover using this skeleton, including:
 We want to ensure each project follows (roughly) the same structure, according to best practices:
 
 ```
+.
 ├── data
-│   ├── predictions
-│   ├── raw
-│   ├── staging
-│   └── transformed
+│   ├── predictions
+│   ├── raw
+│   ├── staging
+│   └── transformed
+├── docker
 ├── models
-│   └── metadata
+│   └── metadata
 ├── notebooks
+├── openapi
 ├── reports
 ├── scripts
 ├── src
-│   ├── app
-│   ├── etl
-│   ├── helpers
-│   └── model
-└── tests
-
+│   ├── app
+│   ├── etl
+│   ├── helpers
+│   └── model
+├── tests
 ```
 
 ### data/
@@ -66,6 +68,12 @@ You can find more details on metadata description in following section.
 Location to save notebooks used for data and model exploration.  
 Reporting notebooks are here placed by default, with default content.  
 They can be exported to `reports` as HTML/PDF etc.
+
+### openapi/
+
+OpenAPI specs used to deploy the prediction endpoint. From the root of the project you can run `python scripts/api/py`
+to deploy the prediction endpoint. Likewise you can run it using `docker-compose up api`. 
+Note that `connexxion` will open a SwaggerUI at `/ui` where you can inspect the endpoint specs. 
 
 ### reports/
 
@@ -98,9 +106,10 @@ This directory contains the unittests by which you test your helper functions an
 
 Preferably, you can use make commands (from `Makefile`) or directly run scripts from `scripts`.  
 Refer to section below for the descriptions of make commands. Before running it, consider creating  
-a virtual environment. Project example code should be compatible with both Python 2.7 and 3.7.  
+a virtual environment.  
+
 First install `mlmonkey` and then dependencies listed in `requirements.txt`.    
-Here is the command to install `mlmonkey` directly from git: `pip install git+ssh://git@gitlab.com/dataroots/mlmonkey.git`
+You can `pip install` `mlmonkey` directly from here: https://gitlab.com/dataroots-public/mlmonkey.git.
 
 
 ## Makefile and test example
@@ -109,16 +118,16 @@ Try out the `make` commands on the example iris dataset model (see `make help`).
 You need to install packages listed in requirements.txt file before running any commands that execute code.
 
 ```sh
-help                           show help on available commands
-generate_dataset               run new ETL pipeline, to generate dataset from raw data
-train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
-prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
-deploy-endpoint                start Flask endpoint for calculating predictions
+api                            start flask server, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" deploy-endpoint
 count-report-files             count the number of present report files
 count-test-files               count the number of present test files
+generate-dataset               run new ETL pipeline
+help                           show help on available commands
 init-train                     generate dataset & train the model
-tox                            run tox, that includes running unit tests (pytest) and linting (flake8)
-test                           run extensive test
+prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
+test                           run extensive tests
+tox                            run tox tests
+train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 ```
 
 Note the dependency: `generate_dataset` > `train` > `prediction`.
@@ -126,32 +135,19 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 
 ## Example scripts
 
-In source directory, we provide basic examples of scripts for generating features dataset,  
-training, calculating predictions, and model explanations. After running train script, model and metadata  
-will be saved in `models` directory.  Note that for model, supported file extensions are `joblib` and `pickle`,  
-as a requirement from `mlmonkey` package, which later loads the model for purpose of exposing the model via Flask API.   
-Predictions are saved in `predictions` directory, prediction details are included in log.  
-
+In the `src` directory, we provide basic examples of scripts for generating features dataset,  
+training, calculating predictions, and model explanations. After running the `train.py` script, model and metadata  
+will be saved in the `models` directory.  
 
 ## Model metadata
 
 After training the model, metadata are being generated, using helper methods  from `mlmonkey` package.  
 For details on how metadata are generated, refer to documentation of that package.
 
+## Deploying the API
 
-## Creating API endpoint
-
-Calling `make deploy-endpoint` will start Flask API which calculates predictions for new data.  
-`deploy-endpoint` can accept four parameters (model path, metadata path, host and port).   
-Default configuration is to use host 0.0.0.0 and port 5000.
-For detailed description of valid requests/responses, refer to `mlmonkey` package documentation.  
-Example how to call API using curl:
-```
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"features":[[4.8, 1.8, 2.4], [7.4, 2.5, 3.1]]}' \
-  http://localhost:5000/predict
-```
+Calling `make api` will start a Flask based API (implemented in `connexion`) which calculates predictions for new data.  
+The API is defined in `scripts/api.py` and simply implements the specification in `openapi/prediction-api.yaml`.
 
 ## Report example
 
@@ -160,17 +156,15 @@ The report contains sections that should preferably exist in the report, as well
 of textual content and visualizations. 
 
 
-## Dockerization
+## Docker
 
 Currently you can find two docker files within the project root.  
 1. `Dockerfile.jupyter` builds an image for running notebooks.  
-2. `Dockerfile.api` builds an image for starting API endpoint. When building image,  
-initial model will be trained and included in image definition. You can build image using following command:  
-`docker build -t your_tag -f Dockerfile.api .`, and run as `docker run -d -p 5000:5000 your_tag`.  
-After this, requests are accepted on localhost, port 5000.  
+2. `Dockerfile.api` builds an image for starting an API endpoint.
+3. `Dockerfile.test` builds an image to run all tests in (`make test`).
 
-Finally, you can start both services using `docker-compose`:  
-for example `docker-compose up jupyter` and `docker-compose up api`.  
+Finally, you can start all services using `docker-compose`:  
+for example `docker-compose up jupyter`, `docker-compose up api` or `docker-compose up test`.  
 
 
 ## Best practices for development

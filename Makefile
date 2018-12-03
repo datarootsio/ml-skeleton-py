@@ -25,9 +25,9 @@ prediction: ## predict new values, you can pass arguments as follows: make ARGS=
 	@echo ">>> generating new predictions/estimates"
 	python ./scripts/predict.py $(ARGS)
 
-deploy-endpoint: ## start flask server, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" deploy-endpoint
+api: ## start flask server, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" deploy-endpoint
 	@echo ">>> starting flask"
-	python ./scripts/deploy_endpoint.py $(ARGS)
+	python ./scripts/api.py $(ARGS)
 
 count-test-files: ## count the number of present test files
     ifeq (0, $(NO_OF_TEST_FILES))

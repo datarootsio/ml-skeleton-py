@@ -14,8 +14,6 @@ import numpy as np
 import shap
 
 from mlmonkey.metadata import PredictionMetadata
-from mlmonkey.metadata.utils import get_git_commit
-
 
 from .. import settings as s
 
@@ -24,9 +22,12 @@ logger = logging.getLogger(__name__)
 
 @functools.lru_cache()
 def load_model(model_location):
-    """Cached function to load model using joblib.
+    """Load model using joblib.
 
-    :param model_location: path to model file"""
+    Uses lru for caching.
+
+    :param model_location: path to model file
+    """
     return joblib.load(model_location)
 
 
@@ -82,6 +83,14 @@ def predict_from_file(model_name, input_df, output_df):
 
 
 def predict_api(body, model_name):
+    """
+    Make prediction through an API call.
+
+    :param body: the body of the request
+    :param model_name: the name of the model, will be used to deserialize the model
+
+    :return: predictions
+    """
     start_time = time.time()
     features = np.array(body.get('features'))
 
@@ -89,6 +98,8 @@ def predict_api(body, model_name):
 
     # deserialize the model
     model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_name))
+    model_metadata_location = os.path.join(s.MODEL_METADATA_DIR, '{}.joblib.json'.format(model_name))
+
     model = load_model(model_location)
 
     logger.info('running predictions for input: {}'.format(body))
@@ -113,7 +124,7 @@ def predict_api(body, model_name):
         'release': {
             'model_name': model_name,
             'model_location': model_location,
-            'git_commit': get_git_commit()
+            'model_metadata_location': model_metadata_location
         },
         'result': preds_shap.tolist(),
         'timing': time.time() - start_time

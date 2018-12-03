@@ -58,7 +58,6 @@ def train(model_filename, input_data_filename):
     model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_filename))
     feature_names = iris_X.columns.values.tolist()
 
-
     testing_strategy = '5-fold cross validation, using mean ' \
                        'to aggregate fold metrics, no hold-out set.'
     extra_metadata = {
@@ -78,7 +77,6 @@ def train(model_filename, input_data_filename):
     metadata.add_score('mean_squared_error', 'cv', mse_cv_score)
 
     # Save the model.
-    regr_model._custom_metadata = metadata
     logger.info('Saving serialized model: {}'.format(model_filename))
     joblib.dump(regr_model, model_location)
 

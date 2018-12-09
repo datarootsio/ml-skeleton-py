@@ -13,3 +13,4 @@ graphviz>=0.10
 shap>=0.24
 plotly>=3.3
 connexion[swagger-ui]>=2.0
+git+https://gitlab.com/dataroots-public/mlmonkey.git

@@ -167,7 +167,7 @@ Currently you can find the following docker files:
 Finally, you can start all services using `docker-compose`:  
 for example `docker-compose up jupyter`, `docker-compose up api` or `docker-compose up test`.  
 
-Do you need a notebook for development? Just run `docker-compose jupyter up`. It will launch a Jupyter Notebook 
+Do you need a notebook for development? Just run `docker-compose up jupyter`. It will launch a Jupyter Notebook 
 with access to you local development files.
 
 ## Best practices for development

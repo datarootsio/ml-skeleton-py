@@ -172,12 +172,11 @@ with access to you local development files.
 
 ## Best practices for development
 
-- Make sure that `make test` runs properly.  
+- Make sure that `make test` and/or `docker-compose up test` runs properly.  
+- In need for a Notebook? Use the docker image: `docker-compose up jupyter`.
 - Commit often, perfect later.
 - Integrate `make test` with your CI pipeline.
 - Capture `stdout` when deployed.
-- In need for a Notebook? Use the docker image.
-
 
 ## Project configuration
 

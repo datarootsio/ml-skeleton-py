@@ -50,5 +50,13 @@ tox: ## run tox tests
 
 test: generate-dataset train prediction tox count-test-files count-report-files ## run extensive tests
 
+spark-zip: ## build the dependency zip file to submit with a spark job
+	mkdir -p ./dist/libs
+	cp -a ./src/. ./dist/libs/src/
+	pip install -r requirements-spark.txt -t ./dist/libs/
+	cd ./dist/libs/; zip  -r ../spark-libs.zip *
+	rm -rf ./dist/libs
+
+
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

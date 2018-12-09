@@ -125,6 +125,7 @@ generate-dataset               run new ETL pipeline
 help                           show help on available commands
 init-train                     generate dataset & train the model
 prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
+spark-zip                      build the dependency zip file to submit with a spark job
 test                           run extensive tests
 tox                            run tox tests
 train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
@@ -158,7 +159,7 @@ of textual content and visualizations.
 
 ## Docker
 
-Currently you can find two docker files within the project root.  
+Currently you can find the following docker files:  
 1. `Dockerfile.jupyter` builds an image for running notebooks.  
 2. `Dockerfile.api` builds an image for starting an API endpoint.
 3. `Dockerfile.test` builds an image to run all tests in (`make test`).
@@ -166,6 +167,8 @@ Currently you can find two docker files within the project root.
 Finally, you can start all services using `docker-compose`:  
 for example `docker-compose up jupyter`, `docker-compose up api` or `docker-compose up test`.  
 
+Do you need a notebook for development? Just run `docker-compose jupyter up`. It will launch a Jupyter Notebook 
+with access to you local development files.
 
 ## Best practices for development
 
@@ -173,6 +176,7 @@ for example `docker-compose up jupyter`, `docker-compose up api` or `docker-comp
 - Commit often, perfect later.
 - Integrate `make test` with your CI pipeline.
 - Capture `stdout` when deployed.
+- In need for a Notebook? Use the docker image.
 
 
 ## Project configuration
@@ -184,6 +188,10 @@ For example, you can set variables defined in `src/settings.py`, such as
 
 Logging can be adjusted in source init script (output location, verbosity level etc).      
 Verbosity is read from environment variable `LOG_LEVEL`, and use `WARNING` if such variable is not defined.  
+
+## Spark
+
+See the Makefile for some logic to build a Spark dep file (example TBD.
 
 ## Prerequisites
 

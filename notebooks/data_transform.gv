@@ -1,0 +1,9 @@
+digraph {
+
+    raw[label="raw", weight="0.2"];
+    transformed[label="transformed", weight="0.2"];
+    etl[label="etl (copy)", weight="0.2", shape="box"];
+
+    // connections
+    raw -> etl -> transformed
+}

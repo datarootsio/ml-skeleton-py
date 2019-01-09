@@ -11,7 +11,6 @@ import functools
 
 from sklearn.externals import joblib
 import numpy as np
-import shap
 
 from mlmonkey.metadata import PredictionMetadata
 
@@ -66,18 +65,13 @@ def predict_from_file(model_name, input_df, output_df):
 
     logger.info('calculating prediction explanations (shapley values)')
 
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(input_data)
-
-    preds_shap = np.hstack((preds, shap_values))
-
     output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
     logger.info('storing saved prediction at: {}'.format(output_df_fn))
-    np.savetxt(output_df_fn, preds_shap, delimiter=',')
+    np.savetxt(output_df_fn, preds, delimiter=',')
 
     pm = PredictionMetadata(model_location=model_location,
                             input_identifier=input_data.tolist(),
-                            output_identifier=preds_shap.tolist())
+                            output_identifier=preds.tolist())
 
     logger.info('prediction base metadata: {}'.format(pm))
 
@@ -110,13 +104,10 @@ def predict_api(body, model_name):
     logger.info('prediction results: {}'.format(preds))
 
     logger.info('calculating prediction explanations (shapley values)')
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(features)
-    preds_shap = np.hstack((preds, shap_values))
 
     pm = PredictionMetadata(model_location=model_location,
                             input_identifier=body,
-                            output_identifier=preds_shap.tolist())
+                            output_identifier=preds.tolist())
 
     logger.info('prediction base metadata: {}'.format(pm))
 
@@ -126,6 +117,6 @@ def predict_api(body, model_name):
             'model_location': model_location,
             'model_metadata_location': model_metadata_location
         },
-        'result': preds_shap.tolist(),
+        'result': preds.tolist(),
         'timing': time.time() - start_time
     }

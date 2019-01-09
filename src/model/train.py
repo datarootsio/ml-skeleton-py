@@ -69,7 +69,7 @@ def train(model_filename, input_data_filename):
     }
     metadata = ModelMetadata(model_location, regr_model, model_description,
                              data_location, None, feature_names,
-                             list(regr_model.feature_importances_), testing_strategy, None,
+                             list(zip(feature_names, regr_model.feature_importances_)), testing_strategy, None,
                              extra_metadata=extra_metadata)
 
     # add scores to metadata

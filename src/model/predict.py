@@ -63,8 +63,6 @@ def predict_from_file(model_name, input_df, output_df):
     # single observations at a time
     logger.info('prediction results: {}'.format(preds))
 
-    logger.info('calculating prediction explanations (shapley values)')
-
     output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
     logger.info('storing saved prediction at: {}'.format(output_df_fn))
     np.savetxt(output_df_fn, preds, delimiter=',')
@@ -102,8 +100,6 @@ def predict_api(body, model_name):
     preds = preds.reshape(-1, 1)  # transform single axis array to a column
 
     logger.info('prediction results: {}'.format(preds))
-
-    logger.info('calculating prediction explanations (shapley values)')
 
     pm = PredictionMetadata(model_location=model_location,
                             input_identifier=body,

@@ -6,11 +6,24 @@ for expected error range.
 """
 import os
 
+import src.settings as s
+import unittest
+from sklearn.externals import joblib
 
-def test_model_deserializable():
-    """Test if a model correctly deserializes.
 
-    Note, this infers models should be part of the git repo.
-    TODO: add tangible examples
-    """
-    assert os.path.exists('models/')
+class TestModel(unittest.TestCase):
+
+    def test_model_deserializable(self):
+        """Test if a model correctly deserializes.
+
+        Note, this infers models should be part of the git repo.
+        """
+        model_path = os.path.join(s.MODEL_DIR, 'model.joblib')
+        if os.path.exists(model_path):
+            try:
+                joblib.load(model_path)
+
+            except Exception:
+                self.fail('the deserialization of the model could not be done')
+
+

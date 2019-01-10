@@ -16,7 +16,7 @@ paths:
       - predictions
       responses:
         '200':
-          description: Model output hstack'd with explanatory variables.
+          description: Model output.
           content:
             application/json:
               schema:
@@ -28,7 +28,7 @@ paths:
                         type: string
                       model_location:
                         type: string
-                      git_commit:
+                      model_metadata_location:
                         type: string
                   result:
                     type: array

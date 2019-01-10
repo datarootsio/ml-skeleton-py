@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_data_location(input_data_filename):
-    """
+    """Get the absolute path of the data.
 
     :param input_data_filename: the filename of the data
     :return: the data's complete path

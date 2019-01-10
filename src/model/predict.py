@@ -101,12 +101,6 @@ def predict_api(body, model_name):
 
     logger.info('prediction results: {}'.format(preds))
 
-    pm = PredictionMetadata(model_location=model_location,
-                            input_identifier=body,
-                            output_identifier=preds.tolist())
-
-    logger.info('prediction base metadata: {}'.format(pm))
-
     return {
         'release': {
             'model_name': model_name,

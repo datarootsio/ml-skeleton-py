@@ -16,3 +16,4 @@ pip-delete-this-directory.txt
 coverage.xml
 *.cover
 *.log
+.git

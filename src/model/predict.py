@@ -13,7 +13,6 @@ from sklearn.externals import joblib
 import numpy as np
 
 from mlmonkey.metadata import PredictionMetadata
-from mlmonkey.metadata.utils import get_git_commit
 
 from .. import settings as s
 
@@ -102,18 +101,11 @@ def predict_api(body, model_name):
 
     logger.info('prediction results: {}'.format(preds))
 
-    pm = PredictionMetadata(model_location=model_location,
-                            input_identifier=body,
-                            output_identifier=preds.tolist())
-
-    logger.info('prediction base metadata: {}'.format(pm))
-
     return {
         'release': {
             'model_name': model_name,
             'model_location': model_location,
-            'model_metadata_location': model_metadata_location,
-            'git_commit': get_git_commit()
+            'model_metadata_location': model_metadata_location
         },
         'result': preds.tolist(),
         'timing': time.time() - start_time

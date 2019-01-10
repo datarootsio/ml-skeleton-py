@@ -16,6 +16,30 @@ from mlmonkey.metadata import ModelMetadata
 logger = logging.getLogger(__name__)
 
 
+def get_data_location(input_data_filename):
+    """Get the absolute path of the data.
+
+    :param input_data_filename: the filename of the data
+    :return: the data's complete path
+    """
+    return os.path.join(s.DATA_TRANSFORMED, input_data_filename)
+
+
+def load_dataset(input_data_filename):
+    """Load the data based on its filename.
+
+    :param input_data_filename: the filename of the data
+    :return: the data shuffled
+    """
+    logging.info('Loading transformed dataset')
+    data_location = get_data_location(input_data_filename)
+    data = pd.read_csv(data_location)
+    data = data.sample(frac=1, random_state=1)  # shuffle
+    data_X = data.drop(columns=['species', 'petal_length'])
+    data_y = data['petal_length']
+    return data_X, data_y
+
+
 def train(model_filename, input_data_filename):
     """Train and save a model. Calculate evaluation metrics. Write metadata.
 
@@ -25,16 +49,9 @@ def train(model_filename, input_data_filename):
     the model (with extension)
     """
     # Load the iris dataset
-    logging.info('Loading iris dataset')
-    data_location = os.path.join(s.DATA_TRANSFORMED, input_data_filename)
-    iris = pd.read_csv(data_location)
-    iris = iris.sample(frac=1)  # shuffle
-    # Prepare train and target columns
-    iris_X = iris.drop(columns=['species', 'petal_length'])
-    iris_y = iris['petal_length']
-
+    (iris_X, iris_y) = load_dataset(input_data_filename)
     # Create linear regression object
-    regr_model = RandomForestRegressor()
+    regr_model = RandomForestRegressor(n_estimators=20, random_state=1)
 
     # Calculating CV score(s)
     logger.info('Performing cross validation')
@@ -47,7 +64,7 @@ def train(model_filename, input_data_filename):
     mse_cv_score = - scores['test_neg_mean_squared_error'].mean()
 
     # Calculate predictions, to plot actual-vs-predicted later.
-    predictions = cross_val_predict(regr_model, iris_X, iris_y, cv=5)
+    predictions = cross_val_predict(regr_model, iris_X, iris_y, cv=cv)
 
     # Train a model using the whole dataset
     logger.info('Fitting linear model.')
@@ -68,7 +85,7 @@ def train(model_filename, input_data_filename):
         }
     }
     metadata = ModelMetadata(model_location, regr_model, model_description,
-                             data_location, None, feature_names,
+                             get_data_location(input_data_filename), None, feature_names,
                              list(zip(feature_names, regr_model.feature_importances_)), testing_strategy, None,
                              extra_metadata=extra_metadata)
 

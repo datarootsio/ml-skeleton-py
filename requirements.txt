@@ -6,7 +6,7 @@ scikit-learn==0.20
 click==6.7
 numpy==1.15
 scipy==1.1
-pandas==0.23
+pandas==0.23.4
 python-dotenv==0.9
 jupyter==1.0
 graphviz==0.10

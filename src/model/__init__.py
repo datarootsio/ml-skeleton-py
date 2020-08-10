@@ -1,14 +1,10 @@
 """Model package."""
 
-from .train import (
-    train,
-)
+from .train import train
 
-from .predict import (
-    predict_from_file,
-)
+from .predict import predict_from_file
 
 __all__ = [
-    'train',
-    'predict_from_file',
+    "train",
+    "predict_from_file",
 ]

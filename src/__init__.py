@@ -9,8 +9,6 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-logging.basicConfig(level=os.getenv('LOG_LEVEL', 'WARNING'))
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "WARNING"))
 
-logging \
-    .getLogger(__name__) \
-    .addHandler(logging.NullHandler())
+logging.getLogger(__name__).addHandler(logging.NullHandler())

@@ -2,4 +2,6 @@
 
 from .generate_dataset import generate
 
-__all__ = ['generate', ]
+__all__ = [
+    "generate",
+]

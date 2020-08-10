@@ -8,11 +8,13 @@ import os
 import time
 import logging
 import functools
+import pickle
 
-from sklearn.externals import joblib
+# from sklearn.externals import joblib
+import joblib
 import numpy as np
 
-from mlmonkey.metadata import PredictionMetadata
+# from mlmonkey.metadata import PredictionMetadata
 
 from .. import settings as s
 
@@ -42,36 +44,40 @@ def predict_from_file(model_name, input_df, output_df):
     :param output_df: the output data file to store predictions as
     """
     # Deserialize the model
-    logger.info('deserializing model: {}'.format(model_name))
-    model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_name))
-    model = load_model(model_location)
+    logger.info("deserializing model: {}".format(model_name))
+    # model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_name))
+    # model = load_model(model_location)
+
+    model = pickle.load(open(os.path.join(s.MODEL_DIR, model_name), "rb"))["model"]
 
     # input features - normally one would load a file based on the `input_df` path here
-    input_data = np.array([
-        [5.8, 2.8, 2.4],
-        [6.4, 2.8, 2.1]
-    ])
+    # input_data = np.array([
+    #     [5.8, 2.8, 2.4],
+    #     [6.4, 2.8, 2.1]
+    # ])
+    input_data = pickle.load(open(os.path.join(s.DATA_TRANSFORMED, input_df), "rb"))
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
-    logger.info('running predictions for input: {}'.format(input_data))
+    logger.info("running predictions for input: {}".format(input_data))
 
     preds = model.predict(input_data)
     preds = preds.reshape(-1, 1)  # transform single axis array to a column
+    # print(preds)
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
-    logger.info('prediction results: {}'.format(preds))
+    logger.info("prediction results: {}".format(preds))
 
     output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
-    logger.info('storing saved prediction at: {}'.format(output_df_fn))
-    np.savetxt(output_df_fn, preds, delimiter=',')
+    logger.info("storing saved prediction at: {}".format(output_df_fn))
+    np.savetxt(output_df_fn, preds, delimiter=",")
 
-    pm = PredictionMetadata(model_location=model_location,
-                            input_identifier=input_data.tolist(),
-                            output_identifier=preds.tolist())
+    # pm = PredictionMetadata(model_location=model_location,
+    #                         input_identifier=input_data.tolist(),
+    #                         output_identifier=preds.tolist())
 
-    logger.info('prediction base metadata: {}'.format(pm))
+    # logger.info('prediction base metadata: {}'.format(pm))
 
 
 def predict_api(body, model_name):
@@ -84,29 +90,32 @@ def predict_api(body, model_name):
     :return: predictions
     """
     start_time = time.time()
-    features = np.array(body.get('features'))
+    features = np.array(body.get("features"))
 
-    logger.info('deserializing model: {}'.format(model_name))
+    logger.info("deserializing model: {}".format(model_name))
 
     # deserialize the model
-    model_location = os.path.join(s.MODEL_DIR, '{}.joblib'.format(model_name))
-    model_metadata_location = os.path.join(s.MODEL_METADATA_DIR, '{}.joblib.json'.format(model_name))
+
+    model_location = os.path.join(s.MODEL_DIR, "{}.joblib".format(model_name))
+    model_metadata_location = os.path.join(
+        s.MODEL_METADATA_DIR, "{}.joblib.json".format(model_name)
+    )
 
     model = load_model(model_location)
 
-    logger.info('running predictions for input: {}'.format(body))
+    logger.info("running predictions for input: {}".format(body))
 
     preds = model.predict(features)
     preds = preds.reshape(-1, 1)  # transform single axis array to a column
 
-    logger.info('prediction results: {}'.format(preds))
+    logger.info("prediction results: {}".format(preds))
 
     return {
-        'release': {
-            'model_name': model_name,
-            'model_location': model_location,
-            'model_metadata_location': model_metadata_location
+        "release": {
+            "model_name": model_name,
+            "model_location": model_location,
+            "model_metadata_location": model_metadata_location,
         },
-        'result': preds.tolist(),
-        'timing': time.time() - start_time
+        "result": preds.tolist(),
+        "timing": time.time() - start_time,
     }

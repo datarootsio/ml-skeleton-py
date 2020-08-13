@@ -12,7 +12,6 @@ import pickle
 from sklearn.base import BaseEstimator
 
 # from sklearn.externals import joblib
-import joblib
 import numpy as np
 
 # from mlmonkey.metadata import PredictionMetadata
@@ -35,11 +34,12 @@ def load_model(model_name: str) -> BaseEstimator:
         model_name (str): model name e.g. "lr.p"
 
     Returns:
-        model (Pipeline or BaseEstimator): a model that can make predictions 
+        model (Pipeline or BaseEstimator): a model that can make predictions
     """
     with open(os.path.join(s.MODEL_DIR, model_name), "rb") as handle:
         model = pickle.load(handle)["model"]
     return model
+
 
 def predict(model_name: str, observation: np.array) -> float:
     """
@@ -78,9 +78,6 @@ def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.arra
     # Deserialize the model
     logger.info("deserializing model: {}".format(model_name))
 
-    #load model
-    model = load_model(model_name)
-
     # load input_data
     with open(os.path.join(s.DATA_TRANSFORMED, input_df), "rb") as handle:
         input_data = pickle.load(handle)
@@ -105,42 +102,42 @@ def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.arra
     return preds
 
 
-# def predict_api(body: str, model_name: str) -> dict:
-#     """
-#     Make prediction through an API call.
+def predict_api(body: str, model_name: str) -> dict:
+    """
+    Make prediction through an API call.
 
-#     :param body: the body of the request
-#     :param model_name: the name of the model, will be used to deserialize the model
+    :param body: the body of the request
+    :param model_name: the name of the model, will be used to deserialize the model
 
-#     :return: predictions
-#     """
-#     start_time = time.time()
-#     features = np.array(body.get("features"))
+    :return: predictions
+    """
+    start_time = time.time()
+    features = np.array(body.get("features"))
 
-#     logger.info("deserializing model: {}".format(model_name))
+    logger.info("deserializing model: {}".format(model_name))
 
-#     # deserialize the model
+    # deserialize the model
 
-#     model_location = os.path.join(s.MODEL_DIR, "{}.joblib".format(model_name))
-#     model_metadata_location = os.path.join(
-#         s.MODEL_METADATA_DIR, "{}.joblib.json".format(model_name)
-#     )
+    model_location = os.path.join(s.MODEL_DIR, "{}.joblib".format(model_name))
+    model_metadata_location = os.path.join(
+        s.MODEL_METADATA_DIR, "{}.joblib.json".format(model_name)
+    )
 
-#     model = load_model(model_location)
+    model = load_model(model_location)
 
-#     logger.info("running predictions for input: {}".format(body))
+    logger.info("running predictions for input: {}".format(body))
 
-#     preds = model.predict(features)
-#     preds = preds.reshape(-1, 1)  # transform single axis array to a column
+    preds = model.predict(features)
+    preds = preds.reshape(-1, 1)  # transform single axis array to a column
 
-#     logger.info("prediction results: {}".format(preds))
+    logger.info("prediction results: {}".format(preds))
 
-#     return {
-#         "release": {
-#             "model_name": model_name,
-#             "model_location": model_location,
-#             "model_metadata_location": model_metadata_location,
-#         },
-#         "result": preds.tolist(),
-#         "timing": time.time() - start_time,
-#     }
+    return {
+        "release": {
+            "model_name": model_name,
+            "model_location": model_location,
+            "model_metadata_location": model_metadata_location,
+        },
+        "result": preds.tolist(),
+        "timing": time.time() - start_time,
+    }

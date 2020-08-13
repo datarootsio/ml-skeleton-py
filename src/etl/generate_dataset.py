@@ -55,10 +55,9 @@ def generate() -> pd.DataFrame:
     if not os.path.isfile(os.path.join(s.DATA_RAW, "creditcard.csv")):
         logger.info("creditcard.csv not found in " + os.path.join(s.DATA_RAW))
         logger.info(
-            "please download the file from url = \
+            f"please download the file from url = \
             'https://www.kaggle.com/mlg-ulb/creditcardfraud/download' \
-            and place it in "
-            + s.DATA_RAW
+            and place it in {s.DATA_RAW}"
         )
         return
         # open(os.path.join(s.DATA_RAW, "creditcard.zip"), 'wb').write(r.content)
@@ -108,6 +107,9 @@ def generate() -> pd.DataFrame:
         "V10_upper": V10_upper,
         "V10_lower": V10_lower,
     }
+
+    print("outlier_params")
+    print(outlier_params)
 
     df = remove_outliers(df, outlier_params)
 

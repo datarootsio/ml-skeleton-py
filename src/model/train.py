@@ -42,7 +42,7 @@ def fetch_model(model: str) -> Tuple[BaseEstimator, dict]:
 
     """
     if model == "lr":
-        classifier = (LogisticRegression(max_iter=4000),)
+        classifier = LogisticRegression(max_iter=4000)
         params = {"penalty": ["l2"], "C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]}
     elif model == "knn":
         classifier = KNeighborsClassifier()
@@ -147,7 +147,6 @@ def train() -> None:
     # after running several experiments.
     model = "lr"
     classifier, params = fetch_model(model=model)
-    classifier = classifier[0]
 
     # training
     grid_clf = GridSearchCV(classifier, params, scoring="roc_auc")

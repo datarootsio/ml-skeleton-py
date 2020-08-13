@@ -4,12 +4,13 @@ Test for correct working and output of an ML model. Add tests here to check
 for expected error range.
 
 """
-import os, sys
+import os
+import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
-import src.settings as s
+from config import settings as s
 import unittest
 import joblib
 

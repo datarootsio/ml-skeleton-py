@@ -21,18 +21,18 @@ from .. import settings as s
 logger = logging.getLogger(__name__)
 
 
-@functools.lru_cache()
-def load_model(model_location):
-    """Load model using joblib.
+# @functools.lru_cache()
+# def load_model(model_location: str):
+#     """Load model using joblib.
 
-    Uses lru for caching.
+#     Uses lru for caching.
 
-    :param model_location: path to model file
-    """
-    return joblib.load(model_location)
+#     :param model_location: path to model file
+#     """
+#     return joblib.load(model_location)
 
 
-def predict_from_file(model_name, input_df, output_df):
+def predict_from_file(model_name: str, input_df: str, output_df: str) -> None:
     """Predict new values using a serialized model.
 
     Note log predictions via logger to STDOUT. This should be captured by a
@@ -80,7 +80,7 @@ def predict_from_file(model_name, input_df, output_df):
     # logger.info('prediction base metadata: {}'.format(pm))
 
 
-def predict_api(body, model_name):
+def predict_api(body: str, model_name: str) -> dict:
     """
     Make prediction through an API call.
 

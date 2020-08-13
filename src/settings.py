@@ -16,7 +16,7 @@ DATA_PREDICTIONS = os.path.join(
     os.path.abspath(os.getenv("DATA_TRANSFORMED", "./data/predictions/")), ""
 )
 
-ETL_DIR = os.path.join(os.path.abspath(os.getenv("ETL_DIR", "./etl")), "")
+ETL_DIR = os.path.join(os.path.abspath(os.getenv("ETL_DIR", "./src/etl")), "")
 
 MODEL_DIR = os.path.join(os.path.abspath(os.getenv("MODEL_DIR", "./models")), "")
 MODEL_METADATA_DIR = os.path.join(

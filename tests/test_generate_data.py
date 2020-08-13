@@ -1,21 +1,46 @@
 import os, sys
-import subprocess
+import numpy as np
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import src.settings as s
+from src.etl.generate_dataset import generate
 import pickle
 
-# subprocess.check_output("ls " + os.path.join(s.ETL_DIR))
 
-# print(os.path.join(s.ETL_DIR))
+X_train, X_test, y_train, y_test = generate()
 
-def test_generate_dataset():
 
-	# X_train, X_test, y_train, y_test = generate()
+def test_generate_loading_X_train():
+    """
+	test if X_train is loaded correctly
+	"""
+    X_train_load = pickle.load(
+        open(os.path.join(s.DATA_TRANSFORMED, "X_train.p"), "rb")
+    )
+    assert (X_train_load == X_train).all()
 
-	files = os.listdir(s.DATA_TRANSFORMED)
-	assert "X_train.p" in files 
-	assert "y_train.p" in files
-	assert "X_test.p" in files
-	assert "y_test.p" in files
 
+def test_generate_loading_y_train():
+    """
+	test if y_train is loaded correctly
+	"""
+    y_train_load = pickle.load(
+        open(os.path.join(s.DATA_TRANSFORMED, "y_train.p"), "rb")
+    )
+    assert (y_train_load == y_train).all()
+
+
+def test_generate_loading_X_test():
+    """
+	test if X_test is loaded correctly
+	"""
+    X_test_load = pickle.load(open(os.path.join(s.DATA_TRANSFORMED, "X_test.p"), "rb"))
+    assert (X_test_load == X_test).all()
+
+
+def test_generate_loading_y_test():
+    """
+	test if y_test is loaded correctly
+	"""
+    y_test_load = pickle.load(open(os.path.join(s.DATA_TRANSFORMED, "y_test.p"), "rb"))
+    assert (y_test_load == y_test).all()

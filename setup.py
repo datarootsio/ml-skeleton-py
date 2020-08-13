@@ -18,7 +18,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
     classifiers=[
-            "Programming Language :: Python :: 3.7",
-            "Operating System :: OS Independent"
-        ]
+        "Programming Language :: Python :: 3.7",
+        "Operating System :: OS Independent",
+    ],
 )

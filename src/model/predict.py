@@ -16,7 +16,9 @@ import numpy as np
 
 # from mlmonkey.metadata import PredictionMetadata
 
-from .. import settings as s
+# from .. import settings as s
+
+from config import settings as s
 
 logger = logging.getLogger(__name__)
 

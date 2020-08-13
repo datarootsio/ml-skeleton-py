@@ -10,9 +10,7 @@ import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import logging
-# from config import settings as s
-
-from .. import settings as s
+from config import settings as s
 
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
@@ -53,7 +51,6 @@ def generate() -> pd.DataFrame:
     Returns:
         X_train, y_train, X_test, y_test (tuple): the training and test datasets with labels
     """
-    print(s)
     logger.info("Loading dataset")
     if not os.path.isfile(os.path.join(s.DATA_RAW, "creditcard.csv")):
         logger.info("creditcard.csv not found in " + os.path.join(s.DATA_RAW))

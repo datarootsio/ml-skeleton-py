@@ -1,21 +1,15 @@
-[default]
 DATA_RAW = "./data/raw/"
-DYNACONF_DATA_TRANSFORMED = "./data/transformed/"
-DYNACONF_DATA_STAGING = "./data/staging/"
-DYNACONF_PREDICTIONS = "./data/predictions/"
+DATA_TRANSFORMED = "./data/transformed/"
+DATA_STAGING = "./data/staging/"
+PREDICTIONS = "./data/predictions/"
 
-DYNACONF_ETL_DIR = "./src/etl"
+ETL_DIR = "./src/etl"
 
-DYNACONF_MODEL_DIR = "./models"
-DYNACONF_MODEL_METADATA_DIR = "./models/metadata"
+MODEL_DIR = "./models"
+MODEL_METADATA_DIR = "./models/metadata"
 
-DYNACONF_FLASK_ENDPOINT_HOST = "0.0.0.0"
-DYNACONF_FLASK_ENDPOINT_PORT = 5000
-
-key = "value"
-a_boolean = false
-number = 1234
-a_float = 56.8
+FLASK_ENDPOINT_HOST = "0.0.0.0"
+FLASK_ENDPOINT_PORT = 5000
 
 [development]
 

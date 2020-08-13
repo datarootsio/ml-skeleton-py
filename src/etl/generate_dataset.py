@@ -46,7 +46,7 @@ def generate() -> pd.DataFrame:
     Load the data, removes outliers, subsamples the data and returns the traing and test datasets.
 
     Parameters:
-        empty
+        Empty
 
     Returns:
         X_train, y_train, X_test, y_test (tuple): the training and test datasets with labels
@@ -57,7 +57,8 @@ def generate() -> pd.DataFrame:
         logger.info(
             "please download the file from url = \
             'https://www.kaggle.com/mlg-ulb/creditcardfraud/download' \
-            and place it in " + s.DATA_RAW
+            and place it in "
+            + s.DATA_RAW
         )
         return
         # open(os.path.join(s.DATA_RAW, "creditcard.zip"), 'wb').write(r.content)

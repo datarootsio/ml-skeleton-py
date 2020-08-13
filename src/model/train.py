@@ -66,6 +66,23 @@ def fetch_model(model: str) -> Tuple[BaseEstimator, dict]:
     return classifier, params
 
 
+def save_transformed_data(object: pd.DataFrame, file: str) -> None:
+    """
+    Saves a transformed data object.
+
+    Parameters:
+        object (pd.DataFrame): a dataframe that you want to save
+
+        file (str): the filename of the object
+
+    Return:
+        None
+    """
+    with open(os.path.join(s.DATA_TRANSFORMED, file), "wb") as handle:
+        pickle.dump(object, handle)
+    return None
+
+
 def save_split_data(
     X: pd.DataFrame, y: pd.DataFrame
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -90,10 +107,10 @@ def save_split_data(
         X, y, test_size=0.2, random_state=42
     )
 
-    pickle.dump(X_train, open(os.path.join(s.DATA_TRANSFORMED, "X_train.p"), "wb"))
-    pickle.dump(y_train, open(os.path.join(s.DATA_TRANSFORMED, "y_train.p"), "wb"))
-    pickle.dump(X_test, open(os.path.join(s.DATA_TRANSFORMED, "X_test.p"), "wb"))
-    pickle.dump(y_test, open(os.path.join(s.DATA_TRANSFORMED, "y_test.p"), "wb"))
+    save_transformed_data(X_train, "X_train.p")
+    save_transformed_data(y_train, "y_train.p")
+    save_transformed_data(X_test, "X_test.p")
+    save_transformed_data(y_test, "y_test.p")
     return X_train, y_train, X_test, y_test
 
 
@@ -103,6 +120,9 @@ def train() -> None:
 
     Trains a specific classifier with a grid of parameters in a 5fold-CV.
     The training results with the accompanying model is saved in ./models/
+
+    Parameters:
+        Empty
 
     Returns:
         None

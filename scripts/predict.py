@@ -10,9 +10,9 @@ from src import model
 
 
 @click.command()
-@click.option("--model-name", default="model")
-@click.option("--input-df", default="model")
-@click.option("--output-df", default="predictions.csv")
+@click.option("--model_name", default="model")
+@click.option("--input_df", default="model")
+@click.option("--output_df", default="predictions.csv")
 def predict(model_name, input_df, output_df):
     model.predict_from_file(model_name, input_df, output_df)
 

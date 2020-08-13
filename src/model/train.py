@@ -143,6 +143,8 @@ def train() -> None:
     X_train, y_train, X_test, y_test = save_split_data(X, y)
 
     # fetching model params
+    # In this specific example logistic regression was chosen as the most optimal model
+    # after running several experiments.
     model = "lr"
     classifier, params = fetch_model(model=model)
     classifier = classifier[0]

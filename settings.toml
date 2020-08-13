@@ -1,7 +1,7 @@
 DATA_RAW = "./data/raw/"
 DATA_TRANSFORMED = "./data/transformed/"
 DATA_STAGING = "./data/staging/"
-PREDICTIONS = "./data/predictions/"
+DATA_PREDICTIONS = "./data/predictions/"
 
 ETL_DIR = "./src/etl"
 

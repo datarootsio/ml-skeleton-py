@@ -10,7 +10,7 @@ from src import etl
 
 
 @click.command()
-@click.option("--dataset", default="creditcard.csv")
+@click.option("--dataset", type=str, default="creditcard.csv")
 def generate(dataset: str) -> None:
     """
     Load the dataset, remove the outliers and store in transformed data directory.
@@ -25,5 +25,4 @@ def generate(dataset: str) -> None:
 
 
 if __name__ == "__main__":
-    dataset = "creditcard.csv"
-    generate(dataset)
+    generate()

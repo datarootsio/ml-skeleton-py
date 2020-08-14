@@ -33,6 +33,4 @@ def train(model_name: str, dataset: str) -> None:
 
 
 if __name__ == "__main__":
-	model_name = "lr"
-	dataset = "creditcard.csv"
-    train(model_name, dataset)
+    train()

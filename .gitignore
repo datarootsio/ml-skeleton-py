@@ -115,3 +115,7 @@ dmypy.json
 **/__pycache__/
 **.csv
 **.p
+
+# ignore directory ml-skeleton-py
+ml-skeleton-py/
+ml-skeleton-py_env/

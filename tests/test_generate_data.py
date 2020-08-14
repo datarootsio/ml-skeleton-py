@@ -10,7 +10,6 @@ from src.etl.generate_dataset import generate, remove_outliers
 DATASET = "creditcard.csv"
 df = generate(DATASET)
 
-
 def test_generate():
     """
     Tests whether file can be opened and whether it is a pd.DataFrame.
@@ -18,6 +17,11 @@ def test_generate():
     df = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, DATASET))
     assert type(df) == pd.DataFrame
 
+def test_faulty_generate():
+    """
+    Test whether non existent file is returned with None.
+    """
+    assert generate("no.csv") is None
 
 def test_outlier_removal():
     """

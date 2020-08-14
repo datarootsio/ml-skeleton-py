@@ -60,7 +60,6 @@ def generate(dataset: str) -> pd.DataFrame:
             and place it in {s.DATA_RAW}"
         )
         return
-        # open(os.path.join(s.DATA_RAW, "creditcard.zip"), 'wb').write(r.content)
 
     df = pd.read_csv(os.path.join(s.DATA_RAW, dataset))
 
@@ -115,7 +114,3 @@ def generate(dataset: str) -> pd.DataFrame:
 
     logger.info("Done!")
     return df
-
-
-if __name__ == "__main__":
-    generate()

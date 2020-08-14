@@ -177,6 +177,3 @@ def train(model: str, dataset: str) -> None:
     }
     pickle.dump(pred_result, open(os.path.join(s.MODEL_DIR, model) + ".p", "wb"))
 
-
-if __name__ == "__main__":
-    train()

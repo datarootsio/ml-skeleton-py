@@ -114,7 +114,7 @@ def save_split_data(
     return X_train, y_train, X_test, y_test
 
 
-def train() -> None:
+def train(model: str, dataset: str) -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
@@ -122,14 +122,21 @@ def train() -> None:
     The training results with the accompanying model is saved in ./models/
 
     Parameters:
-        Empty
+        model (str): the model that you want to train
+                     options:
+                        "lr": logistic regression
+                        "knn": k nearest neighbors
+                        "svc": support vector classifier
+                        "dt": decision tree
+
+        dataset (str): the dataset on which you want to train
 
     Returns:
         None
 
     """
     # loading data
-    df = pd.read_csv(os.path.join(s.DATA_RAW, "creditcard.csv"))
+    df = pd.read_csv(os.path.join(s.DATA_RAW, dataset))
     X = df.drop("Class", axis=1)
     y = df["Class"]
 
@@ -145,7 +152,6 @@ def train() -> None:
     # fetching model params
     # In this specific example logistic regression was chosen as the most optimal model
     # after running several experiments.
-    model = "lr"
     classifier, params = fetch_model(model=model)
 
     # training

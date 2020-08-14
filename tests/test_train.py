@@ -8,6 +8,8 @@ from src.model.train import fetch_model
 from src.model.train import train
 import pickle
 
+DATASET = "creditcard.csv"
+
 
 def test_lr():
     """
@@ -55,10 +57,43 @@ def test_dt():
 
 def test_train_lr():
     """
-    Test whether a model is trained and a model can be loaded.
+    Test whether logistic regression is trained and can be loaded.
     """
-    train()
     model = "lr"
+    train(model, DATASET)
+    with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
+        pred_result = pickle.load(handle)
+    assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])
+
+
+def test_train_knn():
+    """
+    Test whether k nearest neighbors is trained and can be loaded.
+    """
+    model = "knn"
+    train(model, DATASET)
+    with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
+        pred_result = pickle.load(handle)
+    assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])
+
+
+def test_train_svc():
+    """
+    Test whether support vector classifier is trained and can be loaded.
+    """
+    model = "svc"
+    train(model, DATASET)
+    with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
+        pred_result = pickle.load(handle)
+    assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])
+
+
+def test_train_dt():
+    """
+    Test whether decision tree is trained and can be loaded.
+    """
+    model = "dt"
+    train(model, DATASET)
     with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
         pred_result = pickle.load(handle)
     assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])

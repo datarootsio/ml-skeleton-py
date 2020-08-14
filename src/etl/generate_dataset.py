@@ -41,18 +41,18 @@ def remove_outliers(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     return df
 
 
-def generate() -> pd.DataFrame:
+def generate(dataset: str) -> pd.DataFrame:
     """
     Load the data, removes outliers, subsamples the data and returns the traing and test datasets.
 
     Parameters:
-        Empty
+        dataset (str): the input dataset
 
     Returns:
         X_train, y_train, X_test, y_test (tuple): the training and test datasets with labels
     """
-    logger.info("Loading dataset")
-    if not os.path.isfile(os.path.join(s.DATA_RAW, "creditcard.csv")):
+    logger.info(f"Loading dataset {dataset}")
+    if not os.path.isfile(os.path.join(s.DATA_RAW, dataset)):
         logger.info("creditcard.csv not found in " + os.path.join(s.DATA_RAW))
         logger.info(
             f"please download the file from url = \
@@ -62,7 +62,7 @@ def generate() -> pd.DataFrame:
         return
         # open(os.path.join(s.DATA_RAW, "creditcard.zip"), 'wb').write(r.content)
 
-    df = pd.read_csv(os.path.join(s.DATA_RAW, "creditcard.csv"))
+    df = pd.read_csv(os.path.join(s.DATA_RAW, dataset))
 
     logger.info("Preprocessing dataset from raw to tranformed")
     no_frauds = round(df["Class"].value_counts()[0] / len(df) * 100, 2)
@@ -108,13 +108,10 @@ def generate() -> pd.DataFrame:
         "V10_lower": V10_lower,
     }
 
-    print("outlier_params")
-    print(outlier_params)
-
     df = remove_outliers(df, outlier_params)
 
     # save dataframe with removed outliers
-    df.to_csv(os.path.join(s.DATA_TRANSFORMED, "creditcard.csv"), index=0)
+    df.to_csv(os.path.join(s.DATA_TRANSFORMED, dataset), index=0)
 
     logger.info("Done!")
     return df

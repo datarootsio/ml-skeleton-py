@@ -10,9 +10,20 @@ from src import etl
 
 
 @click.command()
-def generate():
-    etl.generate()
+@click.option("--dataset", default="creditcard.csv")
+def generate(dataset: str) -> None:
+    """
+    Load the dataset, remove the outliers and store in transformed data directory.
+
+    Parameters:
+        dataset (str): the dataset that you want to preprocess and transform
+
+    Returns:
+        None
+    """
+    etl.generate(dataset)
 
 
 if __name__ == "__main__":
-    generate()
+    dataset = "creditcard.csv"
+    generate(dataset)

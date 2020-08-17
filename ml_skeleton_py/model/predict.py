@@ -18,7 +18,8 @@ import numpy as np
 
 # from .. import settings as s
 
-from config import settings as s
+# from config import settings as s
+from ml_skeleton_py import settings
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.arra
     logger.info("deserializing model: {}".format(model_name))
 
     # load input_data
-    with open(os.path.join(s.DATA_TRANSFORMED, input_df), "rb") as handle:
+    with open(os.path.join(settings.DATA_TRANSFORMED, input_df), "rb") as handle:
         input_data = pickle.load(handle)
 
     # only log this directly when batch is small-ish or when predicting for
@@ -95,7 +96,7 @@ def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.arra
     logger.info("prediction results: {}".format(preds))
 
     # save the predictions
-    output_df_fn = os.path.join(s.DATA_PREDICTIONS, output_df)
+    output_df_fn = os.path.join(settings.DATA_PREDICTIONS, output_df)
     logger.info("storing saved prediction at: {}".format(output_df_fn))
     np.savetxt(output_df_fn, preds, delimiter=",")
 

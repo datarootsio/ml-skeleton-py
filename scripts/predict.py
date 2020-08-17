@@ -5,8 +5,8 @@ import sys
 
 import click
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src import model
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from ml_skeleton_py import model
 
 
 @click.command()

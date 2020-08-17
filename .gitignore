@@ -117,5 +117,5 @@ dmypy.json
 **.p
 
 # ignore directory ml-skeleton-py
-ml-skeleton-py/
+# ml-skeleton-py/
 ml-skeleton-py_env/

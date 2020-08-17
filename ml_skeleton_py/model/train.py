@@ -20,7 +20,7 @@ from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 import logging
-from config import settings as s
+from ml_skeleton_py import settings
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +78,7 @@ def save_transformed_data(object: pd.DataFrame, file: str) -> None:
     Return:
         None
     """
-    with open(os.path.join(s.DATA_TRANSFORMED, file), "wb") as handle:
+    with open(os.path.join(settings.DATA_TRANSFORMED, file), "wb") as handle:
         pickle.dump(object, handle)
     return None
 
@@ -136,7 +136,7 @@ def train(model: str, dataset: str) -> None:
 
     """
     # loading data
-    df = pd.read_csv(os.path.join(s.DATA_RAW, dataset))
+    df = pd.read_csv(os.path.join(settings.DATA_RAW, dataset))
     X = df.drop("Class", axis=1)
     y = df["Class"]
 
@@ -175,5 +175,5 @@ def train(model: str, dataset: str) -> None:
         "training score roc_auc": training_score.mean(),
         "model": predict_pipeline,
     }
-    pickle.dump(pred_result, open(os.path.join(s.MODEL_DIR, model) + ".p", "wb"))
+    pickle.dump(pred_result, open(os.path.join(settings.MODEL_DIR, model) + ".p", "wb"))
 

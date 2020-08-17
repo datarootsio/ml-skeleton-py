@@ -10,7 +10,7 @@ import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import logging
-from config import settings as s
+from ml_skeleton_py import settings
 
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
@@ -52,16 +52,16 @@ def generate(dataset: str) -> pd.DataFrame:
         X_train, y_train, X_test, y_test (tuple): the training and test datasets with labels
     """
     logger.info(f"Loading dataset {dataset}")
-    if not os.path.isfile(os.path.join(s.DATA_RAW, dataset)):
-        logger.info("creditcard.csv not found in " + os.path.join(s.DATA_RAW))
+    if not os.path.isfile(os.path.join(settings.DATA_RAW, dataset)):
+        logger.info("creditcard.csv not found in " + os.path.join(settings.DATA_RAW))
         logger.info(
             f"please download the file from url = \
             'https://www.kaggle.com/mlg-ulb/creditcardfraud/download' \
-            and place it in {s.DATA_RAW}"
+            and place it in {settings.DATA_RAW}"
         )
         return
 
-    df = pd.read_csv(os.path.join(s.DATA_RAW, dataset))
+    df = pd.read_csv(os.path.join(settings.DATA_RAW, dataset))
 
     logger.info("Preprocessing dataset from raw to tranformed")
     no_frauds = round(df["Class"].value_counts()[0] / len(df) * 100, 2)
@@ -110,7 +110,7 @@ def generate(dataset: str) -> pd.DataFrame:
     df = remove_outliers(df, outlier_params)
 
     # save dataframe with removed outliers
-    df.to_csv(os.path.join(s.DATA_TRANSFORMED, dataset), index=0)
+    df.to_csv(os.path.join(settings.DATA_TRANSFORMED, dataset), index=0)
 
     logger.info("Done!")
     return df

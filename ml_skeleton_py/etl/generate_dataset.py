@@ -37,7 +37,7 @@ def remove_outliers(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     df = df.drop(
         df[(df["V10"] > params["V10_upper"]) | (df["V10"] < params["V10_lower"])].index
     )
-    logger.info("Number of Instances after outliers removal: {}".format(len(df)))
+    logger.info(f"Number of Instances after outliers removal: {len(df)}")
     return df
 
 
@@ -78,7 +78,7 @@ def generate(dataset: str) -> pd.DataFrame:
     v14_cut_off = v14_iqr * 1.5
     V14_lower, V14_upper = q25 - v14_cut_off, q75 + v14_cut_off
     outliers = [x for x in v14_fraud if x < V14_lower or x > V14_upper]
-    logger.info("Feature V14 Outliers for Fraud Cases: {}".format(len(outliers)))
+    logger.info(f"Feature V14 Outliers for Fraud Cases: {len(outliers)}")
 
     # -----> V12 removing outliers from fraud transactions
     v12_fraud = df["V12"].loc[df["Class"] == 1].values
@@ -87,7 +87,7 @@ def generate(dataset: str) -> pd.DataFrame:
     v12_cut_off = v12_iqr * 1.5
     V12_lower, V12_upper = q25 - v12_cut_off, q75 + v12_cut_off
     outliers = [x for x in v12_fraud if x < V12_lower or x > V12_upper]
-    logger.info("Feature V12 Outliers for Fraud Cases: {}".format(len(outliers)))
+    logger.info(f"Feature V12 Outliers for Fraud Cases: {len(outliers)}")
 
     # -----> Removing outliers V10 Feature
     v10_fraud = df["V10"].loc[df["Class"] == 1].values
@@ -96,7 +96,7 @@ def generate(dataset: str) -> pd.DataFrame:
     v10_cut_off = v10_iqr * 1.5
     V10_lower, V10_upper = q25 - v10_cut_off, q75 + v10_cut_off
     outliers = [x for x in v10_fraud if x < V10_lower or x > V10_upper]
-    logger.info("Feature V10 Outliers for Fraud Cases: {}".format(len(outliers)))
+    logger.info(f"Feature V10 Outliers for Fraud Cases: {len(outliers)}")
 
     outlier_params = {
         "V14_upper": V14_upper,

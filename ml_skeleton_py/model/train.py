@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 def fetch_model(model: str) -> Tuple[BaseEstimator, dict]:
     """
-    Fetch a model and the corresponding grid parameters to be searched.
+    Fetch a model and the corresponding optimized hyperparameters.
 
     Parameters:
         model (str): lr  (logistic regression)
@@ -37,33 +37,16 @@ def fetch_model(model: str) -> Tuple[BaseEstimator, dict]:
 
     Returns:
         classifier (BaseEstimator): classifier model
-
-        params (dict): hyperparameters for grid search.
-
     """
     if model == "lr":
-        classifier = LogisticRegression(max_iter=4000)
-        params = {"penalty": ["l2"], "C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]}
+        classifier = LogisticRegression(max_iter=4000, penalty="l2", C=0.01)
     elif model == "knn":
-        classifier = KNeighborsClassifier()
-        params = {
-            "n_neighbors": list(range(2, 5, 1)),
-            "algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
-        }
+        classifier = KNeighborsClassifier(n_neighbors=4, algorithm="auto")
     elif model == "svc":
-        classifier = SVC()
-        params = {
-            "C": [0.5, 0.7, 0.9, 1],
-            "kernel": ["rbf", "poly", "sigmoid", "linear"],
-        }
+        classifier = SVC(C=1, kernel="linear")
     elif model == "dt":
-        classifier = DecisionTreeClassifier()
-        params = {
-            "criterion": ["gini", "entropy"],
-            "max_depth": list(range(2, 4, 1)),
-            "min_samples_leaf": list(range(5, 7, 1)),
-        }
-    return classifier, params
+        classifier = DecisionTreeClassifier(criterion="entropy", max_depth=3, min_samples_leaf=5)
+    return classifier
 
 
 def save_transformed_data(object: pd.DataFrame, file: str) -> None:
@@ -118,7 +101,7 @@ def train(model: str, dataset: str) -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
-    Trains a specific classifier with a grid of parameters in a 5fold-CV.
+    Trains a specific classifier with a set of optimized hyperparameters in a 5fold-CV.
     The training results with the accompanying model is saved in ./models/
 
     Parameters:
@@ -152,11 +135,10 @@ def train(model: str, dataset: str) -> None:
     # fetching model params
     # In this specific example logistic regression was chosen as the most optimal model
     # after running several experiments.
-    classifier, params = fetch_model(model=model)
+    classifier = fetch_model(model=model)
 
     # training
-    grid_clf = GridSearchCV(classifier, params, scoring="roc_auc")
-    grid_clf.fit(X_train, y_train)
+    classifier.fit(X_train, y_train)
     training_score = cross_val_score(
         classifier, X_train, y_train, cv=5, scoring="roc_auc"
     )
@@ -169,7 +151,7 @@ def train(model: str, dataset: str) -> None:
     )
 
     # saving
-    predict_pipeline = make_pipeline(scaler, grid_clf)
+    predict_pipeline = make_pipeline(scaler, classifier)
     pred_result = {
         "clf": model,
         "training score roc_auc": training_score.mean(),

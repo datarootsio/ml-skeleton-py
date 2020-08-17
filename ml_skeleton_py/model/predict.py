@@ -9,19 +9,15 @@ import time
 import logging
 import functools
 import pickle
+import pandas as pd
 from sklearn.base import BaseEstimator
 
-# from sklearn.externals import joblib
 import numpy as np
 
-# from mlmonkey.metadata import PredictionMetadata
-
-# from .. import settings as s
-
-# from config import settings as s
 from ml_skeleton_py import settings
 
 logger = logging.getLogger(__name__)
+# logging.getLogger().setLevel(logging.INFO)
 
 
 @functools.lru_cache()
@@ -37,7 +33,7 @@ def load_model(model_name: str) -> BaseEstimator:
     Returns:
         model (Pipeline or BaseEstimator): a model that can make predictions
     """
-    with open(os.path.join(s.MODEL_DIR, model_name), "rb") as handle:
+    with open(os.path.join(settings.MODEL_DIR, model_name), "rb") as handle:
         model = pickle.load(handle)["model"]
     return model
 
@@ -55,7 +51,7 @@ def predict(model_name: str, observation: np.array) -> float:
         prediction (float): the prediction
     """
     model = load_model(model_name)
-    prediction = next(iter(model.predict(observation)))
+    prediction = model.predict(observation)[0]
     return prediction
 
 
@@ -77,28 +73,30 @@ def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.arra
     """
 
     # Deserialize the model
-    logger.info("deserializing model: {}".format(model_name))
+    logger.info(f"deserializing model: {model_name}")
 
     # load input_data
     with open(os.path.join(settings.DATA_TRANSFORMED, input_df), "rb") as handle:
         input_data = pickle.load(handle)
+    # input_data = pd.read_csv(os.path.join(settings.DATA_TRANSFORMED, input_df))
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
-    logger.info("running predictions for input: {}".format(input_data))
+    logger.info(f"running predictions for input: {input_data}")
 
     # make predictions
-    preds = [predict(model_name, [x]) for x in input_data]
+    preds = [predict(model_name, [x]) for x in np.array(input_data)]
     preds = np.array(preds).reshape(-1, 1)  # transform single axis array to a column
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
-    logger.info("prediction results: {}".format(preds))
+    logger.info(f"prediction results: {preds}")
 
     # save the predictions
     output_df_fn = os.path.join(settings.DATA_PREDICTIONS, output_df)
-    logger.info("storing saved prediction at: {}".format(output_df_fn))
+    logger.info(f"storing saved prediction at: {output_df_fn}")
     np.savetxt(output_df_fn, preds, delimiter=",")
+    logger.info("Done!")
 
     return preds
 

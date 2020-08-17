@@ -8,6 +8,38 @@ While the project is heavily opinionated, opinions are welcomed to be discussed:
 
 This project is built upon the best practices discussed in our [methodology](https://gitlab.com/dataroots/public/methodology) repo.
 
+## How to test the package
+
+1. Clone the repo
+
+```bash
+git clone git@github.com:datarootsio/ml-skeleton-py.git
+cd ml-skeleton-py
+git checkout api-ci-pipeline
+```
+
+2. Install local environment and install requirements.txt
+
+```bash
+virtualenv local
+source local/bin/activate
+pip install -r requirements.txt
+```
+
+3. Run basic comands
+
+```bash
+make init-train
+make ARGS="--model_name lr.p --input_df X_test.p --output_df predictions.csv" prediction
+```
+
+4. Run some tests
+
+```bash
+coverage run -m pytest ./tests
+coverage report -m
+coverage html
+```
 
 ## Scope
 
@@ -88,7 +120,7 @@ Python scripts that expose functionality from `src`. The idea is that source can
 should preferably stay the same, or not changed much. They can be run manually, from `Makefile`,  
 but also represent example scripts that can be passed to Spark job, (e.g. with spark-submit, in case we use Spark).
 
-### src/
+### ml_skeleton_py/
 
 This directory should contain the logic for the model (training & prediction), ETL, helpers and potential apps.  
 All source code relevant to a packaged and deployable delivery should be contained in this folder.

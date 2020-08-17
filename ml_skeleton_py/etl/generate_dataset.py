@@ -11,6 +11,7 @@ import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import logging
 from ml_skeleton_py import settings
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
@@ -41,7 +42,7 @@ def remove_outliers(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     return df
 
 
-def generate(dataset: str) -> pd.DataFrame:
+def generate(dataset: str) -> Optional[pd.DataFrame]:
     """
     Load the data, removes outliers, subsamples the data and returns the traing and test datasets.
 

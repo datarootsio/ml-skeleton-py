@@ -2,9 +2,9 @@ import os
 import sys
 import pandas as pd
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from config import settings as s
-from src.etl.generate_dataset import generate, remove_outliers
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from ml_skeleton_py import settings as s
+from ml_skeleton_py.etl.generate_dataset import generate, remove_outliers
 
 
 DATASET = "creditcard.csv"

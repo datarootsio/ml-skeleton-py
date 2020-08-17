@@ -23,6 +23,7 @@ import logging
 from ml_skeleton_py import settings
 
 logger = logging.getLogger(__name__)
+logging.getLogger().setLevel(logging.INFO)
 
 
 def fetch_model(model: str) -> Tuple[BaseEstimator, dict]:

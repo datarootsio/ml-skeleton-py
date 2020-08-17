@@ -2,10 +2,10 @@ import os
 import sys
 from sklearn.base import is_classifier, is_regressor
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from config import settings as s
-from src.model.train import fetch_model
-from src.model.train import train
+
+from ml_skeleton_py import settings as s
+from ml_skeleton_py.model.train import fetch_model
+from ml_skeleton_py.model.train import train
 import pickle
 
 DATASET = "creditcard.csv"
@@ -16,10 +16,8 @@ def test_lr():
     Test logistic regression call for model.
     """
     model = "lr"
-    classifier, params = fetch_model(model)
-    assert (is_classifier(classifier) or is_regressor(classifier)) and (
-        type(params) == dict
-    )
+    classifier = fetch_model(model)
+    assert is_classifier(classifier) or is_regressor(classifier)
 
 
 def test_knn():
@@ -27,10 +25,8 @@ def test_knn():
     Test logistic regression call for model.
     """
     model = "knn"
-    classifier, params = fetch_model(model)
-    assert (is_classifier(classifier) or is_regressor(classifier)) and (
-        type(params) == dict
-    )
+    classifier = fetch_model(model)
+    assert is_classifier(classifier) or is_regressor(classifier)
 
 
 def test_svc():
@@ -38,22 +34,16 @@ def test_svc():
     Test logistic regression call for model.
     """
     model = "svc"
-    classifier, params = fetch_model(model)
-    assert (is_classifier(classifier) or is_regressor(classifier)) and (
-        type(params) == dict
-    )
-
+    classifier = fetch_model(model)
+    assert is_classifier(classifier) or is_regressor(classifier)
 
 def test_dt():
     """
     Test logistic regression call for model.
     """
     model = "dt"
-    classifier, params = fetch_model(model)
-    assert (is_classifier(classifier) or is_regressor(classifier)) and (
-        type(params) == dict
-    )
-
+    classifier = fetch_model(model)
+    assert is_classifier(classifier) or is_regressor(classifier)
 
 def test_train_lr():
     """

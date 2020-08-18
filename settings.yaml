@@ -1,9 +1,0 @@
-DATA_RAW : ./data/raw/
-DATA_TRANSFORMED : ./data/transformed/
-DATA_STAGING : ./data/staging/
-DATA_PREDICTIONS : ./data/predictions/
-ETL_DIR : ./src/etl/
-MODEL_DIR : ./models/
-MODEL_METADATA_DIR : ./models/metadata/
-FLASK_ENDPOINT_HOST : 0.0.0.0
-FLASK_ENDPOINT_PORT : 5000

@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-
-import os
-import sys
-
 import click
 
 from ml_skeleton_py import etl
@@ -12,7 +8,7 @@ from ml_skeleton_py import etl
 @click.option("--dataset", type=str, default="creditcard.csv")
 def generate(dataset: str) -> None:
     """
-    Load the dataset, remove the outliers and store in transformed data directory.
+    Load the dataset, remove outliers and store in data directory.
 
     Parameters:
         dataset (str): the dataset that you want to preprocess and transform

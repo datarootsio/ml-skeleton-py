@@ -1,8 +1,5 @@
 import os
-import sys
 from sklearn.base import is_classifier, is_regressor
-
-
 from ml_skeleton_py import settings as s
 from ml_skeleton_py.model.train import fetch_model
 from ml_skeleton_py.model.train import train
@@ -37,6 +34,7 @@ def test_svc():
     classifier = fetch_model(model)
     assert is_classifier(classifier) or is_regressor(classifier)
 
+
 def test_dt():
     """
     Test logistic regression call for model.
@@ -44,6 +42,7 @@ def test_dt():
     model = "dt"
     classifier = fetch_model(model)
     assert is_classifier(classifier) or is_regressor(classifier)
+
 
 def test_train_lr():
     """
@@ -53,7 +52,9 @@ def test_train_lr():
     train(model, DATASET)
     with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
         pred_result = pickle.load(handle)
-    assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])
+    classifier = is_classifier(pred_result["model"])
+    regressor = is_regressor(pred_result["model"])
+    assert classifier or regressor
 
 
 def test_train_knn():
@@ -64,7 +65,9 @@ def test_train_knn():
     train(model, DATASET)
     with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
         pred_result = pickle.load(handle)
-    assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])
+    classifier = is_classifier(pred_result["model"])
+    regressor = is_regressor(pred_result["model"])
+    assert classifier or regressor
 
 
 def test_train_svc():
@@ -75,7 +78,9 @@ def test_train_svc():
     train(model, DATASET)
     with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
         pred_result = pickle.load(handle)
-    assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])
+    classifier = is_classifier(pred_result["model"])
+    regressor = is_regressor(pred_result["model"])
+    assert classifier or regressor
 
 
 def test_train_dt():
@@ -86,4 +91,6 @@ def test_train_dt():
     train(model, DATASET)
     with open(os.path.join(s.MODEL_DIR, model) + ".p", "rb") as handle:
         pred_result = pickle.load(handle)
-    assert is_classifier(pred_result["model"]) or is_regressor(pred_result["model"])
+    classifier = is_classifier(pred_result["model"])
+    regressor = is_regressor(pred_result["model"])
+    assert classifier or regressor

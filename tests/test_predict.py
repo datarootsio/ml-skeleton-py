@@ -1,6 +1,4 @@
 import os
-import sys
-
 from ml_skeleton_py import settings as s
 from ml_skeleton_py.model.predict import predict
 from ml_skeleton_py.model.predict import predict_from_file
@@ -136,5 +134,6 @@ def test_predict_from_file():
     """
     predict_from_file("lr.p", "X_test.p", "predictions.csv")
 
-    df = pd.read_table(os.path.join(s.DATA_PREDICTIONS, "predictions.csv"), header=None)
+    predictions_path = os.path.join(s.DATA_PREDICTIONS, "predictions.csv")
+    df = pd.read_table(predictions_path, header=None)
     assert type(df) == pd.DataFrame

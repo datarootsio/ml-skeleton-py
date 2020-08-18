@@ -5,11 +5,9 @@ http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr
 """
 
 import os
-import time
 import logging
 import functools
 import pickle
-import pandas as pd
 from sklearn.base import BaseEstimator
 
 import numpy as np
@@ -55,14 +53,14 @@ def predict(model_name: str, observation: np.array) -> float:
     return prediction
 
 
-def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.array:
+def predict_from_file(model: str, input_df: str, output_df: str) -> np.array:
     """Predict new values using a serialized model.
 
     Note log predictions via logger to STDOUT. This should be captured by a
     listener. If not, make amends.
 
     Parameters:
-        model_name (str): name find the model to load (including extension)
+        model (str): name find the model to load (including extension)
 
         input_df (str): the input features to use to generate prediction on
 
@@ -73,20 +71,21 @@ def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.arra
     """
 
     # Deserialize the model
-    logger.info(f"deserializing model: {model_name}")
+    logger.info(f"deserializing model: {model}")
 
     # load input_data
-    with open(os.path.join(settings.DATA_TRANSFORMED, input_df), "rb") as handle:
+    input_path = os.path.join(settings.DATA_TRANSFORMED, input_df)
+    with open(input_path, "rb") as handle:
         input_data = pickle.load(handle)
-    # input_data = pd.read_csv(os.path.join(settings.DATA_TRANSFORMED, input_df))
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
     logger.info(f"running predictions for input: {input_data}")
 
     # make predictions
-    preds = [predict(model_name, [x]) for x in np.array(input_data)]
-    preds = np.array(preds).reshape(-1, 1)  # transform single axis array to a column
+    preds = [predict(model, [x]) for x in np.array(input_data)]
+    # transform single axis array to a column
+    preds = np.array(preds).reshape(-1, 1)
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time
@@ -99,5 +98,3 @@ def predict_from_file(model_name: str, input_df: str, output_df: str) -> np.arra
     logger.info("Done!")
 
     return preds
-
-

@@ -3,7 +3,8 @@ EXAMPLE adapted from kaggle.
 
 This script loads the data, removes the outliers and saves the dataframe.
 
-See: https://www.kaggle.com/janiobachmann/credit-fraud-dealing-with-imbalanced-datasets
+See:
+https://www.kaggle.com/janiobachmann/credit-fraud-dealing-with-imbalanced-datasets
 """
 
 import numpy as np  # linear algebra
@@ -29,32 +30,28 @@ def remove_outliers(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     Return:
         df (pd.DataFrame): dataframe with removed outliers
     """
-    df = df.drop(
-        df[(df["V14"] > params["V14_upper"]) | (df["V14"] < params["V14_lower"])].index
-    )
-    df = df.drop(
-        df[(df["V12"] > params["V12_upper"]) | (df["V12"] < params["V12_lower"])].index
-    )
-    df = df.drop(
-        df[(df["V10"] > params["V10_upper"]) | (df["V10"] < params["V10_lower"])].index
-    )
+    for variable in ["V10", "V12", "V14"]:
+        upper_outliers = df[variable] > params[f"{variable}_upper"]
+        lower_outliers = df[variable] < params[f"{variable}_lower"]
+        df = df.drop(df[upper_outliers | lower_outliers].index)
     logger.info(f"Number of Instances after outliers removal: {len(df)}")
     return df
 
 
 def generate(dataset: str) -> Optional[pd.DataFrame]:
     """
-    Load the data, removes outliers, subsamples the data and returns the traing and test datasets.
+    Load data, remove outliers and return the traing and test sets.
 
     Parameters:
         dataset (str): the input dataset
 
     Returns:
-        X_train, y_train, X_test, y_test (tuple): the training and test datasets with labels
+        X_train, y_train, X_test, y_test (tuple):
+                the training and test datasets with labels
     """
     logger.info(f"Loading dataset {dataset}")
     if not os.path.isfile(os.path.join(settings.DATA_RAW, dataset)):
-        logger.info("creditcard.csv not found in " + os.path.join(settings.DATA_RAW))
+        logger.info("creditcard.csv not found in " + settings.DATA_RAW)
         logger.info(
             f"please download the file from url = \
             'https://www.kaggle.com/mlg-ulb/creditcardfraud/download' \

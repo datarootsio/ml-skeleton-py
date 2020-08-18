@@ -16,6 +16,8 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
 settings = Dynaconf(
-    envvar_prefix="DYNACONF",  # export envvars with `export DYNACONF_FOO=bar`.
-    settings_files=['settings.yaml', '.secrets.yaml'],  # Load files in the given order.
+    # export envvars with `export DYNACONF_FOO=bar`.
+    envvar_prefix="DYNACONF",
+    # Load files in the given order.
+    settings_files=["settings.yaml", ".secrets.yaml"],
 )

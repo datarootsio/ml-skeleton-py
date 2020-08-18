@@ -9,7 +9,7 @@ from typing import Tuple
 import os
 import pickle
 import pandas as pd
-from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.base import BaseEstimator
@@ -46,7 +46,9 @@ def fetch_model(model: str) -> Tuple[BaseEstimator, dict]:
     elif model == "svc":
         classifier = SVC(C=1, kernel="linear")
     elif model == "dt":
-        classifier = DecisionTreeClassifier(criterion="entropy", max_depth=3, min_samples_leaf=5)
+        classifier = DecisionTreeClassifier(
+            criterion="entropy", max_depth=3, min_samples_leaf=5
+        )
     return classifier
 
 
@@ -71,7 +73,8 @@ def save_split_data(
     X: pd.DataFrame, y: pd.DataFrame
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
-    Split the datasets into training and test and saves it in the transformed data folder.
+    Split the datasets into training and test and saves it in the transformed
+    data folder ./data/transformed/
 
     Parameters:
         X: the dataset
@@ -102,8 +105,9 @@ def train(model: str, dataset: str) -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
-    Trains a specific classifier with a set of optimized hyperparameters in a 5fold-CV.
-    The training results with the accompanying model is saved in ./models/
+    Trains a specific classifier with a set of optimized hyperparameters
+    in a 5fold-CV. The training results with the accompanying model is
+    saved in ./models/
 
     Parameters:
         model (str): the model that you want to train
@@ -134,8 +138,8 @@ def train(model: str, dataset: str) -> None:
     X_train, y_train, X_test, y_test = save_split_data(X, y)
 
     # fetching model params
-    # In this specific example logistic regression was chosen as the most optimal model
-    # after running several experiments.
+    # In this specific example logistic regression was chosen as
+    # the most optimal model after running several experiments.
     classifier = fetch_model(model=model)
 
     # training
@@ -158,5 +162,5 @@ def train(model: str, dataset: str) -> None:
         "training score roc_auc": training_score.mean(),
         "model": predict_pipeline,
     }
-    pickle.dump(pred_result, open(os.path.join(settings.MODEL_DIR, model) + ".p", "wb"))
-
+    with open(os.path.join(settings.MODEL_DIR, model) + ".p", "wb") as handle:
+        pickle.dump(pred_result, handle)

@@ -24,16 +24,21 @@ git checkout api-ci-pipeline
 virtualenv local
 source local/bin/activate
 pip install -r requirements.txt
+pip install -e ./
 ```
 
-3. Run basic comands
+3. Download the creditcard.csv dataset
+
+Download the creditcard.csv dataset from [here](https://www.kaggle.com/mlg-ulb/creditcardfraud/download) and place it in the ./data/raw directory.
+
+4. Run basic comands
 
 ```bash
 make init-train
 make ARGS="--model_name lr.p --input_df X_test.p --output_df predictions.csv" prediction
 ```
 
-4. Run some tests
+5. Run some tests
 
 ```bash
 coverage run -m pytest ./tests

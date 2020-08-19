@@ -11,8 +11,9 @@ import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import logging
-from ml_skeleton_py import settings
+from ml_skeleton_py import settings as s
 from typing import Optional
+from imblearn.under_sampling import RandomUnderSampler
 
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
@@ -43,23 +44,22 @@ def generate(dataset: str) -> Optional[pd.DataFrame]:
     Load data, remove outliers and return the traing and test sets.
 
     Parameters:
-        dataset (str): the input dataset
+        dataset (str): the dataset that you want to load
 
     Returns:
-        X_train, y_train, X_test, y_test (tuple):
-                the training and test datasets with labels
+        df Optional(pd.DataFrame): preprocessed dataframe
     """
     logger.info(f"Loading dataset {dataset}")
-    if not os.path.isfile(os.path.join(settings.DATA_RAW, dataset)):
-        logger.info("creditcard.csv not found in " + settings.DATA_RAW)
+    if not os.path.isfile(os.path.join(s.DATA_RAW, dataset)):
+        logger.info("creditcard.csv not found in " + s.DATA_RAW)
         logger.info(
             f"please download the file from url = \
             'https://www.kaggle.com/mlg-ulb/creditcardfraud/download' \
-            and place it in {settings.DATA_RAW}"
+            and place it in {s.DATA_RAW}"
         )
         return
 
-    df = pd.read_csv(os.path.join(settings.DATA_RAW, dataset))
+    df = pd.read_csv(os.path.join(s.DATA_RAW, dataset))
 
     logger.info("Preprocessing dataset from raw to tranformed")
     no_frauds = round(df["Class"].value_counts()[0] / len(df) * 100, 2)
@@ -69,46 +69,67 @@ def generate(dataset: str) -> Optional[pd.DataFrame]:
 
     # Removing outliers
     logger.info("Outlier removal")
-    # # -----> V14 Removing Outliers (Highest Negative Correlated with Labels)
-    v14_fraud = df["V14"].loc[df["Class"] == 1].values
-    q25, q75 = np.percentile(v14_fraud, 25), np.percentile(v14_fraud, 75)
-    v14_iqr = q75 - q25
-    v14_cut_off = v14_iqr * 1.5
-    V14_lower, V14_upper = q25 - v14_cut_off, q75 + v14_cut_off
-    outliers = [x for x in v14_fraud if x < V14_lower or x > V14_upper]
-    logger.info(f"Feature V14 Outliers for Fraud Cases: {len(outliers)}")
+    # --> V10,V12,14 Removing Outliers
+    # (Highest Negative Correlated with Labels)
+    outlier_params = {}
+    for variable in ["V10", "V12", "V14"]:
+        fraud = df[variable].loc[df["Class"] == 1].values
+        q25, q75 = np.percentile(fraud, 25), np.percentile(fraud, 75)
+        iqr = q75 - q25
+        cut_off = iqr * 1.5
 
-    # -----> V12 removing outliers from fraud transactions
-    v12_fraud = df["V12"].loc[df["Class"] == 1].values
-    q25, q75 = np.percentile(v12_fraud, 25), np.percentile(v12_fraud, 75)
-    v12_iqr = q75 - q25
-    v12_cut_off = v12_iqr * 1.5
-    V12_lower, V12_upper = q25 - v12_cut_off, q75 + v12_cut_off
-    outliers = [x for x in v12_fraud if x < V12_lower or x > V12_upper]
-    logger.info(f"Feature V12 Outliers for Fraud Cases: {len(outliers)}")
+        lower_cutoff = q25 - cut_off
+        upper_cutoff = q75 + cut_off
+        outlier_params[f"{variable}_lower"] = lower_cutoff
+        outlier_params[f"{variable}_upper"] = upper_cutoff
 
-    # -----> Removing outliers V10 Feature
-    v10_fraud = df["V10"].loc[df["Class"] == 1].values
-    q25, q75 = np.percentile(v10_fraud, 25), np.percentile(v10_fraud, 75)
-    v10_iqr = q75 - q25
-    v10_cut_off = v10_iqr * 1.5
-    V10_lower, V10_upper = q25 - v10_cut_off, q75 + v10_cut_off
-    outliers = [x for x in v10_fraud if x < V10_lower or x > V10_upper]
-    logger.info(f"Feature V10 Outliers for Fraud Cases: {len(outliers)}")
-
-    outlier_params = {
-        "V14_upper": V14_upper,
-        "V14_lower": V14_lower,
-        "V12_upper": V12_upper,
-        "V12_lower": V12_lower,
-        "V10_upper": V10_upper,
-        "V10_lower": V10_lower,
-    }
+        outliers = [x for x in fraud if x < lower_cutoff or x > upper_cutoff]
+        logger.info(
+            f"Feature {variable} Outliers for Fraud Cases:\
+         {len(outliers)}"
+        )
 
     df = remove_outliers(df, outlier_params)
 
     # save dataframe with removed outliers
-    df.to_csv(os.path.join(settings.DATA_TRANSFORMED, dataset), index=0)
+    df.to_csv(os.path.join(s.DATA_TRANSFORMED, dataset), index=0)
 
     logger.info("Done!")
     return df
+
+
+def generate_test(dataset: str) -> None:
+    """
+    Load transformed data, create and saves a balanced and imbalanced test set.
+
+    Parameters:
+        dataset (str): the input dataset
+
+    Returns:
+        None
+    """
+
+    logger.info("Creating an imbalanced and balanced sample test set")
+    # Load Data
+    df = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, dataset))
+
+    # Create X
+    X = df.drop("Class", axis=1)
+    y = df["Class"]
+
+    # Create imbalanced test set X_test
+    X_test = X.sample(frac=0.01)
+
+    # save imbalanced dataframe
+    file_path = os.path.join(s.DATA_TRANSFORMED, "test_imbalanced_" + dataset)
+    X_test.to_csv(file_path, index=0)
+
+    # Create balanced test set X_test
+    rus = RandomUnderSampler(replacement=False)
+    X, y = rus.fit_resample(X, y)
+    X_test = X.sample(frac=0.1)
+
+    # save dataframe with removed outliers
+    file_path = os.path.join(s.DATA_TRANSFORMED, "test_balanced_" + dataset)
+    X_test.to_csv(file_path, index=0)
+    logger.info("Done!")

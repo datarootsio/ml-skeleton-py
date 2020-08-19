@@ -1,15 +1,20 @@
 import os
 from ml_skeleton_py import settings as s
+from ml_skeleton_py.model.train import train
 from ml_skeleton_py.model.predict import predict
 from ml_skeleton_py.model.predict import predict_from_file
 import pandas as pd
 
+DATASET = "creditcard.csv"
+MODEL_NAME = "lr_test"
 
-def test_predict_1():
+
+def test_predict_1() -> None:
     """
     Test whether an observation makes a prediction.
     """
-    model_name = "lr.p"
+    train(MODEL_NAME, DATASET)
+    model_name = "lr_test.p"
     observation = [
         -0.51056756,
         -4.76915766,
@@ -46,11 +51,11 @@ def test_predict_1():
     assert type(float(prediction)) == float
 
 
-def test_predict_2():
+def test_predict_2() -> None:
     """
     Test whether an observation makes a prediction.
     """
-    model_name = "lr.p"
+    model_name = "lr_test.p"
     observation = [
         0.79754226,
         1.06912246,
@@ -87,11 +92,11 @@ def test_predict_2():
     assert type(float(prediction)) == float
 
 
-def test_predict_3():
+def test_predict_3() -> None:
     """
     Test whether an observation makes a prediction.
     """
-    model_name = "lr.p"
+    model_name = "lr_test.p"
     observation = [
         -0.14526721,
         -1.88587432,
@@ -128,12 +133,25 @@ def test_predict_3():
     assert type(float(prediction)) == float
 
 
-def test_predict_from_file():
+def test_predict_from_file_balanced() -> None:
     """
     Test whether predict from file works properly
     """
-    predict_from_file("lr.p", "X_test.p", "predictions.csv")
+    file_name = "test_balanced_predictions.csv"
+    predict_from_file("lr_test.p", "test_balanced_creditcard.csv", file_name)
 
-    predictions_path = os.path.join(s.DATA_PREDICTIONS, "predictions.csv")
-    df = pd.read_table(predictions_path, header=None)
+    pred_path = os.path.join(s.DATA_PREDICTIONS, file_name)
+    df = pd.read_csv(pred_path, header=None)
+    assert type(df) == pd.DataFrame
+
+
+def test_predict_from_file_imbalanced() -> None:
+    """
+    Test whether predict from file works properly
+    """
+    file_name = "test_imbalanced_predictions.csv"
+    predict_from_file("lr_test.p", "test_imbalanced_creditcard.csv", file_name)
+
+    pred_path = os.path.join(s.DATA_PREDICTIONS, file_name)
+    df = pd.read_csv(pred_path, header=None)
     assert type(df) == pd.DataFrame

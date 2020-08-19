@@ -45,6 +45,16 @@ count-report-files: ## count the number of present report files
 
 init-train: generate-dataset train ## generate dataset & train the model
 
+clean:
+	@echo ">>> cleaning files"
+	rm ./data/predictions/* ./data/transformed/* ./models/*.p
+
+linting:
+	@echo ">>> black files"
+	black scripts ml_skeleton_py tests
+	@echo ">>> linting files"
+	flake8 scripts ml_skeleton_py tests
+
 tox: ## run tox tests
 	tox
 

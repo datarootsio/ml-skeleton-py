@@ -1,14 +1,19 @@
 import os
 import pandas as pd
 from ml_skeleton_py import settings as s
-from ml_skeleton_py.etl.generate_dataset import generate, remove_outliers
+from ml_skeleton_py.etl.generate_dataset import generate, generate_test
+from ml_skeleton_py.etl.generate_dataset import remove_outliers
 
 
 DATASET = "creditcard.csv"
+TEST_BALANCED_DATASET = "test_balanced_creditcard.csv"
+TEST_IMBALANCED_DATASET = "test_imbalanced_creditcard.csv"
+
 df = generate(DATASET)
+generate_test(DATASET)
 
 
-def test_generate():
+def test_generate() -> None:
     """
     Tests whether file can be opened and whether it is a pd.DataFrame.
     """
@@ -16,14 +21,30 @@ def test_generate():
     assert type(df) == pd.DataFrame
 
 
-def test_faulty_generate():
+def test_generate_test_balanced() -> None:
+    """
+    Tests whether file can be opened and whether it is a pd.DataFrame.
+    """
+    df = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, TEST_BALANCED_DATASET))
+    assert type(df) == pd.DataFrame
+
+
+def test_generate_test_imbalanced() -> None:
+    """
+    Tests whether file can be opened and whether it is a pd.DataFrame.
+    """
+    df = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, TEST_IMBALANCED_DATASET))
+    assert type(df) == pd.DataFrame
+
+
+def test_faulty_generate() -> None:
     """
     Test whether non existent file is returned with None.
     """
     assert generate("no.csv") is None
 
 
-def test_outlier_removal():
+def test_outlier_removal() -> None:
     """
     Tests whether outlier removal works as intended.
     """

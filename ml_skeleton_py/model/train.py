@@ -5,20 +5,14 @@ The dataset is retrieved from:
 https://www.kaggle.com/janiobachmann/credit-fraud-dealing-with-imbalanced-datasets.
 """
 
-from typing import Tuple
 import os
 import pickle
 import pandas as pd
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
-from sklearn.base import BaseEstimator
 from sklearn.preprocessing import RobustScaler
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
 import logging
 from ml_skeleton_py import settings
 
@@ -26,82 +20,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
 
-def fetch_model(model: str) -> Tuple[BaseEstimator, dict]:
-    """
-    Fetch a model and the corresponding optimized hyperparameters.
-
-    Parameters:
-        model (str): lr  (logistic regression)
-                     knn (k nearest neighbors)
-                     svc (support vector machines)
-                     dt  (decision tree classifier)
-
-    Returns:
-        classifier (BaseEstimator): classifier model
-    """
-    if model == "lr":
-        classifier = LogisticRegression(max_iter=4000, penalty="l2", C=0.01)
-    elif model == "knn":
-        classifier = KNeighborsClassifier(n_neighbors=4, algorithm="auto")
-    elif model == "svc":
-        classifier = SVC(C=1, kernel="linear")
-    elif model == "dt":
-        classifier = DecisionTreeClassifier(
-            criterion="entropy", max_depth=3, min_samples_leaf=5
-        )
-    return classifier
-
-
-def save_transformed_data(object: pd.DataFrame, file: str) -> None:
-    """
-    Saves a transformed data object.
-
-    Parameters:
-        object (pd.DataFrame): a dataframe that you want to save
-
-        file (str): the filename of the object
-
-    Return:
-        None
-    """
-    with open(os.path.join(settings.DATA_TRANSFORMED, file), "wb") as handle:
-        pickle.dump(object, handle)
-    return None
-
-
-def save_split_data(
-    X: pd.DataFrame, y: pd.DataFrame
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """
-    Split the datasets into training and test and saves it in the transformed
-    data folder ./data/transformed/
-
-    Parameters:
-        X: the dataset
-
-        y: the labels
-
-    Returns:
-        X_train (pd.DataFrame): the training dataset
-
-        y_train (pd.DataFrame): the training labels
-
-        X_test (pd.DataFrame): the test dataset
-
-        y_test (pd.DataFrame): the test labels
-    """
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
-    save_transformed_data(X_train, "X_train.p")
-    save_transformed_data(y_train, "y_train.p")
-    save_transformed_data(X_test, "X_test.p")
-    save_transformed_data(y_test, "y_test.p")
-    return X_train, y_train, X_test, y_test
-
-
-def train(model: str, dataset: str) -> None:
+def train(model_name: str, dataset: str) -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
@@ -110,12 +29,9 @@ def train(model: str, dataset: str) -> None:
     saved in ./models/
 
     Parameters:
-        model (str): the model that you want to train
-                     options:
+        model_name (str): the model_name that you want to use as a save
+                     default:
                         "lr": logistic regression
-                        "knn": k nearest neighbors
-                        "svc": support vector classifier
-                        "dt": decision tree
 
         dataset (str): the dataset on which you want to train
 
@@ -124,7 +40,7 @@ def train(model: str, dataset: str) -> None:
 
     """
     # loading data
-    df = pd.read_csv(os.path.join(settings.DATA_RAW, dataset))
+    df = pd.read_csv(os.path.join(settings.DATA_TRANSFORMED, dataset))
     X = df.drop("Class", axis=1)
     y = df["Class"]
 
@@ -134,33 +50,26 @@ def train(model: str, dataset: str) -> None:
     rus = RandomUnderSampler(replacement=False)
     X, y = rus.fit_resample(X, y)
 
-    # splitting in train and test
-    X_train, y_train, X_test, y_test = save_split_data(X, y)
-
-    # fetching model params
     # In this specific example logistic regression was chosen as
     # the most optimal model after running several experiments.
-    classifier = fetch_model(model=model)
+    classifier = LogisticRegression(max_iter=4000, penalty="l2", C=0.01)
 
     # training
-    classifier.fit(X_train, y_train)
-    training_score = cross_val_score(
-        classifier, X_train, y_train, cv=5, scoring="roc_auc"
-    )
-    print(
-        "Classifier: ",
-        classifier.__class__.__name__,
-        "Has a training score of",
-        round(training_score.mean(), 2) * 100,
-        "% roc_auc",
+    classifier.fit(X, y)
+    training_score = cross_val_score(classifier, X, y, cv=5, scoring="roc_auc")
+    logger.info(f"Classifier: {classifier.__class__.__name__}")
+    logger.info(
+        "Has a training score "
+        + f"of {round(training_score.mean(), 2) * 100} % roc_auc"
     )
 
     # saving
     predict_pipeline = make_pipeline(scaler, classifier)
     pred_result = {
-        "clf": model,
+        "clf": model_name,
         "training score roc_auc": training_score.mean(),
         "model": predict_pipeline,
     }
-    with open(os.path.join(settings.MODEL_DIR, model) + ".p", "wb") as handle:
+    model_path = os.path.join(settings.MODEL_DIR, model_name) + ".p"
+    with open(model_path, "wb") as handle:
         pickle.dump(pred_result, handle)

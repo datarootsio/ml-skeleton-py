@@ -12,12 +12,9 @@ def train(model_name: str, dataset: str) -> None:
     Train a model on a dataset and store the model and its results.
 
     Parameters:
-        model_name (str): the model that you want to train
-                     options:
+        model_name (str): the model_name that you want to use as a save
+                     default:
                         "lr": logistic regression
-                        "knn": k nearest neighbors
-                        "svc": support vector classifier
-                        "dt": decision tree
 
         dataset (str): the dataset on which you want to train
 

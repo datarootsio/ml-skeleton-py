@@ -8,7 +8,9 @@ import os
 import logging
 import functools
 import pickle
+import pandas as pd
 from sklearn.base import BaseEstimator
+
 
 import numpy as np
 
@@ -49,8 +51,7 @@ def predict(model_name: str, observation: np.array) -> float:
         prediction (float): the prediction
     """
     model = load_model(model_name)
-    prediction = model.predict(observation)[0]
-    return prediction
+    return model.predict(observation)[0]
 
 
 def predict_from_file(model: str, input_df: str, output_df: str) -> np.array:
@@ -74,9 +75,7 @@ def predict_from_file(model: str, input_df: str, output_df: str) -> np.array:
     logger.info(f"deserializing model: {model}")
 
     # load input_data
-    input_path = os.path.join(settings.DATA_TRANSFORMED, input_df)
-    with open(input_path, "rb") as handle:
-        input_data = pickle.load(handle)
+    input_data = pd.read_csv(os.path.join(settings.DATA_TRANSFORMED, input_df))
 
     # only log this directly when batch is small-ish or when predicting for
     # single observations at a time

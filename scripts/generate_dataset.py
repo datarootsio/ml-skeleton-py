@@ -17,6 +17,7 @@ def generate(dataset: str) -> None:
         None
     """
     etl.generate(dataset)
+    etl.generate_test(dataset)
 
 
 if __name__ == "__main__":

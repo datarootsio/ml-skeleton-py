@@ -6,8 +6,6 @@ This is an opinionated project skeleton for a Python based machine learning proj
 This skeleton is to be used as the default project start for any Python ML project (unless arguments support otherwise).  
 While the project is heavily opinionated, opinions are welcomed to be discussed: feel free to open an issue or comment.
 
-This project is built upon the best practices discussed in our [methodology](https://gitlab.com/dataroots/public/methodology) repo.
-
 ## How to test the package
 
 1. Clone the repo
@@ -18,10 +16,10 @@ cd ml-skeleton-py
 git checkout api-ci-pipeline
 ```
 
-2. Install local environment and install requirements.txt
+2. Install local environment and install requirements.txt. We use `venv` here but you can use your packaging manager of choice.
 
 ```bash
-virtualenv local
+python -m venv local
 source local/bin/activate
 pip install -r requirements.txt
 pip install -e ./
@@ -29,19 +27,19 @@ pip install -e ./
 
 3. Download the creditcard.csv dataset
 
-Download the creditcard.csv dataset from [here](https://www.kaggle.com/mlg-ulb/creditcardfraud/download) and place it in the ./data/raw directory.
+Download the creditcard.csv dataset from [here](https://www.kaggle.com/mlg-ulb/creditcardfraud/download) and place it in the ./data/raw directory. Kaggle doesn't allow using wget, because you have to be logged in.
 
 4. Run basic comands
 
 ```bash
 make init-train
-make ARGS="--model_name lr.p --input_df X_test.p --output_df predictions.csv" prediction
+make prediction
 ```
 
 5. Run some tests
 
 ```bash
-coverage run -m pytest ./tests
+coverage run -m pytest ./tests/
 coverage report -m
 coverage html
 ```

@@ -8,22 +8,24 @@ While the project is heavily opinionated, opinions are welcomed to be discussed:
 
 ## How to test the package
 
-### 1. Clone the repo
+1. Clone the repo
 
 ```bash
 git clone git@github.com:datarootsio/ml-skeleton-py.git
 cd ml-skeleton-py
 ```
 
-### 2. Install dependencies using a) [poetry](https://python-poetry.org/) or b)requirements.txt.
+2. Install dependencies using [poetry](https://python-poetry.org/) or requirements.txt.
 
-    a. poetry
+   a. poetry
+
 ```bash
 poetry shell
 poetry install
 ```
 
-    b. requirements.txt
+   b. requirements.txt
+
 ```bash
 python -m venv local
 source local/bin/activate   source local/bin/activate
@@ -31,11 +33,11 @@ pip install -r requirements.txt pip install -r requirements.txt
 pip install -e ./   pip install -e ./
 ```
 
-### 3. Download the creditcard.csv dataset
+3. Download the creditcard.csv dataset
 
 Download the creditcard.csv dataset from [here](https://www.kaggle.com/mlg-ulb/creditcardfraud/download) and place it in the ./data/raw directory. Kaggle doesn't allow using wget, because you have to be logged in.
 
-### 4. Run basic comands and tests.
+4. Run basic comands and tests.
 
 ```bash
 make init-train

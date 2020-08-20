@@ -8,40 +8,61 @@ While the project is heavily opinionated, opinions are welcomed to be discussed:
 
 ## How to test the package
 
-1. Clone the repo
+### 1. Clone the repo
 
 ```bash
 git clone git@github.com:datarootsio/ml-skeleton-py.git
 cd ml-skeleton-py
 ```
 
-2. We use (poetry)[https://python-poetry.org/] here for dependency management. (Alternatively, you can also use the requirements.txt for dependency management.)
+### 2. Install dependencies using a) [poetry](https://python-poetry.org/) or b)requirements.txt.
 
+    a. poetry
 ```bash
 poetry shell
 poetry install
 ```
 
-3. Download the creditcard.csv dataset
+    b. requirements.txt
+```bash
+python -m venv local
+source local/bin/activate   source local/bin/activate
+pip install -r requirements.txt pip install -r requirements.txt
+pip install -e ./   pip install -e ./
+```
+
+### 3. Download the creditcard.csv dataset
 
 Download the creditcard.csv dataset from [here](https://www.kaggle.com/mlg-ulb/creditcardfraud/download) and place it in the ./data/raw directory. Kaggle doesn't allow using wget, because you have to be logged in.
 
-4. Run basic comands
+### 4. Run basic comands and tests.
 
 ```bash
 make init-train
 make prediction
+make test-package
 ```
 
-5. Run some tests
+## Makefile and test example
 
-```bash
-coverage run -m pytest ./tests/
-coverage report -m
-coverage html
+Try out the `make` commands on the example iris dataset model (see `make help`).
+You need to install packages listed in requirements.txt file before running any commands that execute code.
+
+```sh
+clean                          clean directories from generated files
+generate-dataset               run new ETL pipeline
+help                           show help on available commands
+init-train                     generate dataset & train the model
+prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
+test-package                   run some basic tests
+train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 ```
 
-## Scope
+Note the dependency: `generate_dataset` > `train` > `prediction`.
+
+
+
+<!-- ## Scope
 
 There are several things we cover using this skeleton, including:
 1. predefined project structure (directories and scripts)
@@ -229,4 +250,4 @@ See the Makefile for some logic to build a Spark dep file (example TBD.
 If you are about to use graphviz in your project (example is given in template modeling report),  
 you should install graphviz software in your system (not just the python package).  
 On Linux you can use: `sudo apt-get install graphviz`, for Mac `brew install graphviz`.  
-Graphs can be specified in code using Python API, but also specified in separate (.gv) file.
+Graphs can be specified in code using Python API, but also specified in separate (.gv) file. -->

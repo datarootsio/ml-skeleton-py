@@ -55,6 +55,11 @@ linting:
 	@echo ">>> linting files"
 	flake8 scripts ml_skeleton_py tests
 
+test-package:
+	@echo ">>> running coverage pytest"
+	coverage run -m pytest ./tests/
+	coverage report -m
+
 tox: ## run tox tests
 	tox
 

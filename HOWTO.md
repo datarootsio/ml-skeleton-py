@@ -28,9 +28,9 @@ poetry install
 
 ```bash
 python -m venv local
-source local/bin/activate   source local/bin/activate
-pip install -r requirements.txt pip install -r requirements.txt
-pip install -e ./   pip install -e ./
+source local/bin/activate
+pip install -r requirements.txt
+pip install -e ./
 ```
 
 **3. Download the creditcard.csv dataset**

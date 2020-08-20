@@ -20,6 +20,22 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
 
+def save_pickle(pred_result: dict, save_path: str) -> None:
+    """
+    Save pickle object in a specific directory.
+
+    Parameters:
+        pred_result (dict): object that you want to save
+
+        save_path (str): path on which you want to save a file
+
+    Returns:
+        None
+    """
+    with open(save_path, "wb") as handle:
+        pickle.dump(pred_result, handle)
+
+
 def train(model_name: str, dataset: str) -> None:
     """
     Train models using X_train and y_train with a specific classifier.
@@ -71,5 +87,4 @@ def train(model_name: str, dataset: str) -> None:
         "model": predict_pipeline,
     }
     model_path = os.path.join(settings.MODEL_DIR, model_name) + ".p"
-    with open(model_path, "wb") as handle:
-        pickle.dump(pred_result, handle)
+    save_pickle(pred_result, model_path)

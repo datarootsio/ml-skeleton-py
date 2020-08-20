@@ -44,7 +44,7 @@ def generate(dataset: str) -> Optional[pd.DataFrame]:
     Load data, remove outliers and return the traing and test sets.
 
     Parameters:
-        dataset (str): the dataset that you want to load
+        dataset (str): the filename of the dataset that you want to load
 
     Returns:
         df Optional(pd.DataFrame): preprocessed dataframe
@@ -103,7 +103,7 @@ def generate_test(dataset: str) -> None:
     Load transformed data, create and saves a balanced and imbalanced test set.
 
     Parameters:
-        dataset (str): the input dataset
+        dataset (str): the filename of the dataset that you want to load
 
     Returns:
         None

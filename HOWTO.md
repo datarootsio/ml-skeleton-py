@@ -13,16 +13,13 @@ While the project is heavily opinionated, opinions are welcomed to be discussed:
 ```bash
 git clone git@github.com:datarootsio/ml-skeleton-py.git
 cd ml-skeleton-py
-git checkout api-ci-pipeline
 ```
 
-2. Install local environment and install requirements.txt. We use `venv` here but you can use your packaging manager of choice.
+2. We use (poetry)[https://python-poetry.org/] here for dependency management. (Alternatively, you can also use the requirements.txt for dependency management.)
 
 ```bash
-python -m venv local
-source local/bin/activate
-pip install -r requirements.txt
-pip install -e ./
+poetry shell
+poetry install
 ```
 
 3. Download the creditcard.csv dataset

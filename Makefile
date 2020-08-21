@@ -42,7 +42,7 @@ test-package:
 	coverage run -m pytest ./tests/
 	coverage report -m --include=./tests/*
 
-test: generate-dataset train prediction test-package ## run extensive tests
+test: generate-dataset train prediction clean test-package ## run extensive tests
 
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

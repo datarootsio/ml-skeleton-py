@@ -28,7 +28,7 @@ def load_model(model_name: str) -> BaseEstimator:
     Uses lru for caching.
 
     Parameters:
-        model_name (str): model name e.g. "lr.p"
+        model_name (str): model name (including extension) e.g. "lr.p"
 
     Returns:
         model (Pipeline or BaseEstimator): a model that can make predictions
@@ -38,14 +38,16 @@ def load_model(model_name: str) -> BaseEstimator:
     return model
 
 
-def predict(model_name: str, observation: np.array) -> float:
+def predict(observation: np.array, model_name: str = "lr.p") -> float:
     """
     Predict one single observation.
 
     Parameters:
-        model_name (str): the name of the model file that you want to use
+        observation (np.array): the input observation
 
-        observation (np.array): the variables of the input observation
+        model_name (str): the name of the model file that you want to load
+                          (including extension)
+                          default value = "lr.p"
 
     Return:
         prediction (float): the prediction
@@ -82,7 +84,7 @@ def predict_from_file(model: str, input_df: str, output_df: str) -> np.array:
     logger.info(f"running predictions for input: {input_data}")
 
     # make predictions
-    preds = [predict(model, [x]) for x in np.array(input_data)]
+    preds = [predict([x], model) for x in np.array(input_data)]
     # transform single axis array to a column
     preds = np.array(preds).reshape(-1, 1)
 

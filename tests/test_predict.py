@@ -47,7 +47,7 @@ def test_predict_1() -> None:
         -1.25077894,
         -0.30741284,
     ]
-    prediction = predict(model_name, [observation])
+    prediction = predict([observation], model_name)
     assert type(float(prediction)) == float
 
 
@@ -88,7 +88,7 @@ def test_predict_2() -> None:
         -0.67713242,
         -0.20959966,
     ]
-    prediction = predict(model_name, [observation])
+    prediction = predict([observation], model_name)
     assert type(float(prediction)) == float
 
 
@@ -129,7 +129,7 @@ def test_predict_3() -> None:
         -1.08784478,
         3.03081115,
     ]
-    prediction = predict(model_name, [observation])
+    prediction = predict([observation], model_name)
     assert type(float(prediction)) == float
 
 

@@ -5,6 +5,7 @@ This file contains some helper functions.
 import pickle
 from typing import Any
 
+
 def save_pickle(object: Any, save_path: str) -> None:
     """
     Save pickle object in a specific directory.

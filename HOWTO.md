@@ -45,7 +45,13 @@ make prediction
 make test-package
 ```
 
-## Makefile and test example
+## Running the project
+
+Preferably, you can use make commands (from `Makefile`) or directly run scripts from `scripts`.  
+Refer to section below for the descriptions of make commands. Before running it, consider creating  
+a virtual environment.  
+
+**Makefile and test example**
 
 Try out the `make` commands on the example iris dataset model (see `make help`).
 You need to install packages listed in requirements.txt file before running any commands that execute code.
@@ -59,11 +65,30 @@ prediction                     predict new values, you can pass arguments as fol
 test-package                   run some basic tests
 train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 linting                        run black and flake8
+test                           run extensive tests
 ```
 
 Note the dependency: `generate_dataset` > `train` > `prediction`.
 
+## Docker
 
+Currently you can find the following docker files:  
+1. `Dockerfile.jupyter` builds an image for running notebooks.  
+2. `Dockerfile.test` builds an image to run all tests in (`make test-package`).
+
+Finally, you can start all services using `docker-compose`:  
+for example `docker-compose up jupyter` or `docker-compose up test`.  
+
+Do you need a notebook for development? Just run `docker-compose up jupyter`. It will launch a Jupyter Notebook 
+with access to your local development files.
+
+## Best practices for development
+
+- Make sure that `make test-package` and/or `docker-compose up test` runs properly.  
+- In need for a Notebook? Use the docker image: `docker-compose up jupyter`.
+- Commit often, perfect later.
+- Integrate `make test` with your CI pipeline.
+- Capture `stdout` when deployed.
 
 <!-- ## Scope
 

@@ -24,10 +24,10 @@ pandas = "^1.1.0"
 imblearn = "^0.0"
 flake8 = "^3.8.3"
 flake8-annotations = "^2.3.0"
-
+coverage = "^5.2.1"
+pytest = "^6.0.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
 
 [build-system]
 requires = ["poetry>=0.12"]

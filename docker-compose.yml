@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.jupyter
+    ports:
+    - "8888:8888"
+    volumes:
+    - ./:/workspace/mounted_volume
+  test:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.test

@@ -6,7 +6,6 @@ https://www.kaggle.com/janiobachmann/credit-fraud-dealing-with-imbalanced-datase
 """
 
 import os
-import pickle
 import pandas as pd
 from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import make_pipeline

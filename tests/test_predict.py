@@ -13,7 +13,7 @@ def test_predict_1() -> None:
     """
     Test whether an observation makes a prediction.
     """
-    train(MODEL_NAME, DATASET)
+    train(DATASET, MODEL_NAME)
     model_name = "lr_test.p"
     observation = [
         -0.51056756,

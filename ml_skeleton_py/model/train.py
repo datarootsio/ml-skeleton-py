@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
 
-def train(model_name: str, dataset: str) -> None:
+def train(dataset: str, model_name: str = "lr") -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
@@ -46,25 +46,24 @@ def train(model_name: str, dataset: str) -> None:
 
     # preprocessing
     scaler = RobustScaler()
-    X = scaler.fit_transform(X)
-    rus = RandomUnderSampler(replacement=False)
-    X, y = rus.fit_resample(X, y)
 
     # In this specific example logistic regression was chosen as
     # the most optimal model after running several experiments.
     classifier = LogisticRegression(max_iter=4000, penalty="l2", C=0.01)
 
+    # create pipeline
+    predict_pipeline = make_pipeline(scaler, classifier)
+
     # training
-    classifier.fit(X, y)
-    training_score = cross_val_score(classifier, X, y, cv=5, scoring="roc_auc")
-    logger.info(f"Classifier: {classifier.__class__.__name__}")
+    predict_pipeline.fit(X, y)
+    training_score = cross_val_score(predict_pipeline, X, y, cv=5, scoring="roc_auc")
+    logger.info(f"Classifier: {predict_pipeline.__class__.__name__}")
     logger.info(
         "Has a training score "
         + f"of {round(training_score.mean(), 2) * 100} % roc_auc"
     )
 
     # saving
-    predict_pipeline = make_pipeline(scaler, classifier)
     pred_result = {
         "clf": model_name,
         "training score roc_auc": training_score.mean(),

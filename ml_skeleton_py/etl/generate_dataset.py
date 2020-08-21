@@ -31,12 +31,13 @@ def remove_outliers(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     Return:
         df (pd.DataFrame): dataframe with removed outliers
     """
+    df_dropped = df.copy(deep=True)
     for variable in ["V10", "V12", "V14"]:
-        upper_outliers = df[variable] > params[f"{variable}_upper"]
-        lower_outliers = df[variable] < params[f"{variable}_lower"]
-        df = df.drop(df[upper_outliers | lower_outliers].index)
-    logger.info(f"Number of Instances after outliers removal: {len(df)}")
-    return df
+        upper_outliers = df_dropped[variable] > params[f"{variable}_upper"]
+        lower_outliers = df_dropped[variable] < params[f"{variable}_lower"]
+        df_dropped = df_dropped.drop(df_dropped[upper_outliers | lower_outliers].index)
+    logger.info(f"Number of Instances after outliers removal: {len(df_dropped)}")
+    return df_dropped
 
 
 def generate(dataset: str) -> Optional[pd.DataFrame]:

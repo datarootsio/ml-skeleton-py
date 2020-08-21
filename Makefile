@@ -8,6 +8,7 @@
 NO_OF_TEST_FILES := $(words $(wildcard tests/test_*.py))
 NO_OF_REPORT_FILES := $(words $(wildcard reports/))
 NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
+TEST_CSV := ./data/transformed/test_balanced_creditcard.csv
 
 ###############################################################
 # COMMANDS                                                    #
@@ -39,10 +40,12 @@ linting:
 
 test-package:
 	@echo ">>> running coverage pytest"
-	coverage run -m pytest ./tests/
+	coverage run -m pytest ./tests/test_data.py ./tests/test_generate_data.py ./tests/test_train.py ./tests/test_predict.py
 	coverage report -m --include=./tests/*
 
 test: generate-dataset train prediction clean test-package ## run extensive tests
 
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+

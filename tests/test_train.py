@@ -12,7 +12,7 @@ def test_train_lr() -> None:
     """
     Test whether logistic regression is trained and can be loaded.
     """
-    train(MODEL_NAME, DATASET)
+    train(DATASET, MODEL_NAME)
     with open(os.path.join(s.MODEL_DIR, MODEL_NAME) + ".p", "rb") as handle:
         pred_result = pickle.load(handle)
     classifier = is_classifier(pred_result["model"])

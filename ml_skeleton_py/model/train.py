@@ -65,7 +65,7 @@ def train(dataset: str, model_name: str = "lr") -> None:
     # saving
     pred_result = {
         "clf": model_name,
-        "training score roc_auc": training_score.mean(),
+        "roc_auc": training_score.mean(),
         "model": pipeline,
     }
     model_path = os.path.join(settings.MODEL_DIR, model_name) + ".p"

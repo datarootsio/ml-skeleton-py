@@ -40,7 +40,7 @@ linting:
 
 test-package:
 	@echo ">>> running coverage pytest"
-	coverage run -m pytest ./tests/test_data.py ./tests/test_generate_data.py ./tests/test_train.py ./tests/test_predict.py
+	coverage run -m pytest ./tests/test_data.py ./tests/test_generate_data.py ./tests/test_train.py ./tests/test_predict.py ./tests/test_acceptance.py
 	coverage report -m --include=./tests/*
 
 test: generate-dataset train prediction clean test-package ## run extensive tests

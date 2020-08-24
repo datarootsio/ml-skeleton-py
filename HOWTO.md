@@ -33,11 +33,7 @@ pip install -r requirements.txt
 pip install -e ./
 ```
 
-**3. Download the creditcard.csv dataset**
-
-Download the creditcard.csv dataset from [here](https://www.kaggle.com/mlg-ulb/creditcardfraud/download) and place it in the ./data/raw directory. Kaggle doesn't allow using wget, because you have to be logged in.
-
-**4. Run basic comands and tests.**
+**3. Run basic comands and tests.**
 
 ```bash
 make init-train

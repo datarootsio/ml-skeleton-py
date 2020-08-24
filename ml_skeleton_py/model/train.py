@@ -56,6 +56,7 @@ def train(dataset: str, model_name: str = "lr") -> None:
     # training
     pipeline.fit(X, y)
     training_score = cross_val_score(pipeline, X, y, cv=5, scoring="roc_auc")
+
     logger.info(f"Classifier: {pipeline.__class__.__name__}")
     logger.info(
         "Has a training score "

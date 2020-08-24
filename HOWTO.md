@@ -69,8 +69,8 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 ## Docker
 
 Currently you can find the following docker files:  
-1. `jupyter.Dockerfile` builds an image for running notebooks.  
-2. `test.Dockerfile` builds an image to run all tests in (`make test-package`).
+1. `jupyter.dockerfile` builds an image for running notebooks.  
+2. `test.dockerfile` builds an image to run all tests in (`make test-package`).
 
 Finally, you can start all services using `docker-compose`:  
 for example `docker-compose up jupyter` or `docker-compose up test`.  

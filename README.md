@@ -1,7 +1,7 @@
 
 [![maintained by dataroots](https://img.shields.io/badge/maintained%20by-dataroots-%2300b189)](https://dataroots.io)
-
 [![PythonVersion](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)
+[![tests](https://github.com/datarootsio/ml-skeleton-py/workflows/tests/badge.svg?branch=api-ci-pipeline)](https://github.com/datarootsio/ml-skeleton-py/actions)
 
 # `PROJECT NAME`
 

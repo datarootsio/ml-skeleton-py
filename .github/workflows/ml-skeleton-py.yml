@@ -5,9 +5,9 @@ name: ml-skeleton-py
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ $default-branch, api-ci-pipeline ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ $default-branch, api-ci-pipeline ]
 
 jobs:
   build:

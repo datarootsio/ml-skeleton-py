@@ -37,6 +37,7 @@ def load_model(model_name: str) -> BaseEstimator:
         model = pickle.load(handle)["model"]
     return model
 
+
 # @dploy endpoint predict
 def predict(observation: np.array, model_name: str = "lr.p") -> float:
     """

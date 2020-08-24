@@ -113,7 +113,7 @@ dmypy.json
 .idea/
 .DS_Store
 **/__pycache__/
-**.csv
+# **.csv
 **.p
 
 # ignore directory ml-skeleton-py

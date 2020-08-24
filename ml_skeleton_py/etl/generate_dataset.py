@@ -35,8 +35,10 @@ def remove_outliers(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     for variable in ["V10", "V12", "V14"]:
         upper_outliers = df_dropped[variable] > params[f"{variable}_upper"]
         lower_outliers = df_dropped[variable] < params[f"{variable}_lower"]
-        df_dropped = df_dropped.drop(df_dropped[upper_outliers | lower_outliers].index)
-    logger.info(f"Number of Instances after outliers removal: {len(df_dropped)}")
+        filter_outliers = upper_outliers | lower_outliers
+        df_dropped = df_dropped.drop(df_dropped[filter_outliers].index)
+    message = f"Number of Instances after outliers removal: {len(df_dropped)}"
+    logger.info(message)
     return df_dropped
 
 

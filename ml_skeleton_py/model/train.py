@@ -10,7 +10,6 @@ import pandas as pd
 from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import RobustScaler
-from imblearn.under_sampling import RandomUnderSampler
 from sklearn.linear_model import LogisticRegression
 import logging
 from ml_skeleton_py import settings
@@ -52,12 +51,12 @@ def train(dataset: str, model_name: str = "lr") -> None:
     classifier = LogisticRegression(max_iter=4000, penalty="l2", C=0.01)
 
     # create pipeline
-    predict_pipeline = make_pipeline(scaler, classifier)
+    pipeline = make_pipeline(scaler, classifier)
 
     # training
-    predict_pipeline.fit(X, y)
-    training_score = cross_val_score(predict_pipeline, X, y, cv=5, scoring="roc_auc")
-    logger.info(f"Classifier: {predict_pipeline.__class__.__name__}")
+    pipeline.fit(X, y)
+    training_score = cross_val_score(pipeline, X, y, cv=5, scoring="roc_auc")
+    logger.info(f"Classifier: {pipeline.__class__.__name__}")
     logger.info(
         "Has a training score "
         + f"of {round(training_score.mean(), 2) * 100} % roc_auc"
@@ -67,7 +66,7 @@ def train(dataset: str, model_name: str = "lr") -> None:
     pred_result = {
         "clf": model_name,
         "training score roc_auc": training_score.mean(),
-        "model": predict_pipeline,
+        "model": pipeline,
     }
     model_path = os.path.join(settings.MODEL_DIR, model_name) + ".p"
     save_pickle(pred_result, model_path)

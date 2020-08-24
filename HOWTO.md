@@ -49,7 +49,7 @@ a virtual environment.
 
 **Makefile and test example**
 
-Try out the `make` commands on the example iris dataset model (see `make help`).
+Try out the `make` commands on the example creditcard.cscv dataset model (see `make help`).
 You need to install packages listed in requirements.txt file before running any commands that execute code.
 
 ```sh
@@ -80,7 +80,7 @@ with access to your local development files.
 
 ## Best practices for development
 
-- Make sure that `make test-package` and/or `docker-compose up test` runs properly.  
+- Make sure that `docker-compose up test` runs properly.  
 - In need for a Notebook? Use the docker image: `docker-compose up jupyter`.
 - Commit often, perfect later.
 - Integrate `make test` with your CI pipeline.

@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
-
-import os
-import sys
-
 import click
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src import etl
+from ml_skeleton_py import etl
 
 
 @click.command()
-def generate():
-    etl.generate()
+@click.option("--dataset", type=str, default="creditcard.csv")
+def generate(dataset: str) -> None:
+    """
+    Load the dataset, remove outliers and store in data directory.
+
+    Parameters:
+        dataset (str): the dataset that you want to preprocess and transform
+
+    Returns:
+        None
+    """
+    etl.generate(dataset)
+    etl.generate_test(dataset)
 
 
 if __name__ == "__main__":

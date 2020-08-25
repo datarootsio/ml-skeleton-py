@@ -2,22 +2,15 @@ version: '3'
 
 services:
 
-  api:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile.api
-    ports:
-    - "9090:9090"
-
   jupyter:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile.jupyter
+      dockerfile: ./docker/jupyter.dockerfile
     ports:
     - "8888:8888"
     volumes:
-    - ./:/workspace/project_mount
+    - ./:/workspace/mounted_volume
   test:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile.test
+      dockerfile: ./docker/test.dockerfile

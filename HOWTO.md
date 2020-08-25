@@ -6,10 +6,87 @@ This is an opinionated project skeleton for a Python based machine learning proj
 This skeleton is to be used as the default project start for any Python ML project (unless arguments support otherwise).  
 While the project is heavily opinionated, opinions are welcomed to be discussed: feel free to open an issue or comment.
 
-This project is built upon the best practices discussed in our [methodology](https://gitlab.com/dataroots/public/methodology) repo.
+## How to test the package
 
+**1. Clone the repo**
 
-## Scope
+```bash
+git clone git@github.com:datarootsio/ml-skeleton-py.git
+cd ml-skeleton-py
+```
+
+**2. Install dependencies using [poetry](https://python-poetry.org/) or requirements.txt.**
+
+**a. poetry**
+
+```bash
+poetry shell
+poetry install
+```
+
+**b. requirements.txt**
+
+```bash
+python -m venv local
+source local/bin/activate
+pip install -r requirements.txt
+pip install -e ./
+```
+
+**3. Run basic comands and tests.**
+
+```bash
+make init-train
+make prediction
+make test-package
+```
+
+## Running the project
+
+Preferably, you can use make commands (from `Makefile`) or directly run scripts from `scripts`.  
+Refer to section below for the descriptions of make commands. Before running it, consider creating  
+a virtual environment.  
+
+**Makefile and test example**
+
+Try out the `make` commands on the example creditcard.cscv dataset model (see `make help`).
+You need to install packages listed in requirements.txt file before running any commands that execute code.
+
+```sh
+clean                          clean directories from generated files
+generate-dataset               run new ETL pipeline
+help                           show help on available commands
+init-train                     generate dataset & train the model
+prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
+test-package                   run some basic tests
+train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
+linting                        run black and flake8
+test                           run extensive tests
+```
+
+Note the dependency: `generate_dataset` > `train` > `prediction`.
+
+## Docker
+
+Currently you can find the following docker files:  
+1. `jupyter.dockerfile` builds an image for running notebooks.  
+2. `test.dockerfile` builds an image to run all tests in (`make test-package`).
+
+Finally, you can start all services using `docker-compose`:  
+for example `docker-compose up jupyter` or `docker-compose up test`.  
+
+Do you need a notebook for development? Just run `docker-compose up jupyter`. It will launch a Jupyter Notebook 
+with access to your local development files.
+
+## Best practices for development
+
+- Make sure that `docker-compose up test` runs properly.  
+- In need for a Notebook? Use the docker image: `docker-compose up jupyter`.
+- Commit often, perfect later.
+- Integrate `make test` with your CI pipeline.
+- Capture `stdout` when deployed.
+
+<!-- ## Scope
 
 There are several things we cover using this skeleton, including:
 1. predefined project structure (directories and scripts)
@@ -88,7 +165,7 @@ Python scripts that expose functionality from `src`. The idea is that source can
 should preferably stay the same, or not changed much. They can be run manually, from `Makefile`,  
 but also represent example scripts that can be passed to Spark job, (e.g. with spark-submit, in case we use Spark).
 
-### src/
+### ml_skeleton_py/
 
 This directory should contain the logic for the model (training & prediction), ETL, helpers and potential apps.  
 All source code relevant to a packaged and deployable delivery should be contained in this folder.
@@ -197,4 +274,4 @@ See the Makefile for some logic to build a Spark dep file (example TBD.
 If you are about to use graphviz in your project (example is given in template modeling report),  
 you should install graphviz software in your system (not just the python package).  
 On Linux you can use: `sudo apt-get install graphviz`, for Mac `brew install graphviz`.  
-Graphs can be specified in code using Python API, but also specified in separate (.gv) file.
+Graphs can be specified in code using Python API, but also specified in separate (.gv) file. -->

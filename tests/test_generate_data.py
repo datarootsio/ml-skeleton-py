@@ -1,21 +1,59 @@
-import os, sys
-import subprocess
+import os
+import pandas as pd
+from ml_skeleton_py import settings as s
+from ml_skeleton_py.etl.generate_dataset import generate, generate_test
+from ml_skeleton_py.etl.generate_dataset import remove_outliers
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import src.settings as s
-import pickle
 
-# subprocess.check_output("ls " + os.path.join(s.ETL_DIR))
+DATASET = "creditcard.csv"
+TEST_BALANCED_DATASET = "test_balanced_creditcard.csv"
+TEST_IMBALANCED_DATASET = "test_imbalanced_creditcard.csv"
 
-# print(os.path.join(s.ETL_DIR))
 
-def test_generate_dataset():
+def test_generate() -> None:
+    """
+    Tests whether file can be opened and whether it is a pd.DataFrame.
+    """
+    df = generate(DATASET)
+    df = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, DATASET))
+    assert type(df) == pd.DataFrame
 
-	# X_train, X_test, y_train, y_test = generate()
 
-	files = os.listdir(s.DATA_TRANSFORMED)
-	assert "X_train.p" in files 
-	assert "y_train.p" in files
-	assert "X_test.p" in files
-	assert "y_test.p" in files
+def test_generate_test_balanced() -> None:
+    """
+    Tests whether file can be opened and whether it is a pd.DataFrame.
+    """
+    generate_test(DATASET)
+    df = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, TEST_BALANCED_DATASET))
+    assert type(df) == pd.DataFrame
 
+
+def test_generate_test_imbalanced() -> None:
+    """
+    Tests whether file can be opened and whether it is a pd.DataFrame.
+    """
+    df = pd.read_csv(os.path.join(s.DATA_TRANSFORMED, TEST_IMBALANCED_DATASET))
+    assert type(df) == pd.DataFrame
+
+
+def test_faulty_generate() -> None:
+    """
+    Test whether non existent file is returned with None.
+    """
+    assert generate("no.csv") is None
+
+
+def test_outlier_removal() -> None:
+    """
+    Tests whether outlier removal works as intended.
+    """
+    df = generate(DATASET)
+    params = {
+        "V14_upper": 3.8320323237414122,
+        "V14_lower": -17.807576138200663,
+        "V12_upper": 5.597044719256134,
+        "V12_lower": -17.25930926645337,
+        "V10_upper": 5.099587558797303,
+        "V10_lower": -15.47046969983434,
+    }
+    assert type(remove_outliers(df, params)) == pd.DataFrame

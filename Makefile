@@ -8,6 +8,7 @@
 NO_OF_TEST_FILES := $(words $(wildcard tests/test_*.py))
 NO_OF_REPORT_FILES := $(words $(wildcard reports/))
 NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
+TEST_CSV := ./data/transformed/test_balanced_creditcard.csv
 
 ###############################################################
 # COMMANDS                                                    #
@@ -25,38 +26,26 @@ prediction: ## predict new values, you can pass arguments as follows: make ARGS=
 	@echo ">>> generating new predictions/estimates"
 	python ./scripts/predict.py $(ARGS)
 
-api: ## start flask server, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" deploy-endpoint
-	@echo ">>> starting flask"
-	python ./scripts/api.py $(ARGS)
-
-count-test-files: ## count the number of present test files
-    ifeq (0, $(NO_OF_TEST_FILES))
-		$(error >>> No tests found)
-    else
-	@echo ">>> OK, $(NO_OF_TEST_FILES) pytest file found"
-    endif
-
-count-report-files: ## count the number of present report files
-    ifeq (0, $(NO_OF_REPORT_FILES))
-		$(warning >>> No report files found)
-    else
-	@echo ">>> OK, $(NO_OF_REPORT_FILES) report files found"
-    endif
-
 init-train: generate-dataset train ## generate dataset & train the model
 
-tox: ## run tox tests
-	tox
+clean:
+	@echo ">>> cleaning files"
+	rm ./data/predictions/* ./data/transformed/* ./models/*.p
 
-test: generate-dataset train prediction tox count-test-files count-report-files ## run extensive tests
+linting:
+	@echo ">>> black files"
+	black scripts ml_skeleton_py tests
+	@echo ">>> linting files"
+	flake8 scripts ml_skeleton_py tests
 
-spark-zip: ## build the dependency zip file to submit with a spark job
-	mkdir -p ./dist/libs
-	cp -a ./src/. ./dist/libs/src/
-	pip install -r requirements-spark.txt -t ./dist/libs/
-	cd ./dist/libs/; zip  -r ../spark-libs.zip *
-	rm -rf ./dist/libs
+test-package:
+	@echo ">>> running coverage pytest"
+	coverage run -m pytest ./tests/test_data.py ./tests/test_generate_data.py ./tests/test_train.py ./tests/test_predict.py ./tests/test_acceptance.py
+	coverage report -m --include=./tests/*
 
+test: generate-dataset train prediction clean test-package ## run extensive tests
 
 help: ## show help on available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+

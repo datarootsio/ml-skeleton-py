@@ -1,8 +1,12 @@
 FROM python:3.7
 RUN apt-get update && apt-get install -y python-dev libffi-dev build-essential
-COPY requirements.txt /app/requirements.txt
 WORKDIR /app
-RUN pip install -r requirements.txt
 COPY . /app
+ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
+RUN pip3 install poetry
+# docker is already a virtual env, no need to create a new one
+RUN poetry config virtualenvs.create false 
+# install poetry minus development packages
+RUN poetry install --no-dev
 ENV LOG_LEVEL INFO
 ENTRYPOINT ["make", "test-package"]

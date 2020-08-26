@@ -1,19 +1,19 @@
 import os
 from ml_skeleton_py import settings as s
-from ml_skeleton_py.model.train import train
 from ml_skeleton_py.model.predict import predict
 from ml_skeleton_py.model.predict import predict_from_file
-import pandas as pd
+from pandas import DataFrame, read_csv
 
 DATASET = "creditcard.csv"
 MODEL_NAME = "lr_test"
 
 
-def test_predict_1() -> None:
+def test_pred_1(
+    test_generate_df: DataFrame, test_train: None, test_generate_test_df: None,
+) -> None:
     """
     Test whether an observation makes a prediction.
     """
-    train(DATASET, MODEL_NAME)
     model_name = "lr_test.p"
     observation = [
         -0.51056756,
@@ -51,7 +51,7 @@ def test_predict_1() -> None:
     assert type(float(prediction)) == float
 
 
-def test_predict_2() -> None:
+def test_pred_2(test_generate_df: DataFrame, test_train: None) -> None:
     """
     Test whether an observation makes a prediction.
     """
@@ -92,7 +92,7 @@ def test_predict_2() -> None:
     assert type(float(prediction)) == float
 
 
-def test_predict_3() -> None:
+def test_pred_3(test_generate_df: DataFrame, test_train: None) -> None:
     """
     Test whether an observation makes a prediction.
     """
@@ -133,7 +133,7 @@ def test_predict_3() -> None:
     assert type(float(prediction)) == float
 
 
-def test_predict_from_file_balanced() -> None:
+def test_predict_from_file_bal(test_generate_test_df: None) -> None:
     """
     Test whether predict from file works properly
     """
@@ -141,11 +141,11 @@ def test_predict_from_file_balanced() -> None:
     predict_from_file("lr_test.p", "test_balanced_creditcard.csv", file_name)
 
     pred_path = os.path.join(s.DATA_PREDICTIONS, file_name)
-    df = pd.read_csv(pred_path, header=None)
-    assert type(df) == pd.DataFrame
+    df = read_csv(pred_path, header=None)
+    assert type(df) == DataFrame
 
 
-def test_predict_from_file_imbalanced() -> None:
+def test_predict_from_file_imb(test_generate_test_df: None) -> None:
     """
     Test whether predict from file works properly
     """
@@ -153,5 +153,5 @@ def test_predict_from_file_imbalanced() -> None:
     predict_from_file("lr_test.p", "test_imbalanced_creditcard.csv", file_name)
 
     pred_path = os.path.join(s.DATA_PREDICTIONS, file_name)
-    df = pd.read_csv(pred_path, header=None)
-    assert type(df) == pd.DataFrame
+    df = read_csv(pred_path, header=None)
+    assert type(df) == DataFrame

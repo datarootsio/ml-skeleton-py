@@ -12,5 +12,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Test docker action step
-        uses: ml-skeleton-py/docker
+        uses: ./docker/
         id: docker-test

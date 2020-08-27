@@ -58,8 +58,8 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 ## Docker
 
 Currently you can find the following docker files:  
-1. `jupyter.dockerfile` builds an image for running notebooks.  
-2. `test.dockerfile` builds an image to run all tests in (`make test-package`).
+1. `jupyter.Dockerfile` builds an image for running notebooks.  
+2. `test.Dockerfile` builds an image to run all tests in (`make test-package`).
 
 Finally, you can start all services using `docker-compose`:  
 for example `docker-compose up jupyter` or `docker-compose up test`.  
@@ -78,16 +78,11 @@ with access to your local development files.
 ## Managing Dependencies using `poetry` commands
 
 * `poetry shell`: Command is run in your project directory, Poetry creates a Python virtual environment for this project.
-
 * `poetry install`: Installs the dependencies specified in *pyproject.toml*.
-
 * `poetry update`: The same functionality as *install* except the newer versions will be installed and *.lock* file will be update.
-
 * `poetry add [package-name]`:  Add a dependency to pyproject.toml and install package immediately upon adding.
-
 * `poetry remove [package-name]`: Opposite of above.
-
-* `poetry export -f requirements.txt > requirements.txt`: Exports your project's .lock file to requirements.txt.
+* `poetry export -f requirements.txt > requirements.txt`: Exports your project's *.lock* file to requirements.txt.
 
 
 <!-- ## Scope

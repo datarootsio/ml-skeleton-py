@@ -26,6 +26,7 @@ flake8 = "^3.8.3"
 flake8-annotations = "^2.3.0"
 coverage = "^5.2.1"
 pytest = "^6.0.1"
+pytest-cov = "^2.10.1"
 
 [tool.poetry.dev-dependencies]
 

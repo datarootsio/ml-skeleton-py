@@ -3,8 +3,6 @@ name: testing docker
 on:
   push:
     branches: [ $default-branch, github-tests, master ]
-  pull_request:
-    branches: [ $default-branch, github-tests, master]
 
 jobs:
   build:

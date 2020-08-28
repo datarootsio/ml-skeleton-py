@@ -6,8 +6,6 @@ name: tests
 on:
   push:
     branches: [ $default-branch, github-tests, master ]
-  pull_request:
-    branches: [ $default-branch, github-tests, master]
 
 jobs:
   build:
@@ -34,5 +32,6 @@ jobs:
         flake8 . --count --show-source --statistics
     - name: Test with pytest
       run: |
-        coverage run -m pytest
-        coverage report -m --include=./tests/*
+        pytest --cov=./ --cov-report=xml
+    - name: Upload coverage
+      uses: codecov/codecov-action@v1

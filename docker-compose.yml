@@ -5,7 +5,7 @@ services:
   jupyter:
     build:
       context: .
-      dockerfile: ./docker/jupyter.dockerfile
+      dockerfile: ./docker/jupyter.Dockerfile
     ports:
     - "8888:8888"
     volumes:
@@ -13,4 +13,4 @@ services:
   test:
     build:
       context: .
-      dockerfile: ./docker/test.dockerfile
+      dockerfile: ./docker/test.Dockerfile

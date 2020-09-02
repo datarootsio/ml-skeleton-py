@@ -15,22 +15,11 @@ git clone git@github.com:datarootsio/ml-skeleton-py.git
 cd ml-skeleton-py
 ```
 
-**2. Install dependencies using [poetry](https://python-poetry.org/) or requirements.txt.**
-
-**a. poetry**
+**2. Install dependencies using [poetry](https://python-poetry.org/).**
 
 ```bash
 poetry shell
 poetry install
-```
-
-**b. requirements.txt**
-
-```bash
-python -m venv local
-source local/bin/activate
-pip install -r requirements.txt
-pip install -e ./
 ```
 
 **3. Run basic comands and tests.**
@@ -69,8 +58,8 @@ Note the dependency: `generate_dataset` > `train` > `prediction`.
 ## Docker
 
 Currently you can find the following docker files:  
-1. `jupyter.dockerfile` builds an image for running notebooks.  
-2. `test.dockerfile` builds an image to run all tests in (`make test-package`).
+1. `jupyter.Dockerfile` builds an image for running notebooks.  
+2. `test.Dockerfile` builds an image to run all tests in (`make test-package`).
 
 Finally, you can start all services using `docker-compose`:  
 for example `docker-compose up jupyter` or `docker-compose up test`.  
@@ -85,6 +74,16 @@ with access to your local development files.
 - Commit often, perfect later.
 - Integrate `make test` with your CI pipeline.
 - Capture `stdout` when deployed.
+
+## Managing Dependencies using `poetry` commands
+
+* `poetry shell`: Command is run in your project directory, Poetry creates a Python virtual environment for this project.
+* `poetry install`: Installs the dependencies specified in *pyproject.toml*.
+* `poetry update`: The same functionality as *install* except the newer versions will be installed and *.lock* file will be update.
+* `poetry add [package-name]`:  Add a dependency to pyproject.toml and install package immediately upon adding.
+* `poetry remove [package-name]`: Opposite of above.
+* `poetry export -f requirements.txt > requirements.txt`: Exports your project's *.lock* file to requirements.txt.
+
 
 <!-- ## Scope
 

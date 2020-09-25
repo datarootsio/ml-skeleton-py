@@ -6,9 +6,6 @@ import argparse
 def generate() -> None:
     """
     Load the dataset, remove outliers and store in data directory.
-
-    Returns:
-        None
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="creditcard.csv", help="raw dataset to generate train and test data")

@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-import click
-
+import argparse
 from ml_skeleton_py import model
 
 
-@click.command()
-@click.option("--model_name", default="lr")
-@click.option("--dataset", default="creditcard.csv")
-def train(dataset: str, model_name: str) -> None:
+def train() -> None:
     """
     Train a model on a dataset and store the model and its results.
 
@@ -21,7 +17,12 @@ def train(dataset: str, model_name: str) -> None:
     Returns:
         None
     """
-    model.train(dataset, model_name)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", default="creditcard.csv", help="raw dataset to generate train and test data")
+    parser.add_argument("--model-name", default="lr", help="the serialized model name default lr referring to "
+                                                           "logistic regression")
+    args = parser.parse_args()
+    model.train(args.dataset, args.model_name)
 
 
 if __name__ == "__main__":

@@ -15,11 +15,11 @@ git clone git@github.com:datarootsio/ml-skeleton-py.git
 cd ml-skeleton-py
 ```
 
-**2. Install dependencies using [poetry](https://python-poetry.org/).**
+**2. Install dependencies using [pip](https://pip.pypa.io/en/stable/installing/). Installing dependencies with `-e` 
+editable mode is recommended to properly run unit tests.**
 
 ```bash
-poetry shell
-poetry install
+pip install -e .
 ```
 
 **3. Run basic comands and tests.**
@@ -38,7 +38,7 @@ a virtual environment.
 
 **Makefile and test example**
 
-Try out the `make` commands on the example creditcard.cscv dataset model (see `make help`).
+Try out the `make` commands on the example creditcard.csv dataset model (see `make help`).
 You need to install packages listed in requirements.txt file before running any commands that execute code.
 
 ```sh
@@ -74,15 +74,6 @@ with access to your local development files.
 - Commit often, perfect later.
 - Integrate `make test` with your CI pipeline.
 - Capture `stdout` when deployed.
-
-## Managing Dependencies using `poetry` commands
-
-* `poetry shell`: Command is run in your project directory, Poetry creates a Python virtual environment for this project.
-* `poetry install`: Installs the dependencies specified in *pyproject.toml*.
-* `poetry update`: The same functionality as *install* except the newer versions will be installed and *.lock* file will be update.
-* `poetry add [package-name]`:  Add a dependency to pyproject.toml and install package immediately upon adding.
-* `poetry remove [package-name]`: Opposite of above.
-* `poetry export -f requirements.txt > requirements.txt`: Exports your project's *.lock* file to requirements.txt.
 
 
 <!-- ## Scope

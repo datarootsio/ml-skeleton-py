@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "pandas>=1.1.0",
-        "numpy>=1.19.1"
+        "scikit-learn>=0.23.2"
     ],
     tests_require=test_deps,
     extras_require=extras)

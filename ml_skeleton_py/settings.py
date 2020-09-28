@@ -1,27 +1,23 @@
-"""Configuration file.
-Most of these variables can be overridden through environment variables.
+""" Configuration file.
+All static variables can be assigned in this settings.py file
 """
 
 import os
-from os.path import abspath
 
-DATA_RAW = os.path.join(abspath(os.getenv("DATA_RAW", "./data/raw/")), "")
-DATA_TRANSFORMED = os.path.join(
-    abspath(os.getenv("DATA_TRANSFORMED", "./data/transformed/")), ""
-)
-DATA_STAGING = os.path.join(
-    abspath(os.getenv("DATA_TRANSFORMED", "./data/staging/")), ""
-)
-DATA_PREDICTIONS = os.path.join(
-    abspath(os.getenv("DATA_TRANSFORMED", "./data/predictions/")), ""
-)
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ETL_DIR = os.path.join(abspath(os.getenv("ETL_DIR", "./etl")), "")
+DATA_DIR = os.path.join(ROOT_DIR, 'data')
 
+DATA_RAW = os.path.join(DATA_DIR, 'raw')
 
-MODEL_DIR = os.path.join(abspath(os.getenv("MODEL_DIR", "./models")), "")
-MODEL_METADATA_DIR = os.path.join(
-    abspath(os.getenv("MODEL_METADATA_DIR", "./models/metadata")), ""
-)
+DATA_TRANSFORMED = os.path.join(DATA_DIR, 'transformed')
 
-FLASK_ENDPOINT_PORT = os.getenv("FLASK_ENDPOINT_PORT", 5000)
+DATA_STAGING = os.path.join(DATA_DIR, 'staging')
+
+DATA_PREDICTIONS = os.path.join(DATA_DIR, 'predictions')
+
+ETL_DIR = os.path.join(ROOT_DIR, 'ml_skeleton_py', 'etl')
+
+MODEL_DIR = os.path.join(ROOT_DIR, 'models')
+
+MODEL_METADATA_DIR = os.path.join(ROOT_DIR, 'models', 'metadata')

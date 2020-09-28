@@ -11,7 +11,6 @@ def generate() -> None:
     parser.add_argument("--dataset", default="creditcard.csv", help="raw dataset to generate train and test data")
     args = parser.parse_args()
     etl.generate(args.dataset)
-    etl.generate_test(args.dataset)
 
 
 if __name__ == "__main__":

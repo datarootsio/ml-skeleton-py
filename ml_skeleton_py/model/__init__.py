@@ -2,6 +2,6 @@
 
 from .train import train
 
-from .predict import predict_from_file, predict
+from .predict import predict
 
-__all__ = ["train", "predict", "predict_from_file"]
+__all__ = ["train", "predict"]

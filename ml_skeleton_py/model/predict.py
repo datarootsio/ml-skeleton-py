@@ -4,11 +4,12 @@ Example borrowed from:
 http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr-auto-examples-linear-model-plot-ols-py
 """
 
-import os
 import functools
-import pickle
-import sklearn.pipeline
+import os
+
+import joblib
 import numpy as np
+import sklearn.pipeline
 
 
 @functools.lru_cache()
@@ -26,7 +27,7 @@ def load_model(model_name: str) -> sklearn.pipeline:
     """
     root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     with open(os.path.join(root_dir, "models", model_name), "rb") as handle:
-        model = pickle.load(handle)["model"]
+        model = joblib.load(handle)["model"]
     return model
 
 

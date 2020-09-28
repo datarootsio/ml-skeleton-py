@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
 import argparse
+
 from ml_skeleton_py import model
 
 

@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
-from ml_skeleton_py import etl
 import argparse
+
+from ml_skeleton_py import etl
 
 
 def generate() -> None:

@@ -4,6 +4,7 @@ All static variables can be assigned in this settings.py file
 
 import os
 
+# Directories
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DATA_DIR = os.path.join(ROOT_DIR, 'data')
@@ -21,3 +22,20 @@ ETL_DIR = os.path.join(ROOT_DIR, 'ml_skeleton_py', 'etl')
 MODEL_DIR = os.path.join(ROOT_DIR, 'models')
 
 MODEL_METADATA_DIR = os.path.join(ROOT_DIR, 'models', 'metadata')
+
+# Model Variables
+TARGET_VARIABLE = 'Class'
+DATASET_NAME = 'creditcard.csv'
+
+# ---------- PYTEST VARIABLES ---------
+# TEST Variables
+TEST_DATASET_NAME = 'sample_creditcard.csv'
+
+# TEST DIRECTORIES
+ASSETS_DIR = os.path.join(ROOT_DIR, 'tests', 'assets')
+
+EXPECTED_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed", TEST_DATASET_NAME)
+UNEXPECTED_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed", "dummy.csv")
+
+EXPECTED_RAW_DATA_LOC = os.path.join(ASSETS_DIR, "raw", TEST_DATASET_NAME)
+UNEXPECTED_RAW_DATA_LOC = os.path.join(ASSETS_DIR, "raw", "dummy.csv")

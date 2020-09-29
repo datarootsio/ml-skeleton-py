@@ -16,33 +16,34 @@ from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import RobustScaler
 
-from ml_skeleton_py import settings
-
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
 
-def train(dataset: str, model_name: str = "lr") -> None:
+def train(dataset_loc: str, model_dir, model_name: str = "lr") -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
     Trains a specific classifier with a set of optimized hyper-parameters
-    in a 5fold-CV. The training results with the accompanying model is
+    in a 5 fold-CV. The training results with the accompanying models is
     saved in ./models/
 
     Parameters:
-        model_name (str): the model_name that you want to use as a save
-                     default:
-                        "lr": logistic regression
+        dataset_loc (str): the dataset path on which we want to train
 
-        dataset (str): the dataset on which you want to train
+        model_dir (str): directory of the serialized ml models
 
+        model_name (str): the model_name that we want to use as a save
+             default:
+                "lr": logistic regression
     Returns:
         None
 
     """
     # loading data
-    df = pd.read_csv(os.path.join(settings.DATA_TRANSFORMED, dataset))
+    df = pd.read_csv(dataset_loc)
+
+    # Separate X and y
     y = df.pop("Class")
     X = df
 
@@ -50,7 +51,7 @@ def train(dataset: str, model_name: str = "lr") -> None:
     scaler = RobustScaler()
 
     # In this specific example logistic regression was chosen as
-    # the most optimal model after running several experiments.
+    # the most optimal models after running several experiments.
     classifier = LogisticRegression(max_iter=4000, penalty="l2", C=0.01)
 
     # create pipeline
@@ -65,32 +66,36 @@ def train(dataset: str, model_name: str = "lr") -> None:
         + f"of {round(training_score.mean(), 2) * 100} % roc_auc"
     )
 
-    # Save model
-    dump_model(pipeline, model_name, training_score)
+    dump_model(pipeline, model_name, training_score, model_dir)
 
 
-def dump_model(pipeline: sklearn.pipeline, model_name: str, training_score: np.ndarray) -> None:
+def dump_model(pipeline: sklearn.pipeline,
+               model_name: str,
+               training_score: np.ndarray,
+               model_dir: str) -> None:
     """
-    Serialized trained pipeline to ./models/ directory
+    Dump serialized trained pipeline to disk
 
     Parameters:
         pipeline (sklearn.pipeline): Fitted pipeline object that we want to serialize
-        model_name (str): Name of the model that we want to serialize
+
+        model_name (str): Name of the models that we want to serialize
                      default:
                         "lr": logistic regression
         training_score (np.ndarray): ROC AUC scores of each CV
+
+        model_dir (str): directory of the serialized ml models
 
     Returns:
         None
     """
 
-    # Model
     pred_result = {
-        "clf": model_name,
+        "model_name": model_name,
         "roc_auc": training_score.mean(),
-        "model": pipeline,
+        "deserialized_model": pipeline,
     }
-    model_location = os.path.join(settings.MODEL_DIR, model_name) + ".joblib"
+    model_location = os.path.join(model_dir, model_name) + ".joblib"
     with open(model_location, "wb") as f:
         # Serialize pipeline and compress it with the max factor 9
         joblib.dump(pred_result, f, compress=9)

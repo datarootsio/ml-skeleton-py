@@ -11,24 +11,23 @@ import joblib
 import numpy as np
 import sklearn.pipeline
 
+from ml_skeleton_py import settings as s
+
 
 @functools.lru_cache()
-def load_model(model_name: str) -> sklearn.pipeline:
+def load_model(model_loc: str) -> sklearn.pipeline:
     """
-    Load model using pickle.
+    Load models using pickle.
 
     Uses lru for caching.
 
     Parameters:
-        model_name (str): model name (including extension) e.g. "lr.p"
+        model_loc (str): models file name e.g. "lr.joblib"
 
     Returns:
-        model (Pipeline or BaseEstimator): a model that can make predictions
+        models (Pipeline or BaseEstimator): a models that can make predictions
     """
-    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    with open(os.path.join(root_dir, "models", model_name), "rb") as handle:
-        model = joblib.load(handle)["model"]
-    return model
+    return joblib.load(model_loc)["deserialized_model"]
 
 
 # Don't delete the following line, it is required to deploy this function via dploy-kickstart
@@ -38,14 +37,15 @@ def predict(body: dict) -> float:
     Predict one single observation.
 
     Parameters:
-        body (dict): having the model name and features. Model name is the serialized model name
+        body (dict): having the models name and features. Model name is the serialized models name
                      in string type. Features represent all the features in list type that will
                      be used to do the predictions
-                     I.e {"model_name": "lr.joblib",
+                     I.e {"model_f_name": "lr.joblib",
                           "features": [0.12, 0.56, ..., 0.87]}
     Return:
         prediction (float): the prediction
     """
-    model = load_model(body["model_name"])
+    model_loc = os.path.join(s.MODEL_DIR, body["model_f_name"])
+    model = load_model(model_loc)
     features = np.asarray(body["features"]).reshape(1, -1)
     return float(model.predict(features)[0])

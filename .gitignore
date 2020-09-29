@@ -119,3 +119,7 @@ dmypy.json
 # ignore directory ml-skeleton-py
 # ml-skeleton-py/
 ml-skeleton-py_env/
+
+# Ignore pytest artifacts
+tests/assets/models/*.joblib
+tests/assets/transformed/temp_sample_creditcard.csv

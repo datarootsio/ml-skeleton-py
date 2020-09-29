@@ -1,32 +1,27 @@
-import pytest
-from ml_skeleton_py.etl.generate_dataset import generate, generate_test
+import os
+
 import pandas as pd
-from ml_skeleton_py.model.train import train
+from sklearn.model_selection import train_test_split
 
-DATASET = "creditcard.csv"
-MODEL_NAME = "lr_test"
+from ml_skeleton_py import settings as s
+
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-@pytest.fixture(scope="module")
-def test_generate_df() -> pd.DataFrame:
+def create_sample_dataset() -> None:
     """
-    Generate creditcard.csv dataset.
+    Generate sample datasets to easily work on unit tests
     """
-    df = generate(DATASET)
-    return df
+    df = pd.read_csv(os.path.join(s.DATA_RAW, s.DATASET_NAME))
+    y = df.pop(s.TARGET_VARIABLE)
+    _, X_test, _, y_test = train_test_split(df, y, test_size=0.1,
+                                            random_state=42, stratify=y)
+    X_test['Class'] = y_test
+    X_test.to_csv(s.EXPECTED_RAW_DATA_LOC, index=False)
 
 
-@pytest.fixture(scope="module")
-def test_generate_test_df() -> None:
+def pytest_sessionstart(session):
     """
-    Generate test sets on the basis of creditcard.csv dataset.
+    Pytest Hook Method; run this method before running any tests
     """
-    generate_test(DATASET)
-
-
-@pytest.fixture(scope="module")
-def test_train() -> None:
-    """
-    Train logistic regression on creditcard.csv dataset.
-    """
-    train(DATASET, MODEL_NAME)
+    create_sample_dataset()

@@ -7,10 +7,16 @@ services:
       context: .
       dockerfile: ./docker/jupyter.Dockerfile
     ports:
-    - "8888:8888"
+      - "8888:8888"
     volumes:
-    - ./:/workspace/mounted_volume
+      - ./:/workspace/mounted_volume
   test:
     build:
       context: .
       dockerfile: ./docker/test.Dockerfile
+  serve:
+    build:
+      context: .
+      dockerfile: ./docker/serve.Dockerfile
+    ports:
+      - "8080:8080"

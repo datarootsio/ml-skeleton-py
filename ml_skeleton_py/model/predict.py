@@ -31,14 +31,15 @@ def load_model(model_name: str) -> sklearn.pipeline:
     return model
 
 
+# Don't delete the following line, it is required to deploy this function via dploy-kickstart
 # @dploy endpoint predict
 def predict(body: dict) -> float:
     """
     Predict one single observation.
 
     Parameters:
-        body (dict): having the and model name and features. Model name is the serialized model name
-                     in string format. Features represents all the features in list type that will
+        body (dict): having the model name and features. Model name is the serialized model name
+                     in string type. Features represent all the features in list type that will
                      be used to do the predictions
                      I.e {"model_name": "lr.joblib",
                           "features": [0.12, 0.56, ..., 0.87]}

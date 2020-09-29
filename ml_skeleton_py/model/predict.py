@@ -32,19 +32,19 @@ def load_model(model_name: str) -> sklearn.pipeline:
 
 
 # @dploy endpoint predict
-def predict(observation: np.array, model_name: str = "lr.p") -> float:
+def predict(body: dict) -> float:
     """
     Predict one single observation.
 
     Parameters:
-        observation (np.array): the input observation
-
-        model_name (str): the name of the model file that you want to load
-                          (including extension)
-                          default value = "lr.p"
-
+        body (dict): having the and model name and features. Model name is the serialized model name
+                     in string format. Features represents all the features in list type that will
+                     be used to do the predictions
+                     I.e {"model_name": "lr.joblib",
+                          "features": [0.12, 0.56, ..., 0.87]}
     Return:
         prediction (float): the prediction
     """
-    model = load_model(model_name)
-    return float(model.predict(observation)[0])
+    model = load_model(body["model_name"])
+    features = np.asarray(body["features"]).reshape(1, -1)
+    return float(model.predict(features)[0])

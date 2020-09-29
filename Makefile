@@ -38,7 +38,6 @@ linting:
 	@echo ">>> linting files"
 	flake8 scripts ml_skeleton_py tests
 
-# ./tests/test_data.py ./tests/test_generate_data.py ./tests/test_train.py ./tests/test_predict.py ./tests/test_acceptance.py
 test-package:
 	@echo ">>> running coverage pytest"
 	coverage run -m pytest 

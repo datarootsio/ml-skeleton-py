@@ -11,8 +11,13 @@ test_deps = [
     "pytest-cov>=2.8.1"
 ]
 
+serve_deps = [
+    "dploy-kickstart>=0.1.5",
+]
+
 extras = {
     "test": test_deps,
+    "serve": serve_deps
 }
 
 setup(

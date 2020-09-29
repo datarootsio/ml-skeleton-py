@@ -5,7 +5,7 @@ from ml_skeleton_py import model
 
 def train() -> None:
     """
-    Train a model on a dataset and store the model and its results.
+    Train a model on a dataset and store the model.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset",

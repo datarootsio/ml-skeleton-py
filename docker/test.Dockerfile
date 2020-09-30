@@ -4,4 +4,4 @@ WORKDIR /app
 COPY . /app
 ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 RUN pip install -e ".[test]"
-ENTRYPOINT ["make", "test-package"]
+ENTRYPOINT ["make", "test"]

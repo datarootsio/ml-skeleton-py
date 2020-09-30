@@ -9,6 +9,7 @@ test_deps = [
     "flake8>=3.7.9",
     "flake8-annotations>=1.1.3",
     "pytest-cov>=2.8.1",
+    "black>=19.10b0"
 ]
 
 serve_deps = [

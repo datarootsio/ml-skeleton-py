@@ -8,21 +8,21 @@ While the project is heavily opinionated, opinions are welcomed to be discussed:
 
 ## How to test the package
 
-**1. Clone the repo**
+1. Clone the repo
 
-```bash
-git clone git@github.com:datarootsio/ml-skeleton-py.git
-cd ml-skeleton-py
-```
+    ```bash
+    git clone git@github.com:datarootsio/ml-skeleton-py.git
+    cd ml-skeleton-py
+    ```
 
-**2. Install dependencies using [pip](https://pip.pypa.io/en/stable/installing/). The following command
+2. Install dependencies using [pip](https://pip.pypa.io/en/stable/installing/). The following command
 will install the dependencies from `setup.py`. Note that installing dependencies with `-e` 
 editable mode is needed to properly run unit tests. `[test, serve]` is optional. `test` refers to
-unit test dependencies and `serve` refers to deployment dependencies.**
+unit test dependencies and `serve` refers to deployment dependencies.
 
-```bash
-pip install -e ".[test, serve]"
-```
+    ```bash
+    pip install -e ".[test, serve]"
+    ```
 
 ## Running the project
 

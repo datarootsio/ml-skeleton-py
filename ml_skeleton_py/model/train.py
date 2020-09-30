@@ -20,9 +20,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
 
-def train(
-        dataset_loc: str, model_dir: str, model_name: str = "lr"
-) -> None:
+def train(dataset_loc: str, model_dir: str, model_name: str = "lr") -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
@@ -72,8 +70,10 @@ def train(
 
 
 def dump_model(
-        pipeline: sklearn.pipeline, model_name: str,
-        training_score: np.ndarray, model_dir: str
+        pipeline: sklearn.pipeline,
+        model_name: str,
+        training_score: np.ndarray,
+        model_dir: str,
 ) -> None:
     """
     Dump serialized trained pipeline to disk

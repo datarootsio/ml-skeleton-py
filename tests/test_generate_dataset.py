@@ -8,12 +8,39 @@ from ml_skeleton_py.etl.generate_dataset import generate
 from ml_skeleton_py.etl.generate_dataset import remove_outliers
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
-EXPECTED_HEADERS = ['Time', 'V1', 'V2', 'V3', 'V4',
-                    'V5', 'V6', 'V7', 'V8', 'V9', 'V10',
-                    'V11', 'V12', 'V13', 'V14', 'V15', 'V16',
-                    'V17', 'V18', 'V19', 'V20', 'V21', 'V22',
-                    'V23', 'V24', 'V25', 'V26', 'V27', 'V28',
-                    'Amount', 'Class']
+EXPECTED_HEADERS = [
+    "Time",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount",
+    "Class",
+]
 
 EXPECTED_N_HEADERS = len(EXPECTED_HEADERS)
 UNEXPECTED_N_HEADERS = len(EXPECTED_HEADERS) - 10
@@ -22,10 +49,8 @@ UNEXPECTED_N_HEADERS = len(EXPECTED_HEADERS) - 10
 @pytest.mark.parametrize(
     "raw_data_loc, transformed_data_loc, error_expected",
     [
-        (s.EXPECTED_RAW_DATA_LOC,
-         s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, False),
-        (s.UNEXPECTED_RAW_DATA_LOC,
-         s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, True),
+        (s.EXPECTED_RAW_DATA_LOC, s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, False),
+        (s.UNEXPECTED_RAW_DATA_LOC, s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, True),
     ],
 )
 def test_generate(

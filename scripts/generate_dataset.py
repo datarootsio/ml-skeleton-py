@@ -14,7 +14,8 @@ def generate() -> None:
     Load the dataset, remove outliers and store in data directory.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", default="creditcard.csv", help="raw dataset to generate train and test data")
+    parser.add_argument("--dataset", default="creditcard.csv",
+                        help="raw dataset to generate train and test data")
     args = parser.parse_args()
 
     input_location = os.path.join(s.DATA_RAW, args.dataset)

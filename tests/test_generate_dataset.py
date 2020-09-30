@@ -22,11 +22,15 @@ UNEXPECTED_N_HEADERS = len(EXPECTED_HEADERS) - 10
 @pytest.mark.parametrize(
     "raw_data_loc, transformed_data_loc, error_expected",
     [
-        (s.EXPECTED_RAW_DATA_LOC, s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, False),
-        (s.UNEXPECTED_RAW_DATA_LOC, s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, True),
+        (s.EXPECTED_RAW_DATA_LOC,
+         s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, False),
+        (s.UNEXPECTED_RAW_DATA_LOC,
+         s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, True),
     ],
 )
-def test_generate(raw_data_loc: str, transformed_data_loc: str, error_expected: bool) -> None:
+def test_generate(
+        raw_data_loc: str, transformed_data_loc: str, error_expected: bool
+) -> None:
     """
     Tests whether file can be opened from ./data/raw
     """
@@ -45,7 +49,9 @@ def test_generate(raw_data_loc: str, transformed_data_loc: str, error_expected: 
         (s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, EXPECTED_N_HEADERS, True),
     ],
 )
-def test_transformed_df(dataset_loc: str, number_of_cols: int, error_expected: bool):
+def test_transformed_df(
+        dataset_loc: str, number_of_cols: int, error_expected: bool
+) -> None:
     """
     Tests whether file can be opened from ./data/transformed and it has the
     desired number of rows, columns and headers
@@ -68,7 +74,9 @@ def test_transformed_df(dataset_loc: str, number_of_cols: int, error_expected: b
         (s.EXPECTED_TEMP_TRANSFORMED_DATA_LOC, UNEXPECTED_N_HEADERS, True),
     ],
 )
-def test_remove_outliers(dataset_loc: str, number_of_cols: int, error_expected: bool) -> None:
+def test_remove_outliers(
+        dataset_loc: str, number_of_cols: int, error_expected: bool
+) -> None:
     """
     Tests whether outlier removal creates unexpected behaviors. Make sure
     the outlier removed data frame has exactly the same headers with the

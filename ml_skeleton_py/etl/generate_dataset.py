@@ -61,8 +61,11 @@ def remove_outliers(df: pd.DataFrame) -> pd.DataFrame:
 
     # Fit a basic local outlier factor to detect outliers
     lof = LocalOutlierFactor()
-    df_outlier_removed['is_outlier'] = lof.fit_predict(df_outlier_removed[["V10", "V12", "V14"]])
-    df_outlier_removed = df_outlier_removed[df_outlier_removed.is_outlier != -1]  # -1 represents outliers
+    df_outlier_removed['is_outlier'] = lof.fit_predict(
+        df_outlier_removed[["V10", "V12", "V14"]])
+
+    df_outlier_removed = df_outlier_removed[
+        df_outlier_removed.is_outlier != -1]  # -1 represents outliers
 
     # Report number of removed rows
     n_filtered_rows = df_outlier_removed.shape[0]

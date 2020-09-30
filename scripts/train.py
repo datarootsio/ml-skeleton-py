@@ -13,8 +13,8 @@ def train() -> None:
                         help="raw dataset to generate train and test data")
     parser.add_argument("--model-name",
                         default="lr",
-                        help="the serialized model name default lr referring to "
-                             "logistic regression")
+                        help="the serialized model name default lr "
+                             "referring to logistic regression")
     args = parser.parse_args()
     model.train(args.dataset, args.model_name)
 

@@ -30,16 +30,16 @@ def load_model(model_loc: str) -> sklearn.pipeline:
     return joblib.load(model_loc)["deserialized_model"]
 
 
-# Don't delete the following line, it is required to deploy this function via dploy-kickstart
+# Don't delete the following line, it is required
+# to deploy this function via dploy-kickstart
 # @dploy endpoint predict
 def predict(body: dict) -> float:
     """
     Predict one single observation.
 
     Parameters:
-        body (dict): having the models name and features. Model name is the serialized models name
-                     in string type. Features represent all the features in list type that will
-                     be used to do the predictions
+        body (dict): having the serialized model name (str)
+                     and features (list).
                      I.e {"model_f_name": "lr.joblib",
                           "features": [0.12, 0.56, ..., 0.87]}
     Return:

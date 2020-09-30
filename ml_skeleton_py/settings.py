@@ -35,9 +35,12 @@ TEST_DATASET_NAME = 'sample_creditcard.csv'
 # TEST DIRECTORIES
 ASSETS_DIR = os.path.join(ROOT_DIR, 'tests', 'assets')
 
-EXPECTED_TEMP_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed", "temp_sample_creditcard.csv")
-EXPECTED_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed", TEST_DATASET_NAME)
-UNEXPECTED_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed", "dummy.csv")
+EXPECTED_TEMP_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed",
+                                                  "temp_sample_creditcard.csv")
+EXPECTED_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed",
+                                             TEST_DATASET_NAME)
+UNEXPECTED_TRANSFORMED_DATA_LOC = os.path.join(ASSETS_DIR, "transformed",
+                                               "dummy.csv")
 
 EXPECTED_RAW_DATA_LOC = os.path.join(ASSETS_DIR, "raw", TEST_DATASET_NAME)
 UNEXPECTED_RAW_DATA_LOC = os.path.join(ASSETS_DIR, "raw", "dummy.csv")

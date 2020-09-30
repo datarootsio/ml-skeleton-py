@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
 
-def train(dataset_loc: str, model_dir, model_name: str = "lr") -> None:
+def train(
+        dataset_loc: str, model_dir: str, model_name: str = "lr"
+) -> None:
     """
     Train models using X_train and y_train with a specific classifier.
 
@@ -69,15 +71,16 @@ def train(dataset_loc: str, model_dir, model_name: str = "lr") -> None:
     dump_model(pipeline, model_name, training_score, model_dir)
 
 
-def dump_model(pipeline: sklearn.pipeline,
-               model_name: str,
-               training_score: np.ndarray,
-               model_dir: str) -> None:
+def dump_model(
+        pipeline: sklearn.pipeline, model_name: str,
+        training_score: np.ndarray, model_dir: str
+) -> None:
     """
     Dump serialized trained pipeline to disk
 
     Parameters:
-        pipeline (sklearn.pipeline): Fitted pipeline object that we want to serialize
+        pipeline (sklearn.pipeline): Fitted pipeline object
+                                     that we want to serialize
 
         model_name (str): Name of the models that we want to serialize
                      default:

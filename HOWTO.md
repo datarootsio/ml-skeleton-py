@@ -34,7 +34,7 @@ a virtual environment.
 
 Try out the `make` commands on the example `creditcard.csv` dataset model (see `make help`).
 
-```sh
+```
 clean                          clean artifacts
 coverage                       create coverage report
 generate-dataset               run ETL pipeline

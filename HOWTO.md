@@ -15,19 +15,13 @@ git clone git@github.com:datarootsio/ml-skeleton-py.git
 cd ml-skeleton-py
 ```
 
-**2. Install dependencies using [pip](https://pip.pypa.io/en/stable/installing/). Installing dependencies with `-e` 
-editable mode is recommended to properly run unit tests.**
+**2. Install dependencies using [pip](https://pip.pypa.io/en/stable/installing/). The following command
+will install the dependencies from `setup.py`. Note that installing dependencies with `-e` 
+editable mode is needed to properly run unit tests. `[test, serve]` is optional. `test` refers to
+unit test dependencies and `serve` refers to deployment dependencies.**
 
 ```bash
-pip install -e .
-```
-
-**3. Run basic comands and tests.**
-
-```bash
-make init-train
-make prediction
-make test-package
+pip install -e ".[test, serve]"
 ```
 
 ## Running the project
@@ -38,34 +32,109 @@ a virtual environment.
 
 **Makefile and test example**
 
-Try out the `make` commands on the example creditcard.csv dataset model (see `make help`).
-You need to install packages listed in requirements.txt file before running any commands that execute code.
+Try out the `make` commands on the example `creditcard.csv` dataset model (see `make help`).
 
 ```sh
-clean                          clean directories from generated files
-generate-dataset               run new ETL pipeline
+clean                          clean artifacts
+coverage                       create coverage report
+generate-dataset               run ETL pipeline
 help                           show help on available commands
-init-train                     generate dataset & train the model
-prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
-test-package                   run some basic tests
+lint                           flake8 linting and black code style
+run-pipeline                   clean artifacts -> generate dataset -> train -> serve
+serve                          serve trained model with a REST API using dploy-kickstart
+test-docker                    run unit tests in docker environment
+test                           run unit tests in the current virtual environment
 train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
-linting                        run black and flake8
-test                           run extensive tests
 ```
 
-Note the dependency: `generate_dataset` > `train` > `prediction`.
+Note the dependency: `generate-dataset` > `train` > `serve`.
 
 ## Docker
 
 Currently you can find the following docker files:  
 1. `jupyter.Dockerfile` builds an image for running notebooks.  
-2. `test.Dockerfile` builds an image to run all tests in (`make test-package`).
+2. `test.Dockerfile` builds an image to run all tests in (`make test-docker`).
+3. `serve.Dockerfile` build an image to serve the trained model via a REST api.
+To ease the serving it uses open source `dploy-kickstart` module. To find more info
+about `dploy-kickstart` click [here](https://github.com/dploy-ai/dploy-kickstart/).
 
 Finally, you can start all services using `docker-compose`:  
-for example `docker-compose up jupyter` or `docker-compose up test`.  
+for example `docker-compose up jupyter` or `docker-compose up serve`.  
 
 Do you need a notebook for development? Just run `docker-compose up jupyter`. It will launch a Jupyter Notebook 
 with access to your local development files.
+
+## Deploying the API
+
+Calling `make serve` will start a Flask based API using `dploy-kickstart`
+wrapper. 
+
+In `ml_skeleton_py/model/predict.py` file, there is `# @dploy endpoint predict`
+annotation above the `predict` method. 
+
+From `# @dploy endpoint predict` annotation, we are telling `dploy-kickstart` 
+that the url that we need to do the post request is `http://localhost:8080/predict`.
+As another example, if the annotation would be `# @dploy endpoint score` then the url
+would change to `http://localhost:8080/score`.  
+
+Going back to our case, the posted data to `http://localhost:8080/predict` url will be
+the argument of the exposed method which is `def predict(body)`. 
+
+As a concrete example;
+
+After the deployment, we can do our predictions with the following curl command.
+In this case, `def predict(body)` method will be triggered and the value of the `--data`
+will be the argument of `def predict(body)` function, i.e. `body`.
+
+```sh
+ curl --request POST \
+  --url http://localhost:8080/predict \
+  --header 'content-type: application/json' \
+  --data '{"model_f_name": "lr.joblib",
+        "features": [28692.0,-29.200328590574397,16.1557014298057,-30.013712485724803,6.47673117996833,-21.2258096535165,-4.90299739658728,-19.791248405247,19.168327389730102,-3.6172417860425496,-7.87012194292549,4.06625507293473,-5.66149242261771,1.2929501445424199,-5.07984568135779,-0.126522740416921,-5.24447151974264,-11.274972585125198,-4.67843652929376,0.650807370688892,1.7158618242835801,1.8093709332883998,-2.1758152034214198,-1.3651041075509,0.174286359566544,2.10386807204715,-0.20994399913056697,1.27868097084218,0.37239271433854104,99.99]}
+'
+```
+
+To test the health of the deployed model, you can make a get request as shown below;
+
+```sh
+    curl --request GET \
+      --url http://localhost:8080/healthz
+```
+
+
+
+## Project Structure Overview 
+The project structure tree is shown below. This structure is designed
+in a way to easily develop ML projects. Feedback / PRs are always welcome
+about the structure.
+
+```
+.
+├── .github             # Github actions CI pipeline
+|
+├── data                
+│   ├── predictions     # predictions data, calculated using the model
+│   ├── raw             # immutable original data
+│   ├── staging         # data obtained after preprocessing, i.e. cleaning, merging, filtering etc.
+│   └── transformed     # data ready for modeling (dataset containing features and label)
+|
+├── docker              # Store all dockerfiles
+|
+├── ml_skeleton_py      # Logic of the model
+│   ├── etl             # Logic for cleaning the data and preparing train / test set 
+│   └── model           # Logic for ML model including CV, parameter tuning, model evaluation
+|
+├── models              # Store serialized fitted models
+|
+├── notebooks           # Store prototype or exploration related .ipynb notebooks
+|
+├── reports             # Store textual or visualisation content, i.e. pdf, latex, .doc, .txt 
+|
+├── scripts             # Call ml_skeleton_py module from here e.g. cli for training
+|
+└── tests               # Unit tests
+```
 
 ## Best practices for development
 
@@ -74,194 +143,3 @@ with access to your local development files.
 - Commit often, perfect later.
 - Integrate `make test` with your CI pipeline.
 - Capture `stdout` when deployed.
-
-
-<!-- ## Scope
-
-There are several things we cover using this skeleton, including:
-1. predefined project structure (directories and scripts)
-2. example scripts for model training, predictions, model explanation, and modeling report
-3. generation of metadata used to ease model reproducibility and report generation
-4. assist creation of deployable solution, e.g. using Flask, Docker etc.
-5. check if the project includes necessary report files and tests (unit test coverage)
-... (this list will be extended)
-
-## Overview project structure
-
-We want to ensure each project follows (roughly) the same structure, according to best practices:
-
-```
-.
-├── data
-│   ├── predictions
-│   ├── raw
-│   ├── staging
-│   └── transformed
-├── docker
-├── models
-│   └── metadata
-├── notebooks
-├── openapi
-├── reports
-├── scripts
-├── src
-│   ├── app
-│   ├── etl
-│   ├── helpers
-│   └── model
-├── tests
-```
-
-### data/
-
-Location for data in various shapes. Directories for storing data:  
-`raw` - contains original dataset, which should always be considered **immutable**.    
-`staging` - data obtained after preprocessing - cleaning, merging, filtering etc.  
-`transformed` - data ready for modeling (dataset containing features and label).  
-`predictions` - for storing predictions calculated using the model.   
-
-For larger projects, where it's infeasible to have project specific datasets within the project structure,  
-make sure to update the configuration and connectors to reflect as much.
-
-### models/
-
-Location for saving serialized models. Make sure that the serialized version is of a reasonable size  
-(e.g., do not include training data in the model object). For every modelm metadata will be stored in `models/metadata`.  
-Metadata is very important as it should support model reproducibility and report generation.  
-You can find more details on metadata description in following section.
-
-### notebooks/
-
-Location to save notebooks used for data and model exploration.  
-Reporting notebooks are here placed by default, with default content.  
-They can be exported to `reports` as HTML/PDF etc.
-
-### openapi/
-
-OpenAPI specs used to deploy the prediction endpoint. From the root of the project you can run `python scripts/api/py`
-to deploy the prediction endpoint. Likewise you can run it using `docker-compose up api`. 
-Note that `connexxion` will open a SwaggerUI at `/ui` where you can inspect the endpoint specs. 
-
-### reports/
-
-Location for reports and files necessary to reproduce report generation. Any format of reports can be used.  
-We provide report templates as notebooks. Notebooks are chosen because users are familiar with them and  
-interactivity is supported (HTML). At least explorative and delivery report are expected.  
-Note that `make test` will not error if reports are not included, but will instead issue a warning.
-
-### scripts/
-
-Python scripts that expose functionality from `src`. The idea is that source can be freely changed, and those scripts  
-should preferably stay the same, or not changed much. They can be run manually, from `Makefile`,  
-but also represent example scripts that can be passed to Spark job, (e.g. with spark-submit, in case we use Spark).
-
-### ml_skeleton_py/
-
-This directory should contain the logic for the model (training & prediction), ETL, helpers and potential apps.  
-All source code relevant to a packaged and deployable delivery should be contained in this folder.
-
-Two scripts must exist in this directory:
-1. `model/train.py` - trains the model, saves it and generates metadata
-2. `model/predict.py` - calculates predictions for new data
-
-### tests/
-
-This directory contains the unittests by which you test your helper functions and coded logic.
-
-
-## Running the project
-
-Preferably, you can use make commands (from `Makefile`) or directly run scripts from `scripts`.  
-Refer to section below for the descriptions of make commands. Before running it, consider creating  
-a virtual environment.  
-
-First install `mlmonkey` and then dependencies listed in `requirements.txt`.    
-You can `pip install` `mlmonkey` directly from here: https://gitlab.com/dataroots-public/mlmonkey.git.
-
-
-## Makefile and test example
-
-Try out the `make` commands on the example iris dataset model (see `make help`).
-You need to install packages listed in requirements.txt file before running any commands that execute code.
-
-```sh
-api                            start flask server, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" deploy-endpoint
-count-report-files             count the number of present report files
-count-test-files               count the number of present test files
-generate-dataset               run new ETL pipeline
-help                           show help on available commands
-init-train                     generate dataset & train the model
-prediction                     predict new values, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" prediction
-spark-zip                      build the dependency zip file to submit with a spark job
-test                           run extensive tests
-tox                            run tox tests
-train                          train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
-```
-
-Note the dependency: `generate_dataset` > `train` > `prediction`.
-
-
-## Example scripts
-
-In the `src` directory, we provide basic examples of scripts for generating features dataset,  
-training, calculating predictions, and model explanations. After running the `train.py` script, model and metadata  
-will be saved in the `models` directory.  
-
-## Model metadata
-
-After training the model, metadata are being generated, using helper methods  from `mlmonkey` package.  
-For details on how metadata are generated, refer to documentation of that package.
-
-## Deploying the API
-
-Calling `make api` will start a Flask based API (implemented in `connexion`) which calculates predictions for new data.  
-The API is defined in `scripts/api.py` and simply implements the specification in `openapi/prediction-api.yaml`.
-
-## Report example
-
-Within `report` directory, you can find example of modeling report, in notebook format.  
-The report contains sections that should preferably exist in the report, as well as examples  
-of textual content and visualizations. 
-
-
-## Docker
-
-Currently you can find the following docker files:  
-1. `Dockerfile.jupyter` builds an image for running notebooks.  
-2. `Dockerfile.api` builds an image for starting an API endpoint.
-3. `Dockerfile.test` builds an image to run all tests in (`make test`).
-
-Finally, you can start all services using `docker-compose`:  
-for example `docker-compose up jupyter`, `docker-compose up api` or `docker-compose up test`.  
-
-Do you need a notebook for development? Just run `docker-compose up jupyter`. It will launch a Jupyter Notebook 
-with access to you local development files.
-
-## Best practices for development
-
-- Make sure that `make test` and/or `docker-compose up test` runs properly.  
-- In need for a Notebook? Use the docker image: `docker-compose up jupyter`.
-- Commit often, perfect later.
-- Integrate `make test` with your CI pipeline.
-- Capture `stdout` when deployed.
-
-## Project configuration
-
-Environment variables for the project can be specified in `.env` file,
-in project root. These variables will be read by dotenv package.  
-For example, you can set variables defined in `src/settings.py`, such as
-`MODEL_DIR = /your/path/to/the/model/`.  
-
-Logging can be adjusted in source init script (output location, verbosity level etc).      
-Verbosity is read from environment variable `LOG_LEVEL`, and use `WARNING` if such variable is not defined.  
-
-## Spark
-
-See the Makefile for some logic to build a Spark dep file (example TBD.
-
-## Prerequisites
-
-If you are about to use graphviz in your project (example is given in template modeling report),  
-you should install graphviz software in your system (not just the python package).  
-On Linux you can use: `sudo apt-get install graphviz`, for Mac `brew install graphviz`.  
-Graphs can be specified in code using Python API, but also specified in separate (.gv) file. -->

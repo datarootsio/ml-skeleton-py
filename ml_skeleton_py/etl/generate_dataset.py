@@ -20,7 +20,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 def generate(raw_data_loc: str, transformed_data_loc: str) -> None:
     """
-    Load data, remove outliers and write train and test data.
+    Load data, remove outliers and write transformed data.
 
     Parameters:
         raw_data_loc (str): the location of the raw data you want to load
@@ -49,7 +49,7 @@ def generate(raw_data_loc: str, transformed_data_loc: str) -> None:
 
 def remove_outliers(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Remove outliers using local outlier factor algorithm
+    Remove outliers using local outlier factor algorithm.
 
     Parameters:
         df (pd.DataFrame): data frame with outliers

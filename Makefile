@@ -25,11 +25,11 @@ train: ## train the model, you can pass arguments as follows: make ARGS="--foo 1
 	@echo ">>> training model"
 	python ./scripts/train.py $(ARGS)
 
-serve: ## Serve model with a REST API using dploy-kickstart
+serve: ## serve trained model with a REST API using dploy-kickstart
 	@echo ">>> serving the trained model"
 	kickstart serve -e ml_skeleton_py/model/predict.py -l .
 
-run-pipeline: clean generate-dataset train serve  ## clean artifacts generate dataset & train the model & serve
+run-pipeline: clean generate-dataset train serve  ## clean artifacts -> generate dataset -> train -> serve
 
 lint: ## flake8 linting and black code style
 	@echo ">>> black files"
@@ -37,15 +37,15 @@ lint: ## flake8 linting and black code style
 	@echo ">>> linting files"
 	flake8 scripts ml_skeleton_py tests
 
-coverage: ## Create coverage report
+coverage: ## create coverage report
 	@echo ">>> running coverage pytest"
 	pytest --cov=./ --cov-report=xml
 
-test: ## Make unit tests in the current environment
+test: ## run unit tests in the current virtual environment
 	@echo ">>> running unit tests with the existing environment"
 	pytest
 
-test-docker: ## Make unit tests in docker environment
+test-docker: ## run unit tests in docker environment
 	@echo ">>> running unit tests in an isolated docker environment"
 	docker-compose up test
 

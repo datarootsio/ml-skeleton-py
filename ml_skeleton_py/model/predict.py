@@ -1,11 +1,9 @@
 """Predict example.
-
-Example borrowed from:
-http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr-auto-examples-linear-model-plot-ols-py
 """
 
 import functools
 import os
+from typing import Dict, Union, List
 
 import joblib
 import numpy as np
@@ -17,7 +15,7 @@ from ml_skeleton_py import settings as s
 @functools.lru_cache()
 def load_model(model_loc: str) -> sklearn.pipeline:
     """
-    Load models using pickle.
+    Load models using joblib.
 
     Uses lru for caching.
 
@@ -25,15 +23,15 @@ def load_model(model_loc: str) -> sklearn.pipeline:
         model_loc (str): models file name e.g. "lr.joblib"
 
     Returns:
-        models (Pipeline or BaseEstimator): a models that can make predictions
+        models (Pipeline or BaseEstimator): sk-learn fitted models
     """
     return joblib.load(model_loc)["deserialized_model"]
 
 
 # Don't delete the following line, it is required
-# to deploy this function via dploy-kickstart
+# to deploy this method via dploy-kickstart
 # @dploy endpoint predict
-def predict(body: dict) -> float:
+def predict(body: Dict[str, Union[List[float], set]]) -> float:
     """
     Predict one single observation.
 

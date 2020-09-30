@@ -8,5 +8,5 @@ exclude =
     build,
     dist,
     tests
-max-line-length = 88
+max-line-length = 88 # black default
 ignore = D202,W503,E203 # conflicts with black

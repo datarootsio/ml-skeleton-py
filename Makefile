@@ -15,7 +15,7 @@ NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
 
 clean: ## clean artifacts
 	@echo ">>> cleaning files"
-	rm ./data/predictions/* ./data/transformed/* ./models/*.joblib
+	rm ./data/predictions/* ./data/transformed/* ./models/*.joblib || true
 
 generate-dataset: ## run ETL pipeline
 	@echo ">>> generating dataset"
@@ -29,9 +29,7 @@ serve: ## Serve model with a REST API using dploy-kickstart
 	@echo ">>> serving the trained model"
 	kickstart serve -e ml_skeleton_py/model/predict.py -l .
 
-run-pipeline: ## Run entire pipeline (clean artifacts -> generate-dataset -> train model -> serve model)
-	@echo ">>> running the pipeline"
-	clean clean generate-dataset train serve  ## clean artifacts generate dataset & train the model & serve
+run-pipeline: clean generate-dataset train serve  ## clean artifacts generate dataset & train the model & serve
 
 lint: ## flake8 linting and black code style
 	@echo ">>> black files"

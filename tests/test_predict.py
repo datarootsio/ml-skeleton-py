@@ -110,7 +110,7 @@ train(s.EXPECTED_TRANSFORMED_DATA_LOC, s.EXPECTED_MODEL_LOC, "test_model")
 
 @pytest.mark.parametrize(
     "features, error_expected",
-    [(features_1, False), (features_2, True), (features_3, True), ],
+    [(features_1, False), (features_2, True), (features_3, True)],
 )
 def test_pred(features: list, error_expected: bool) -> None:
     """

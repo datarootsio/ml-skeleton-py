@@ -16,6 +16,8 @@ from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import RobustScaler
 
+from ml_skeleton_py import settings as s
+
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
@@ -44,7 +46,7 @@ def train(dataset_loc: str, model_dir: str, model_name: str = "lr") -> None:
     df = pd.read_csv(dataset_loc)
 
     # Separate X and y
-    y = df.pop("Class")
+    y = df.pop(s.TARGET_VARIABLE)
     X = df
 
     # pre-processing

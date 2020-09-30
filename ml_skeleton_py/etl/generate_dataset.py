@@ -12,6 +12,8 @@ import logging
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.neighbors import LocalOutlierFactor
 
+from ml_skeleton_py import settings as s
+
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
@@ -35,9 +37,8 @@ def generate(raw_data_loc: str, transformed_data_loc: str) -> None:
 
     # Give some overview about the generated dataset
     logger.info("Preprocessing dataset from raw to transformed")
-    target_col = "Class"
-    no_frauds = round(df[target_col].value_counts()[0] / len(df) * 100, 2)
-    frauds = round(df[target_col].value_counts()[1] / len(df) * 100, 2)
+    no_frauds = round(df[s.TARGET_VARIABLE].value_counts()[0] / len(df) * 100, 2)
+    frauds = round(df[s.TARGET_VARIABLE].value_counts()[1] / len(df) * 100, 2)
     logger.info(f"No Frauds {no_frauds} % of the dataset")
     logger.info(f"Frauds {frauds} % of the dataset")
 

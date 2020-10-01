@@ -31,7 +31,7 @@ def load_model(model_loc: str) -> sklearn.pipeline:
 # Don't delete the following line, it is required
 # to deploy this method via dploy-kickstart
 # @dploy endpoint predict
-def predict(body: Dict[str, Union[List[float], set]]) -> float:
+def predict(body: Dict[str, Union[str, List[float]]]) -> float:
     """
     Predict one single observation.
 

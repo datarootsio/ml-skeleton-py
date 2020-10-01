@@ -47,7 +47,7 @@ def generate(raw_data_loc: str, transformed_data_loc: str) -> None:
     logger.info("Training data has been saved into disk!")
 
 
-def remove_outliers(df: pd.DataFrame, **kwargs) -> pd.DataFrame:
+def remove_outliers(df: pd.DataFrame, **kwargs: int) -> pd.DataFrame:
     """
     Remove outliers using local outlier factor algorithm.
 

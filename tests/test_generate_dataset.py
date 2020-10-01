@@ -4,24 +4,27 @@ import pytest
 from ml_skeleton_py.etl.generate_dataset import remove_outliers
 
 DF_EXPECTED = pd.DataFrame(
-    {"V10": [-1, -1.5, 100, -2],
-     "V12": [20, 21, 600, 18],
-     "V14": [20, 21, 10000, 18],
-     }
+    {
+        "V10": [-1, -1.5, 100, -2],
+        "V12": [20, 21, 600, 18],
+        "V14": [20, 21, 10000, 18],
+    }
 )
 
 DF_UNEXPECTED_1 = pd.DataFrame(
-    {"V10": [-1, -1.5, 100, -2],
-     "V12": [20, 21, 600, 18],
-     "test": [20, 21, 20, 18],
-     }
+    {
+        "V10": [-1, -1.5, 100, -2],
+        "V12": [20, 21, 600, 18],
+        "test": [20, 21, 20, 18],
+    }
 )
 
 DF_UNEXPECTED_2 = pd.DataFrame(
-    {"V10": [-1, None, 100, -2],
-     "V12": [20, 21, 600, 18],
-     "V14": [20, 21, 20, 18],
-     }
+    {
+        "V10": [-1, None, 100, -2],
+        "V12": [20, 21, 600, 18],
+        "V14": [20, 21, 20, 18],
+    }
 )
 
 
@@ -33,9 +36,7 @@ DF_UNEXPECTED_2 = pd.DataFrame(
         (DF_UNEXPECTED_2, True),
     ],
 )
-def test_remove_outliers(
-        df: pd.DataFrame, error_expected: bool
-) -> None:
+def test_remove_outliers(df: pd.DataFrame, error_expected: bool) -> None:
     """
     Tests whether outlier removal creates unexpected behaviors. Make sure
     the outlier removed data frame has exactly the same headers with the

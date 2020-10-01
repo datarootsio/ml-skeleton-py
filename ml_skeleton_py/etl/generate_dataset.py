@@ -47,7 +47,7 @@ def generate(raw_data_loc: str, transformed_data_loc: str) -> None:
     logger.info("Training data has been saved into disk!")
 
 
-def remove_outliers(df: pd.DataFrame) -> pd.DataFrame:
+def remove_outliers(df: pd.DataFrame, **kwargs) -> pd.DataFrame:
     """
     Remove outliers using local outlier factor algorithm.
 
@@ -61,7 +61,7 @@ def remove_outliers(df: pd.DataFrame) -> pd.DataFrame:
     n_rows = df_outlier_removed.shape[0]
 
     # Fit a basic local outlier factor to detect outliers
-    lof = LocalOutlierFactor()
+    lof = LocalOutlierFactor(**kwargs)
     df_outlier_removed["is_outlier"] = lof.fit_predict(
         df_outlier_removed[["V10", "V12", "V14"]]
     )

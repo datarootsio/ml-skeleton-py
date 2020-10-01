@@ -6,7 +6,7 @@ This is an opinionated project skeleton for a Python based machine learning proj
 This skeleton is to be used as the default project start for any Python ML project (unless arguments support otherwise).  
 While the project is heavily opinionated, opinions are welcomed to be discussed: feel free to open an issue or comment.
 
-## How to test the package
+## Installing the package
 
 1. Clone the repo
 
@@ -82,7 +82,7 @@ the argument of the exposed method which is `def predict(body)`.
 
 As a concrete example;
 
-After the deployment, we can do our predictions with the following curl command.
+After calling `make serve`, we can do our predictions with the following curl command.
 In this case, `def predict(body)` method will be triggered and the value of the `--data`
 will be the argument of `def predict(body)` function, i.e. `body`.
 

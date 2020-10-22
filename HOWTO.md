@@ -1,7 +1,5 @@
 # Python ML project skeleton
 
-**THIS HAS NOT BEEN VALIDATED YET**
-
 This is an opinionated project skeleton for a Python based machine learning projects.  
 This skeleton is to be used as the default project start for any Python ML project (unless arguments support otherwise).  
 While the project is heavily opinionated, opinions are welcomed to be discussed: feel free to open an issue or comment.

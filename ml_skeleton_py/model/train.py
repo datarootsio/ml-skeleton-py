@@ -60,12 +60,14 @@ def train(dataset_loc: str, model_dir: str, model_name: str = "lr") -> None:
     training_score = cross_val_score(
         pipeline, X_train, y_train, cv=5, scoring="roc_auc"
     )
+
+    auc_roc = round(training_score.mean(), 2)
     logger.info(f"Classifier: {pipeline.__class__.__name__}")
     logger.info(
         "Has a training score "
-        + f"of {round(training_score.mean(), 2) * 100} % roc_auc"
+        + f"of {auc_roc} roc_auc"
     )
-
+    check_performance(auc_roc)
     # Serialize and dump trained pipeline to disk
     pred_result = {
         "model_name": model_name,
@@ -77,3 +79,13 @@ def train(dataset_loc: str, model_dir: str, model_name: str = "lr") -> None:
     with open(model_location, "wb") as f:
         # Serialize pipeline and compress it with the max factor 9
         joblib.dump(pred_result, f, compress=9)
+
+
+def check_performance(auc_roc: float) -> None:
+    if auc_roc < s.EXPECTED_MIN_AUC:
+        raise Exception("The auc roc is less than the expected, "
+                        "please check your data manipulation or "
+                        "training parameters!")
+    else:
+        # Performance is more than the expected
+        pass

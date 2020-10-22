@@ -27,6 +27,9 @@ jobs:
       - name: Unit tests
         run: |
           make test
+      - name: Regression e2e tests
+        run: |
+          make clean generate-dataset train
       - name: Coverage report
         run: |
           make coverage

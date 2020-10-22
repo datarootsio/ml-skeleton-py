@@ -25,5 +25,5 @@ MODEL_METADATA_DIR = os.path.join(ROOT_DIR, "models", "metadata")
 
 # Model Variables
 TARGET_VARIABLE = "Class"
-
 DATASET_NAME = "creditcard.csv"
+EXPECTED_MIN_AUC = 0.97

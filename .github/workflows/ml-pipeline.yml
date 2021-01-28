@@ -4,6 +4,8 @@
 name: 'machine learning pipeline'
 on:
   push:
+    branches:
+      - '**'
     tags-ignore:
       - v*
 

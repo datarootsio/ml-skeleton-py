@@ -8,6 +8,7 @@
 NO_OF_TEST_FILES := $(words $(wildcard tests/test_*.py))
 NO_OF_REPORT_FILES := $(words $(wildcard reports/))
 NO_OF_REPORT_FILES := $(words $(filter-out reports/.gitkeep, $(SRC_FILES)))
+DATASET := data/transformed/creditcard.csv
 
 ###############################################################
 # COMMANDS                                                    #
@@ -17,11 +18,13 @@ clean: ## clean artifacts
 	@echo ">>> cleaning files"
 	rm ./data/predictions/* ./data/transformed/* ./models/*.joblib || true
 
-generate-dataset: ## run ETL pipeline
+generate-dataset: $(DATASET)
+
+$(DATASET):
 	@echo ">>> generating dataset"
 	python ./scripts/generate_dataset.py $(ARGS)
 
-train: ## train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
+train: $(DATASET) ## train the model, you can pass arguments as follows: make ARGS="--foo 10 --bar 20" train
 	@echo ">>> training model"
 	python ./scripts/train.py $(ARGS)
 

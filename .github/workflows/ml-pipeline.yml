@@ -8,8 +8,20 @@ on:
       - '**'
     tags-ignore:
       - v*
+  pull_request:
+    types: [closed]
+    branches:
+      - master
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
   # will run tests on every commit, except when merging a pull request
   tests:
     if: github.event.pull_request.merged == false

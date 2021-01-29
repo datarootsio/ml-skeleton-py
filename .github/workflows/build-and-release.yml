@@ -39,7 +39,7 @@ jobs:
         id: next_tag
         uses: "WyriHaximus/github-action-next-semvers@master"
         with:
-          version: ${{push steps.get_version.outputs.version }}
+          version: ${{ steps.get_version.outputs.version }}
       - name: 'Build, Tag and Push'
         uses: docker/build-push-action@v1
         with:

@@ -1,0 +1,52 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: 'build & release'
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  build-and-release:
+    name: 'build and release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Download artifacts from pull request'
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ml-pipeline.yml
+          pr: ${{github.event.pull_request.number}}
+          name: models
+          path: models
+      - name: 'Checkout'
+        uses: actions/checkout@master
+      - name: Unshallow
+        run: git fetch --prune --unshallow --tags
+      - name: Find Tag
+        id: get_latest_tag
+        uses: jimschubert/query-tag-action@v1
+        with:
+          include: 'v*'
+          exclude: '*-rc*'
+          commit-ish: 'HEAD~'
+          skip-unshallow: 'true'
+      - run: echo "::set-output name=version::$(echo ${{ steps.get_latest_tag.outputs.tag }} | cut -d- -f2)"
+        id: get_version
+      - name: 'Get next version'
+        id: next_tag
+        uses: "WyriHaximus/github-action-next-semvers@master"
+        with:
+          version: ${{push steps.get_version.outputs.version }}
+      - name: 'Build, Tag and Push'
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: ${{ github.repository }}/serve
+          tags: ${{ steps.next_tag.outputs.v_patch }}
+          dockerfile: docker/serve.Dockerfile
+          tag_with_ref: true
+

@@ -4,8 +4,6 @@
 name: 'test & train'
 on:
   push:
-    branches:
-      - '**'
     branches-ignore:
       - 'master'
       - 'main'

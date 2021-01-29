@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@master
       - name: Unshallow
         run: git fetch --prune --unshallow --tags
-      - name: Find Tag
+      - name: 'Find Tag'
         id: get_latest_tag
         uses: jimschubert/query-tag-action@v1
         with:

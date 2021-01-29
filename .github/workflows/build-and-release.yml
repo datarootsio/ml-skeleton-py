@@ -17,7 +17,7 @@ jobs:
       - name: 'Download artifacts from pull request'
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: ml-pipeline.yml
+          workflow: test-and-train.yml
           pr: ${{github.event.pull_request.number}}
           name: models
           path: models

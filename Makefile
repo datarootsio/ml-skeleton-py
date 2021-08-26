@@ -34,7 +34,7 @@ serve: ## serve trained model with a REST API using dploy-kickstart
 	@echo ">>> serving the trained model"
 	kickstart serve -e ml_skeleton_py/model/predict.py -l .
 
-run-pipeline: install clean generate-dataset train serve  ## clean artifacts -> generate dataset -> train -> serve
+run-pipeline: install clean generate-dataset train serve  ## install dependencies -> clean artifacts -> generate dataset -> train -> serve
 
 lint: ## flake8 linting and black code style
 	@echo ">>> black files"

@@ -63,10 +63,7 @@ def train(dataset_loc: str, model_dir: str, model_name: str = "lr") -> None:
 
     auc_roc = round(training_score.mean(), 2)
     logger.info(f"Classifier: {pipeline.__class__.__name__}")
-    logger.info(
-        "Has a training score "
-        + f"of {auc_roc} roc_auc"
-    )
+    logger.info("Has a training score " + f"of {auc_roc} roc_auc")
     check_performance(auc_roc)
     # Serialize and dump trained pipeline to disk
     pred_result = {
@@ -83,9 +80,11 @@ def train(dataset_loc: str, model_dir: str, model_name: str = "lr") -> None:
 
 def check_performance(auc_roc: float) -> None:
     if auc_roc < s.EXPECTED_MIN_AUC:
-        raise Exception("The auc roc is less than the expected, "
-                        "please check your data manipulation or "
-                        "training parameters!")
+        raise Exception(
+            "The auc roc is less than the expected, "
+            "please check your data manipulation or "
+            "training parameters!"
+        )
     else:
         # Performance is more than the expected
         pass

@@ -14,12 +14,12 @@ While the project is heavily opinionated, opinions are welcomed to be discussed:
     ```
 
 2. Install dependencies using [pip](https://pip.pypa.io/en/stable/installing/). The following command
-will install the dependencies from `setup.py`. Note that installing dependencies with `-e` 
+will install the dependencies from `setup.py`. In the backend it will run `pip install -e ".[test, serve]"`. Note that installing dependencies with `-e` 
 editable mode is needed to properly run unit tests. `[test, serve]` is optional. `test` refers to
 unit test dependencies and `serve` refers to deployment dependencies.
 
     ```bash
-    pip install -e ".[test, serve]"
+    make install
     ```
 
 ## Running the project
@@ -49,7 +49,7 @@ Note the dependency: `generate-dataset` > `train` > `serve`.
 
 ## Docker
 
-Currently you can find the following docker files:  
+Currently, you can find the following docker files:  
 1. `jupyter.Dockerfile` builds an image for running notebooks.  
 2. `test.Dockerfile` builds an image to run all tests in (`make test-docker`).
 3. `serve.Dockerfile` build an image to serve the trained model via a REST api.

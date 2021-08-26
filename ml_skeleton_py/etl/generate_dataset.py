@@ -68,7 +68,7 @@ def remove_outliers(df: pd.DataFrame, **kwargs: int) -> pd.DataFrame:
 
     df_outlier_removed = df_outlier_removed[
         df_outlier_removed.is_outlier != -1
-        ]  # -1 represents outliers
+    ]  # -1 represents outliers
 
     # Report number of removed rows
     n_filtered_rows = df_outlier_removed.shape[0]
